@@ -1,23 +1,3 @@
-#TO DO List:
-
-# * Add character count to processComment and add <wbr> if no spaces encountered.
-
-### CHECK IF TABLE acdt ON SERVER HAS AN "o" COLUMN OR NOT
-
-# * Should 'all', 'listed', and 'unlisted' boards just display threads in order of creation date only? (flash-like display? lol). We can keep it the way it is for now and change it in the future if the site gets faster.
-# * Does tonarihouse store file extensions in database separate?
-# * Change /ho/ to a 2D random? Change /jp/ into just Japanese Culture? Merge them?
-# * Make sure BoardInfo is actually used properly now that it has changed (note all the indices should have shifted)
-# * make 'all', 'listed', and 'unlisted' display modes from the settings actually be used
-# * make 'all', 'listed', and 'unlisted' display modes use the board thread limit 
-# * Turn off the cron job that replaces banners
-# * Add CSS that hides files upload box to all boards without uploaders or whatever, like inside threads with images disabled
-
-# * Detect uploaded filetypes, like how it's done on tonarihouse (probably put file uploads into its own function so the code only shows up once instead of twice)
-# * Add HTML5 upload like how it's done on tonarihouse
-#============================================================
-
-
 #!/bin/bash/env python3
 
 # 4taba.net server code
