@@ -1,0 +1,42 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>Mod Login</title><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><script src="/res/dat/login.js"></script></head>
+<body onload="mainf()">
+<div class="menu">
+<a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
+[HOME]</a><br>
+<a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
+<br>
+<ul>
+<li><a href="/all">All</a></li>
+</ul><hr>
+<b>Japan</b>
+<ul>
+<li><a href="/a">Anime</a></li>
+<li><a href="/ma">Manga</a></li>
+<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/d">二次元エロ</a></li>
+<li><a href="/ni">日本語と英語</a></li>
+</ul><br><hr>
+<b>Computers</b>
+<ul>
+<li><a href="/hw">Hardware</a></li>
+<li><a href="/sw">Software</a></li>
+<li><a href="/pr">Programming</a></li>
+</ul><br><hr>
+<b>Miscellaneous</b>
+<ul>
+<li><a href="/sci">Science & Mathematics</a></li>
+<li><a href="/v">Video Games</a></li>
+<li><a href="/ho">Other</a></li>
+</ul><br><hr>
+<a href="/res/dat/rulesEN">[Rules]</a><br>
+<a href="/res/dat/faqEN">[F.A.Q.]</a><br>
+<a href="/watcher">[Watcher]</a><br>
+<a href="/settings">[Settings]</a><br>
+</div>
+<div align="center"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/dat/banner.jpg"></div><hr>
+<h1 style="color:#000">Moderator Login:</h1>
+<input type="text" id="id" style="width:300px;" placeholder="ID"><br>
+<input type="text" id="pass" style="width:300px;" placeholder="Password"><br>
+<input type="submit" value="Submit" onclick="send()">
+<input type="submit" onclick="logout()" value="Logout"> <div id="status"></div><hr>
+</body></html>

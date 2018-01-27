@@ -1,0 +1,41 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>Watcher</title><link rel="stylesheet" type="text/css" href="/res/dat/styleThreads.css"><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><style>.column.over{border:2px dashed #000;}</style><script src="/res/dat/watcher.js"></script></head>
+<body style="background-image:url('/res/dat/bgb.png')" onload="mainf()">
+<div class="menu">
+<a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
+[HOME]</a><br>
+<a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
+<br>
+<ul>
+<li><a href="/all">All</a></li>
+</ul><hr>
+<b>Japan</b>
+<ul>
+<li><a href="/a">Anime</a></li>
+<li><a href="/ma">Manga</a></li>
+<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/d">二次元エロ</a></li>
+<li><a href="/ni">日本語と英語</a></li>
+</ul><br><hr>
+<b>Computers</b>
+<ul>
+<li><a href="/hw">Hardware</a></li>
+<li><a href="/sw">Software</a></li>
+<li><a href="/pr">Programming</a></li>
+</ul><br><hr>
+<b>Miscellaneous</b>
+<ul>
+<li><a href="/sci">Science & Mathematics</a></li>
+<li><a href="/v">Video Games</a></li>
+<li><a href="/ho">Other</a></li>
+</ul><br><hr>
+<a href="/res/dat/rulesEN">[Rules]</a><br>
+<a href="/res/dat/faqEN">[F.A.Q.]</a><br>
+<a href="/watcher">[Watcher]</a><br>
+<a href="/settings">[Settings]</a><br>
+</div>
+<div id="navlnks" style="position:fixed;top:0;right:0;background:#FFF;"></div>
+<span id='toplinks'></span><script>checkmenu()</script>
+<div align="center"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/dat/banner.jpg"></div><br>
+<h1 style="color:#000">THREAD WATCHER</h1>Drag the numbers at the left on top of each other to rearrange threads.<div class="tw" id="threadWatcher"></div><br>
+<h1 style="color:#000">BOARD WATCHER</h1><input type="text" id="query" style="width:300px;" placeholder="Example: lang+a+nu"><input type="submit" onclick="boardUpdate(this);" value="Update"><input type="submit" onclick="clearThreads();" value="Clear"><div class="bw catalog" id="boardWatcher"></div>
+</body></html>

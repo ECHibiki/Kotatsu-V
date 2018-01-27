@@ -1,0 +1,78 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><link rel="stylesheet" type="text/css" href="/res/dat/styleInfo.css"></head>
+<body style="background-image:url('/res/dat/bgb.png');font-family:'MS PGothic'">
+<div class="menu">
+<a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
+[HOME]</a><br>
+<a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
+<br>
+<ul>
+<li><a href="/all">All</a></li>
+</ul><hr>
+<b>Japan</b>
+<ul>
+<li><a href="/a">Anime</a></li>
+<li><a href="/ma">Manga</a></li>
+<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/d">二次元エロ</a></li>
+<li><a href="/ni">日本語と英語</a></li>
+</ul><br><hr>
+<b>Computers</b>
+<ul>
+<li><a href="/hw">Hardware</a></li>
+<li><a href="/sw">Software</a></li>
+<li><a href="/pr">Programming</a></li>
+</ul><br><hr>
+<b>Miscellaneous</b>
+<ul>
+<li><a href="/f">Flash & HTML5</a></li>
+<li><a href="/lit">Literature</a></li>
+<li><a href="/sci">Science & Mathematics</a></li>
+<li><a href="/v">Video Games</a></li>
+<li><a href="/ho">Other</a></li>
+</ul><br><hr>
+<a href="/res/dat/rulesEN">[Rules]</a><br>
+<a href="/res/dat/faqEN">[F.A.Q.]</a><br>
+<a href="/watcher">[Watcher]</a><br>
+<a href="/settings">[Settings]</a><br>
+</div>
+<table class="outer" align="center">
+<tr><td class="inner" colspan="3" style="text-align:center;font-size:32px;font-weight:bold;color:#C00">Welcome to the lower leaves!</td></tr>
+<tr><td class="inner" style="vertical-align:middle;text-align:center;font-size:32px;font-weight:bold">下<br>葉<br>ち<br>ゃ<br>ん</td>
+<td class="inner" style="background-image:url('/res/dat/bgr.png');padding-top:0px;"><img src="/res/dat/logo.png" style="padding:0px;margin:0px;float:none;display:block;margin:auto;"></td>
+<td class="inner" style="vertical-align:middle;text-align:center;font-size:32px;font-weight:bold">下<br>葉<br>ち<br>ゃ<br>ん</td></tr>
+</table><hr>
+<div class="outer"><div class="inner">
+View the <a href="/res/dat/faqEN">F.A.Q. here.</a><br>
+<span style="color:#C00;"><b><em>All</em></b> boards, including untitled boards, are subject to the <a href="/res/dat/rulesEN">global rules</a>.</span><br>
+<!--Leave any feedback or feature requests here <a href="/meta/12">&gt;&gt;/meta/12</a><br>-->
+<!--Please report bugs at <a href="/meta/2">&gt;&gt;/meta/2</a><br>-->
+<br>
+<table style="min-width:700px"><tr><td colspan="2">
+<a href="/all">View all board threads</a> [<a href="/all/c">All threads catalog</a>]<br><br>
+</td></tr><tr><td>
+<table style="border:none">
+<tr><td style="border:none"><u><h3>Japan</h3></u></td><td style="border:none"><u><h3>Computers</h3></u></td><td style="border:none"><u><h3>Miscellaneous</h3></u></td></tr>
+<tr><td style="border:none;border-right:1px solid #8B6;">
+<a href="/a">Anime</a><br>
+<a href="/ma">Manga</a><br>
+<a href="/jp">Otaku Culture</a><br>
+<a href="/ni">日本語と英語</a><br>
+<a href="/d">二次元エロ</a><br>
+</td><td style="border:none;border-right:1px solid #8B6;">
+<a href="/hw">Hardware</a><br>
+<a href="/sw">Software</a><br>
+<a href="/pr">Programming</a><br>
+</td><td style="border:none">
+<a href="/f">Flash & HTML5</a><br>
+<a href="/lit">Literature</a><br>
+<a href="/sci">Science & Mathematics</a><br>
+<a href="/v">Video Games</a><br>
+<a href="/ho">Other</a>
+</td></tr></table>
+</td>
+<td><br><b>Untitled Boards</b> (first 8)<br><br>%s</td></tr>
+</table>
+</div></div>
+<hr>
+<div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/dat/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/dat/gentoo-badge3.png" id="badge"></div>
+</body></html>

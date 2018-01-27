@@ -1,0 +1,20 @@
+<form enctype="multipart/form-data" action="" method="post" onsubmit="localStorage.password=document.getElementById('p2').value;return checksize(12582912);">
+<table id="btab">
+<tr class="hbox">
+<td class="label">Title</td><td><input type="text" style="width:210px;" name="title"></td><td class="label">Password</td><td><input type="text" style="width:210px;" name="pass" id="p2"></td>
+</tr>
+<tr>
+<td class="label">Name</td><td><input type="text" style="width:210px;" name="name"></td><td class="label">Email</td><td><input type="text" style="width:210px;" name="email"></td>
+</tr>
+<tr>
+<td class="label">Comment</td><td colspan="3"><textarea style="width:500px;" rows="4" name="comment"></textarea></td>
+</tr>
+<tr class="hbox">
+<td class="label">Images</td><td colspan="3"><input type="radio" name="images" value="y" checked>Enabled / <input type="radio" name="images" value="n">Disabled</td>
+</tr>
+<tr class="fbox obox">
+<td class="label">File</td><td colspan="2"><input type="file" name="file"> <a id="baf" href="javascript:void(0)" onclick="addFile('b',1)">[+]</a></td><td><input type="checkbox" name="spoiler" value="y">Spoiler Image</input></td>
+</tr>
+<tr id="bhook">
+<td class="label">Submit</td><td colspan="3"><input type="submit" name="submit" value="Submit"></td>
+</tr></table></form>

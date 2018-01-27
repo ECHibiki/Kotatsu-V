@@ -1,0 +1,5 @@
+This board displays threads from all boards including untitled boards.<br>
+<br>
+To prevent threads on a particular board from being displayed simply subtract it from /all/ in the URL bar.<br>
+For example, to remove threads from /ho/ visit:<br>
+<a href="/all-ho">&gt;&gt;&gt;/all-ho/</a>

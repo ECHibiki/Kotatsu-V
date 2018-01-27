@@ -1,0 +1,27 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i python3 -p python3Packages.psycopg2
+
+import psycopg2
+
+DBconnection = psycopg2.connect("dbname='wwwrun'")
+cur = DBconnection.cursor()
+
+#cur.execute('DROP SCHEMA public CASCADE;')
+#cur.execute('CREATE SCHEMA public;')
+#cur.execute('GRANT ALL ON SCHEMA public TO postgres;')
+#cur.execute('GRANT ALL ON SCHEMA public TO public;')
+#cur.execute('COMMENT ON SCHEMA public IS \'standard public schema\';')
+
+#cur.execute('DROP DATABASE uwsgi;')
+#cur.execute('CREATE DATABASE uwsgi;')
+#cur.execute('\connect uwsgi;')
+
+cur.execute('CREATE TABLE adat (b text, num integer);')
+cur.execute('CREATE TABLE ball (num integer, t integer, cnt integer, b text, ct integer, dt integer);')
+cur.execute('CREATE TABLE un (b text, t integer);')
+cur.execute('CREATE TABLE acdt (i text, t integer);')
+cur.execute('CREATE TABLE atcd (i text, t integer);')
+cur.execute('CREATE TABLE amod (i text, p text, c text);')
+cur.execute('CREATE TABLE aban (a text, b text);')
+
+DBconnection.commit()

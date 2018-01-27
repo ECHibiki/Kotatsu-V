@@ -1,0 +1,94 @@
+body{
+    color:#7FFFFF;
+    font-size:13px;
+    font-family:"Arial";
+    background:#001;
+    background-image:-moz-linear-gradient(top, #012950 0%, #001 180px);
+    background-repeat: no-repeat;
+    margin:10px 0px 30px 105px;
+}
+h1{
+    text-align:center;
+}
+input{
+    font-size:13px;
+    font-family:"Arial";
+}
+textarea{
+    font-size:13px;
+    font-family:"Arial";
+}
+img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+table{
+    background:transparent;
+    border:1px outset #7FFFFF;
+    border:none;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+td{
+    background:#012950;
+}
+hr{
+    border-color:#264048 !important;
+    border:none;
+    border-top:1px solid #264048 !important;
+}
+a:link{
+    color:#FF1;
+}
+a:visited{
+    color:#AAE574;
+}
+input, textarea{
+    color:#FFF;
+    background:#000;
+    border:none;
+}
+ul{
+    margin:0px;
+    padding-left:15px;
+}
+li{
+    padding-top:2px;
+    padding-bottom:2px;
+}
+#navlnks{
+    background:#001!important;
+}
+.banner{
+    display:table;
+}
+.msg{
+    background:#012950;
+    border:1px solid #7FFFFF;
+    margin:0 auto;
+    display:table;
+    padding:10px;
+    min-width:50%;
+}
+.label{
+    background:#157;
+    border:1px solid #7FFFFF;
+    padding:0px 3px 0px 1px;
+}
+.menu{
+    font-size:13px;
+    font-family:"Arial", "MS PGothic";
+    background:#001;
+    border-right:1px solid #264048;
+    position:fixed;
+    left:0px;
+    top:0px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+    width:100px;
+    overflow:hidden;
+}
+.menu hr{
+    border:1px inset #DDD;
+}

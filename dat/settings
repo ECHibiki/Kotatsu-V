@@ -1,0 +1,54 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん: Settings</title><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><link rel="stylesheet" type="text/css" href="/res/dat/styleInfo.css"></head>
+<body>
+<div class="menu">
+<a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
+[HOME]</a><br>
+<a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
+<br>
+<ul>
+<li><a href="/all">All</a></li>
+</ul><hr>
+<b>Japan</b>
+<ul>
+<li><a href="/a">Anime</a></li>
+<li><a href="/ma">Manga</a></li>
+<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/d">二次元エロ</a></li>
+<li><a href="/ni">日本語と英語</a></li>
+</ul><br><hr>
+<b>Computers</b>
+<ul>
+<li><a href="/hw">Hardware</a></li>
+<li><a href="/sw">Software</a></li>
+<li><a href="/pr">Programming</a></li>
+</ul><br><hr>
+<b>Miscellaneous</b>
+<ul>
+<li><a href="/sci">Science & Mathematics</a></li>
+<li><a href="/v">Video Games</a></li>
+<li><a href="/ho">Other</a></li>
+</ul><br><hr>
+<a href="/res/dat/rulesEN">[Rules]</a><br>
+<a href="/res/dat/faqEN">[F.A.Q.]</a><br>
+<a href="/watcher">[Watcher]</a><br>
+<a href="/settings">[Settings]</a><br>
+</div>
+<div class="outer" style="max-width:1200px;"><div class="inner" style="min-width:800px">
+[<a href="/">Home</a>]<br>
+<hr><br>
+<h1 style="text-align:left">Settings:</h1>
+<p style="white-space:pre-wrap;">
+<script>function returnk(e,ev){if(ev.keyCode==13){ev.preventDefault();localStorage.volume=e.value;document.getElementById('vrange').value=e.value;}}</script>
+Default volume: <input type="text" id="vbar" onkeypress="returnk(this,event);" style="width:40px;"><input type="range" id="vrange" min="0" max="100" value="10" onchange="localStorage.volume=this.value;document.getElementById('vbar').value=this.value"/>
+<script>var v=localStorage.volume || '10';document.getElementById('vbar').value=v;document.getElementById('vrange').value=v;</script>
+<script>function mmcchange(e){localStorage.mmc=e.value;}</script>
+<table><tr><td style="border:none" rowspan="2">Thumbnail middle-mouse click behavior:</td><td style="border:none"><input id="mmcopen" type="radio" name="mmc" value="open" onchange="mmcchange(this)">Open file in new tab</td></tr><tr><td style="border:none"><input id="mmcnone" type="radio" name="mmc" value="none" onchange="mmcchange(this)">None</td></tr></table>
+<script>function setStyle(e){localStorage.stl=e.value;}</script>
+<table><tr><td style="border:none" rowspan="2">Stylesheet:</td><td style="border:none"><input id="stlDefault" type="radio" name="stl" value="Default" onchange="setStyle(this)">Default</td></tr><tr><td style="border:none"><input id="stlTomorrow" type="radio" name="stl" value="Tomorrow" onchange="setStyle(this)">Tomorrow</td></tr></table>
+<script>document.getElementById('mmc'+(localStorage.mmc || 'open')).checked=true;</script>
+<script>document.getElementById('stl'+(localStorage.stl || 'Default')).checked=true;</script>
+<hr>
+[<a href="/">Home</a>]</div></div>
+<hr>
+<div style="display:table;margin:0 auto;background:#FFF;padding:7px;border:1px inset #888"><a href="/res/dat/contact">Contact</a></div></body></html>
+</body></html>

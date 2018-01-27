@@ -1,0 +1,63 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>Report</title><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><link rel="stylesheet" type="text/css" href="/res/dat/styleInfo.css"></head>
+<body style="background-image:url('/res/dat/bgb.png')">
+<div class="menu">
+<a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
+[HOME]</a><br>
+<a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
+<br>
+<ul>
+<li><a href="/all">All</a></li>
+</ul><hr>
+<b>Japan</b>
+<ul>
+<li><a href="/a">Anime</a></li>
+<li><a href="/ma">Manga</a></li>
+<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/d">二次元エロ</a></li>
+<li><a href="/ni">日本語と英語</a></li>
+</ul><br><hr>
+<b>Computers</b>
+<ul>
+<li><a href="/hw">Hardware</a></li>
+<li><a href="/sw">Software</a></li>
+<li><a href="/pr">Programming</a></li>
+</ul><br><hr>
+<b>Miscellaneous</b>
+<ul>
+<li><a href="/f">Flash</a></li>
+<li><a href="/lit">Literature</a></li>
+<li><a href="/sci">Science & Mathematics</a></li>
+<li><a href="/v">Video Games</a></li>
+<li><a href="/ho">Other</a></li>
+</ul><br><hr>
+<a href="/res/dat/rulesEN">[Rules]</a><br>
+<a href="/res/dat/faqEN">[F.A.Q.]</a><br>
+<a href="/watcher">[Watcher]</a><br>
+<a href="/settings">[Settings]</a><br>
+</div>
+<h1>Report post:</h1>
+<br>
+
+
+<center>
+<form enctype="multipart/form-data" action="" method="post">
+<table id="btab">
+<tr class="hbox">
+<td class="label">Board</td><td><input type="text" style="width:210px;" name="board"></td>
+</tr>
+<tr>
+<td class="label">Thread Number</td><td><input type="text" style="width:210px;" name="tnum"></td>
+</tr>
+<tr>
+<td class="label">Post Number</td><td><input type="text" style="width:210px;" name="pnum"></td>
+</tr>
+<tr>
+<td class="label">Reason</td><td><textarea style="width:500px;" rows="4" name="reason"></textarea></td>
+</tr>
+<tr>
+<td class="label">Submit</td><td><input type="submit" name="submit" value="Submit"></td>
+</tr></table></form>
+</center>
+
+
+</body></html>

@@ -1,0 +1,54 @@
+body{
+    font-size:14px;
+    border:10px solid transparent;
+    margin:10px 0px 30px 105px;
+}
+table{
+    background:#BE9;
+}
+td{
+    border:1px solid #CCC;
+    margin:0px;
+    vertical-align:top;
+}
+div{
+    background:#FFF;
+    border:1px inset #888;
+    display:table;
+    margin:0 auto;
+    padding:7px;
+}
+h1{
+    margin:5px;
+}
+h3{
+    margin:0px;
+}
+td{
+    padding:5px;
+}
+.inner{
+    background:#EEE;
+    border:1px inset #888;
+}
+.outer{
+    background:#EEE;
+    border:1px outset #888;
+    padding:7px;
+}
+.menu{
+    background:#EDC;
+    border:0px;
+    border-right:1px solid #888;
+    position:fixed;
+    left:0px;
+    top:0px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+    width:100px;
+    overflow:hidden;
+}
+.menu hr{
+    border:1px inset #DDD;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん: FAQ</title><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><link rel="stylesheet" type="text/css" href="/res/dat/styleInfo.css"></head>
+<body style="background-image:url('/res/dat/bgb.png')">
+<div class="menu">
+<a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
+[HOME]</a><br>
+<a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
+<br>
+<ul>
+<li><a href="/all">All</a></li>
+</ul><hr>
+<b>Japan</b>
+<ul>
+<li><a href="/a">Anime</a></li>
+<li><a href="/ma">Manga</a></li>
+<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/d">二次元エロ</a></li>
+<li><a href="/ni">日本語と英語</a></li>
+</ul><br><hr>
+<b>Computers</b>
+<ul>
+<li><a href="/hw">Hardware</a></li>
+<li><a href="/sw">Software</a></li>
+<li><a href="/pr">Programming</a></li>
+</ul><br><hr>
+<b>Miscellaneous</b>
+<ul>
+<li><a href="/sci">Science & Mathematics</a></li>
+<li><a href="/v">Video Games</a></li>
+<li><a href="/ho">Other</a></li>
+</ul><br><hr>
+<a href="/res/dat/rulesEN">[Rules]</a><br>
+<a href="/res/dat/faqEN">[F.A.Q.]</a><br>
+<a href="/watcher">[Watcher]</a><br>
+<a href="/settings">[Settings]</a><br>
+</div>
+<div class="outer" style="max-width:1200px;"><div class="inner">
+<a href="/">Home</a><br>
+<h1>F.A.Q.</h1><br><hr><br>
+･ <a href="#what">What is 4taba?</a><br>
+･ <a href="#trip">Why are there no tripcodes?</a><br>
+･ <a href="#mixed">What is a mixed board view?</a><br>
+･ <a href="#watcher">How do I use the thread and board watcher?</a><br>
+･ <a href="#boards">What are untitled boards?</a><br>
+･ <a href="#bb">How do I format my post?</a><br>
+<hr>
+
+<h2 id="what">What is 4taba?</h2>
+Above all a place to have fun.<br>
+Prounounced "Shitaba", it is an imageboard for discussing various hobbyist topics, modelled after Japanese style discussion and imageboards such as 2channel and Futaba, and English imageboards such as 4chan.<br>
+<br>
+<h2 id="trip">Why are there no tripcodes?</h2>
+This is because the function of tripcodes can be accomplished without the feature being built directly into the site.<br>
+If there is a need for a poster to be identified there are other means available to them such as PGP signatures. This also has the benefit of dircouraging casual excessive use of identification.<br>
+<br>
+<h2 id="mixed">What is a mixed board view?</h2>
+You can view multiple boards at the same time for your convenience. Just use the plus sign to join them like so:<br>
+<a href="/jp+nu">&gt;&gt;/jp+nu/</a><br>
+The first board is considered to be the main one, so if you post a thread it will go there.
+<br>
+Additionally boards may be subtracted (which is really only useful on the /all/ board) like so:<br>
+<a href="/all-nu">&gt;&gt;/all-nu/</a><br>
+<br>
+<h2 id="watcher">How do I use the thread and board watcher?</h2>
+To use the thread watcher click the "Watch" button next to the thread title. You can then go to the <a href="/watcher">watcher</a> page (or click Watcher in the navigation menu at the left) to see the threads you are watching. Click the thread to expand it and view the new posts, click the X to the right of a stub to remove it from your list, and click the number at the left of the stub to clear new posts.<br>
+Threads may be organized by dragging and dropping the numbers at the left of the stubs.<br>
+<br>
+To use the board watcher simply enter a valid board label into the input field and click "Update" (no slashes are needed, for example: enter <b>a</b> to watch /a/, or <b>a+ma</b> to watch both /a/ and /ma/).<br>
+Your last update time will be saved, so you can close the window and return later to view new threads that were made since you last clicked the "Update" button.
+<br>
+<h2 id="boards">What are untitled boards?</h2>
+An experimental feature to give flexibility to the board list.<br>
+<br>
+These are <em>not</em> user created/owned boards. Users can't give them a title or control them any differently from the main boards.<br>
+Untitled boards may be purged and/or repurposed at any time. For more stability please use the main boards.<br>
+<br>
+To use, simply modify the URL to point to the board label of your choice (e.g. <a href="/test">&gt;&gt;/test/</a>) and start posting.<br>
+<br>
+<h2 id="bb">How do I format my post?</h2>
+You can use the following BBCodes:<br>
+<ul>
+<li>[cb] - Create a monospace code block.</li>
+<li>[ja] - Set text size and font for Shift_JIS art. (supresses greentext quoting, but not other features like post linking, URL linking, or spoilers)</li>
+<li>[sp] - Spoiler text.</li>
+</ul><br>
+<hr><br>
+<a href="/">Home</a></div></div>
+<hr>
+<div style="display:table;margin:0 auto;background:#FFF;padding:7px;border:1px inset #888"><a href="/res/dat/contact">Contact</a></div></body></html>
+</body></html>

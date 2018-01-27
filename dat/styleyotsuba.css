@@ -1,0 +1,80 @@
+body{
+    color:#800000;
+    font-size:13px;
+    font-family:"Arial";
+    background:#FFE;
+    height:100%;
+    margin:10px 0px 30px 105px;
+    background:#FFE;
+    background-image:-moz-linear-gradient(top, #FED6AF 0%, #FFE 180px);
+    background-repeat: no-repeat;
+}
+h1{
+    text-align:center;
+}
+input{
+    font-size:13px;
+    font-family:"Arial";
+}
+textarea{
+    font-size:13px;
+    font-family:"Arial";
+}
+img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+hr{
+    border:none;
+    border-top:1px solid #D9BFB7 !important;
+}
+ul{
+    margin:0px;
+    padding-left:15px;
+}
+li{
+    padding-top:2px;
+    padding-bottom:2px;
+}
+.postForm{
+    background:transparent;
+    border:none;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.postForm td{
+    background:#FED6AF;
+}
+.banner{
+    display:table;
+}
+.msg{
+    background:#FED6AF;
+    border:1px solid #800000;
+    display:table;
+    margin:0 auto;
+    padding:10px;
+    min-width:50%;
+}
+.label{
+    background:#EA8;
+    padding:0px 3px 0px 1px;
+    border:1px solid #800000;
+}
+.menu{
+    font-size:13px;
+    font-family:"Arial", "MS PGothic";
+    background:#FFE;
+    border-right:1px solid #D9BFB7;
+    position:fixed;
+    left:0px;
+    top:0px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+    width:100px;
+    overflow:hidden;
+}
+.menu hr{
+    border:1px inset #DDD;
+}
