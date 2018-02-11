@@ -2,8 +2,19 @@
 #! nix-shell -i python3 -p python3Packages.psycopg2
 
 import psycopg2
+import default_settings
+import local_settings
 
-DBconnection = psycopg2.connect("dbname='wwwrun'")
+DBNAME = ''
+DBUSER = 'postgres'
+DBHOST = '127.0.0.1'
+DBPASS = '4sm0k3y4'
+
+temp = ["dbname='"+DBNAME+"'"] 
+temp += ["user='"+DBUSER+"'"] if DBUSER else []
+temp += ["host='"+DBHOST+"'"] if DBHOST else []
+temp += ["password='"+DBPASS+"'"] if DBPASS else []
+DBconnection = psycopg2.connect(' '.join(temp))
 cur = DBconnection.cursor()
 
 #cur.execute('DROP SCHEMA public CASCADE;')
