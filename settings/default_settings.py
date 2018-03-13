@@ -28,7 +28,7 @@ DBPASS = ''
 # The uploaders option determines who may upload files in a thread. Options are: "all", "OP", "posters", or "none"
 # The fileTypes option may either be "all", "noflash" (all filetypes except flash/html5), or "flash" (flash/html5)
 BoardInfo = { 'all': ('All Boards', 'main', '', 150, 'all', 'none', ''),
-            'listed': ('All Listed Boards', 'main', '', 150, 'listed', 'none', ''),
+            #'listed': ('All Listed Boards', 'main', '', 150, 'listed', 'none', ''),
             'unlisted': ('All Unlisted Boards', 'default', '', 150, 'unlisted', 'none', ''),
             'a': ('Anime', 'yotsubab', 'Anonymous', 150, 'normal', 'all', 'noflash'),
             'ma': ('Manga', 'yotsubab', 'Anonymous', 150, 'normal', 'all', 'noflash'),

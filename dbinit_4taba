@@ -8,7 +8,7 @@ import local_settings
 DBNAME = ''
 DBUSER = 'postgres'
 DBHOST = '127.0.0.1'
-DBPASS = '4sm0k3y4'
+DBPASS = ''
 
 temp = ["dbname='"+DBNAME+"'"] 
 temp += ["user='"+DBUSER+"'"] if DBUSER else []
