@@ -68,3 +68,37 @@ UnlistedUploaders = 'none'
 UnlistedFiletypes = ''
 UnlistedMessage = 'This board has no pre-defined topic. Feel free to use it however you like after reading the <a href="/res/dat/faqEN">FAQ</a> and the <a href="/res/dat/rulesEN">global rules</a>.' # The default greeting for unlisted boards
 UnlistedLifetime = 0 # Set this to the number of hours threads on unlisted boards can go without receiving replies before they are deleted. 0 means they live forever (or at least until they fall off the last page of the board)
+
+# List of post filters (this includes quotes, post links, URL highlighting, etc)
+#   Parameter 1 - Callback function to filter text if a match is found
+#       Callback is called with parameters (start, middle, end) where start is the opening delimeter which was matched, end is the closing delimeter that was matched, and middle is all the text in between
+#       Callback function should return new text to replace the matched text, including the delimeters if you want them to remain
+#   Parameter 2 - List of opening delimiters to begin matching
+#   Parameter 3 - List of closing delimiters to end matching
+# NOTE: Filters are applied one after the other, so order can make a difference
+#       Posts are already escaped (e.g. ">" characters show up as "&gt;") and newlines are already converted to <br>
+Filters = [
+            # URL filter
+            re.compile(r'(http://|https://|ftp://)([^ ]*)( |<)') # ( |<) not working right
+
+            [filter_post_link,
+                ['&gt;&gt;'], # >>
+                [' ', '<br>', '(', ')', '[', ']', '{', '}']],
+            [filter_quote,
+                ['&gt;'], # >
+                ['<br>']],
+            [filter_url,
+                ['https://','http://','ftp://'],
+                [' ', '<br>']],
+            [filter_code,
+                ['[code]'],
+                ['[/code]']],
+            [filter_spoiler,
+                ['[spoiler]'],
+                ['[/spoiler]']],
+
+            # Example word filter
+            [filter_duck_roll,
+                ['egg'],
+                ['']],
+]

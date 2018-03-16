@@ -1,14 +1,11 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i python3 -p python3Packages.psycopg2
+#!/usr/bin/env python3
 
 import psycopg2
 import default_settings
 import local_settings
 
-DBNAME = ''
-DBUSER = 'postgres'
-DBHOST = '127.0.0.1'
-DBPASS = ''
+from settings.default_settings import *
+from settings.local_settings import *
 
 temp = ["dbname='"+DBNAME+"'"] 
 temp += ["user='"+DBUSER+"'"] if DBUSER else []
@@ -27,12 +24,38 @@ cur = DBconnection.cursor()
 #cur.execute('CREATE DATABASE uwsgi;')
 #cur.execute('\connect uwsgi;')
 
-cur.execute('CREATE TABLE adat (b text, num integer);')
-cur.execute('CREATE TABLE ball (num integer, t integer, cnt integer, b text, ct integer, dt integer);')
-cur.execute('CREATE TABLE un (b text, t integer);')
-cur.execute('CREATE TABLE acdt (i text, t integer);')
-cur.execute('CREATE TABLE atcd (i text, t integer);')
-cur.execute('CREATE TABLE amod (i text, p text, c text);')
-cur.execute('CREATE TABLE aban (a text, b text);')
+#cur.execute('CREATE TABLE adat (b text, num integer);')
+#cur.execute('CREATE TABLE ball (num integer, t integer, cnt integer, b text, ct integer, dt integer);')
+#cur.execute('CREATE TABLE un (b text, t integer);')
+#cur.execute('CREATE TABLE acdt (i text, t integer);')
+#cur.execute('CREATE TABLE atcd (i text, t integer);')
+#cur.execute('CREATE TABLE amod (i text, p text, c text);')
+#cur.execute('CREATE TABLE aban (a text, b text);')
 
-DBconnection.commit()
+# main schema stores data about thread counts, cooldowns, and bans
+cur.execute('CREATE SCHEMA main')
+# board scheme stores board data
+cur.execute('CREATE SCHEMA board')
+# thread schema stores thread data
+cur.execute('CREATE SCHEMA thread')
+# sub schema stores sub-replies
+cur.execute('CREATE SCHEMA sub')
+
+# main.thread_cooldown stores thread cooldown timers
+cur.execute('CREATE TABLE main.thread_cooldown (ip text, time integer);')
+# main.post_cooldown stores post cooldown timers
+cur.execute('CREATE TABLE main.post_cooldown (ip text, time integer);')
+# main.mod is the list of moderators and their info
+cur.execute('CREATE TABLE main.mod (name text, phash text, cookie text);')
+# main.ban is the list of banned IP's
+cur.execute('CREATE TABLE main.ban (ip text, ban_type text);')
+# main.cookies stores session cookies
+cur.execute('CREATE TABLE main.cookie (cookie text, last_checked integer);')
+# main.event: new feature. Adds "reply events" to ip list to give some "watcher" functionality for browsers without Javascript
+#             such as CLI browsers
+cur.execute('CREATE TABLE main.event (ip text, event_list text[]);')
+
+# board.all is the all board which needs to be initialized (NOTE: all no longer stores threads from unlisted boards)
+cur.execute('CREATE TABLE board.all (threadnum integer, bump_time integer, post_count integer, board text, creation_time integer, deletion_time integer, title text, images boolean);')
+# board.unlisted is the same as board.all but only for unlisted boards
+cur.execute('CREATE TABLE board.unlisted (threadnum integer, bump_time integer, post_count integer, board text, creation_time integer, deletion_time integer, title text, images boolean);')

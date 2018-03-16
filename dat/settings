@@ -50,5 +50,5 @@ Default volume: <input type="text" id="vbar" onkeypress="returnk(this,event);" s
 <hr>
 [<a href="/">Home</a>]</div></div>
 <hr>
-<div style="display:table;margin:0 auto;background:#FFF;padding:7px;border:1px inset #888"><a href="/res/dat/contact">Contact</a></div></body></html>
+<div style="display:table;margin:0 auto;background:#FFF;padding:7px;border:1px inset #888"><a href="/res/dat/contactEN">Contact</a></div></body></html>
 </body></html>
