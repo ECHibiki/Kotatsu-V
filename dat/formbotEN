@@ -13,8 +13,9 @@
 <td class="label">Images</td><td colspan="3"><input type="radio" name="images" value="y" checked>Enabled / <input type="radio" name="images" value="n">Disabled</td>
 </tr>
 <tr class="fbox obox">
-<td class="label">File</td><td colspan="2"><input type="file" name="file"> <a id="baf" href="javascript:void(0)" onclick="addFile('b',1)">[+]</a></td><td><input type="checkbox" name="spoiler" value="y">Spoiler Image</input></td>
+<td class="label">File</td><td colspan="2"><input type="file" name="file"></td><td><input type="checkbox" name="spoiler" value="y">Spoiler Image</input></td>
 </tr>
-<tr id="bhook">
-<td class="label">Submit</td><td colspan="3"><input type="submit" name="submit" value="Submit"></td>
-</tr></table></form>
+<tr>
+<td class="label">Submit</td><td><input type="submit" name="submit" value="Submit"></td>
+</tr>
+</table></form>

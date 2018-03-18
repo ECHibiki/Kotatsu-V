@@ -117,7 +117,6 @@ a{
 .tb{
     margin:0px 0px 4px 0px;
     padding:2px 0px 2px 0px;
-    background:#34345C;
 }
 .title{
     color:#6C879E;
@@ -236,4 +235,35 @@ img.cimg{
 .styledis{
     font-size:16px;
     font-family:"MS PGothic","Konatu","Mona","IPAMonaPGothic","Gothic";
+}
+.styledis .tb{
+    background:#353;
+}
+.styledefault .tb{
+    background:#553;
+}
+.styleyotsuba .tb{
+    background:#543;
+}
+.styleyotsubab .tb{
+    background:#335;
+}
+.styleeb{
+    font-size:14px;
+    font-family:"Georgia","Liberation Serif","Times New Roman";
+    width:98%;
+    width:auto;
+    margin:7px 7px 0px 0px;
+    padding:7px 7px 7px 7px;
+    border:2px outset #000;
+    border-radius:5px;
+}
+.styleeb .thread{
+    width:auto;
+    height:auto;
+    background:transparent;
+    border:none;
+}
+.styleeb .tb{
+    background:#445;
 }

@@ -1,10 +1,11 @@
 <center><div style="margin:0 auto;" class="banner"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/dat/%s"></div></center>
 <hr>
+
 <div class="msg"><div class="msg2"><h1>%s</h1>%s</div></div>
 <form align="center" enctype="multipart/form-data" action="" method="post" onsubmit="localStorage.password=document.getElementById('p1').value;return checksize(12582912);">
 <table class="postForm" id="ttab" align="center">
 <tr class="hbox">
-<td class="label">Title</td><td><input type="text" style="width:210px;" name="title"></td><td class="label">Password</td><td><input type="text" style="width:150px;" name="pass" id="p1"><button type="button" onclick="newpass()">New</button></td>
+<td class="label">Title</td><td colspan="3"><input type="text" style="width:500px;" name="title"></td>
 </tr>
 <tr>
 <td class="label">Name</td><td><input type="text" style="width:210px;" name="name"></td><td class="label">Email</td><td><input type="text" style="width:210px;" name="email"></td>
@@ -12,12 +13,10 @@
 <tr>
 <td class="label">Comment</td><td colspan="3"><textarea style="width:500px;" rows="4" name="comment"></textarea></td>
 </tr>
-<tr class="hbox fbox">
-<td class="label">Images</td><td colspan="3"><input type="radio" name="images" value="y" checked>Enabled / <input type="radio" name="images" value="n">Disabled</td>
-</tr>
 <tr class="fbox obox">
-<td class="label">File</td><td colspan="2"><input type="file" name="file"> <a id="taf" href="javascript:void(0)" onclick="addFile('t',1)">[+]</a></td><td><input type="checkbox" name="spoiler" value="y">Spoiler Image</input></td>
+<td class="label">File</td><td colspan="2"><input type="file" name="file"></td><td><input type="checkbox" name="spoiler" value="y">Spoiler Image</input></td>
 </tr>
-<tr id="thook">
-<td class="label">Submit</td><td colspan="3"><input type="submit" name="submit" value="Submit"></td>
-</tr></table></form>
+<tr class="hbox fbox">
+<td class="label">Images</td><td colspan="2"><input type="radio" name="images" value="y" checked>Enabled / <input type="radio" name="images" value="n">Disabled</td><td><input type="submit" name="submit" value="Submit"></td>
+</tr>
+</table></form>

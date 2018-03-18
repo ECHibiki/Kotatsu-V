@@ -46,11 +46,16 @@ li{
 }
 .msg{
     background:#CFC;
-    border:1px solid #000;
+    border:2px outset #000;
     display:table;
     margin:0 auto;
-    padding:10px;
+    padding:7px;
     min-width:50%;
+}
+.msg2{
+    background:#EEE;
+    border:1px inset #EEE;
+    padding:7px;
 }
 .autotext{
     color:#000;

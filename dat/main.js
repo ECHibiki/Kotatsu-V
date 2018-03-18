@@ -1,130 +1,3 @@
-function mainf(){
-    if(typeof(Storage) !== "undefined"){
-        var p = localStorage.password || '';
-        if(p==''){
-            p = Math.random().toString(36).slice(-8);
-            localStorage.password = p;
-        }
-        var e = document.getElementsByName('pass');
-        e[0].value = p;
-        if(e.length==2)
-            e[1].value = p;
-    }
-
-    var path = window.location.pathname.split('/');
-    if(path.length!=3 || path[2]!='c'){
-        var e = document.getElementsByTagName('img');
-        for(var i=0, a; a=e[i]; ++i){
-            var ext = a.src.substring(a.src.length-7,a.src.length-4);
-            if(ext != 'swf' && ['banner','favicon','badge'].indexOf(a.id) == -1){
-                //a.addEventListener('click', imgswap);
-                if(localStorage.mmc=='none'){
-                    //a.parentElement.style="pointer-events:fill";
-                    a.parentElement.removeAttribute('href');
-                }
-                //a.addEventListener('load', function(){this.style.opacity="1.0";});
-/*                var bq = a.parentElement.nextSibling;
-                var w = a.width + 25;
-                if (typeof(bq) != "undefined")
-                    bq.style.marginLeft = w.toString()+'px';*/
-            }
-        }
-    }
-
-//    var path = window.location.pathname.split('/');
-    if (path[path.length-1] == 'l50' || path.length == 2){
-        var th = document.getElementsByClassName('thread');
-        for (var idw=0; idw < th.length; ++idw){
-            var bq = th[idw].getElementsByTagName('blockquote');
-            for (var idx=0; idx < bq.length; ++idx){
-                var links = bq[idx].getElementsByTagName('a');
-                for (var idy=0; idy < links.length; ++idy){
-                    var c = links[idy].href;
-                    var d = c.indexOf('#');
-                    if (d != -1){
-                        var e = Number(c.substring(d+1,c.length));
-                        if (e == 1 || (Number(bq[bq.length-1].parentElement.id) - e) < 50){
-                            c = c.substring(0,d)+'/l50'+c.substring(d,c.length);
-                            links[idy].href = c;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    var brkchr = [' ','　','<'];
-    e = Array.prototype.slice.call(document.getElementsByTagName('blockquote'),0).concat(Array.prototype.slice.call(document.getElementsByClassName('title'),0));
-    for(var i=0; i<e.length; ++i){
-        var t = e[i].innerHTML;
-        var c = 0;
-        var s = 0;
-        for(var j=0; j<t.length; ++j){
-            if(s == 0 && t[j] == '<'){
-                if(t[j+1]=='b' && t[j+2]=='r')
-                    c = 0;
-                else
-                    s = 1;
-            }
-            if(s == 0 && brkchr.indexOf(t[j]) == -1){
-                ++c;
-                if(c == 25){
-                    t = t.substring(0,j+1)+'<wbr>'+t.substring(j+1,t.length);
-                    c=0;
-                }
-            }else if(s == 0){
-                c=0;
-            }
-/*            if(s == 0 && t[j] == 'h'){
-                if(t.substring(j,j+7) == 'http://' || t.substring(j,j+8) == 'https://'){
-                    var d = 0;
-                    while(1){
-                        if(brkchr.indexOf(t[j+d]) != -1 || j+d == t.length){
-                            var add = t.substring(j,j+d);
-                            add = '<a href="'+add+'">'+add+'</a>';
-                            t = t.substring(0,j) + add + t.substring(j+d,t.length);
-                            j = j + add.length + 1;
-                            break;
-                        }
-                        ++d;
-                    }
-                }
-            }else if(s == 0 && t[j] == '['){
-                if(t[j+1] == 'j' && t[j+2] == 'a'){
-                    var idx = t.indexOf('[/ja]',j+4);
-                    var add = '<span class="ja">'+t.substring(j+4,idx)+'</span>';
-                    t = t.substring(0,j) + add + t.substring(idx+5,t.length);
-                    j = j + add.length + 1;
-                }
-            }*/
-            if(s == 1 && t[j] == '>')
-                s = 0;
-        }
-//        t = '<p>' + t.split('<br>').join('</p><p>') + '</p>';
-        e[i].innerHTML = t;
-    }
-
-    var s = document.getElementById('tools');
-    if(s)
-        s.onclick=tools;
-
-    var s = document.getElementById('srchbr');
-    if(s)
-        s.onkeypress=srchk;
-
-
-    if(document.getElementById("countDown") != null)
-        startCountDown();
-}
-
-/*function plink(n){
-    if(n!='x'){
-        var e = document.getElementsByName('comment')[0];
-        e.value += '>>'+n+'\n';
-        e.focus();
-    }
-}*/
-
 function watchThread(label, cnt){
     if(typeof(Storage) !== "undefined"){
         var t = localStorage.threads || '';
@@ -221,9 +94,12 @@ function checksize(max){
     return true;
 }
 
-function imgswap(){
-    var type = ''
-    var lst = this.src.split('/');
+function imgswap(e){
+    if (typeof e.src == 'undefined')
+        e = this;
+
+    var type = '';
+    var lst = e.src.split('/');
     var p = lst.slice(0, lst.length-1).join('/');
     var name = lst[lst.length-1];
     var ext = ''
@@ -251,17 +127,17 @@ function imgswap(){
     }
     //this.style.opacity="0.5";
     if(type=='img'){
-        var prnt = this.parentElement;
+        var prnt = e.parentElement;
         var nw = document.createElement('img');
         if(localStorage.mmc=='open') 
             nw.style.maxWidth=Number(document.body.offsetWidth-48).toString()+"px";
         nw.src = p+'/'+name;
         prnt.appendChild(nw);
-        prnt.removeChild(this);
+        prnt.removeChild(e);
         nw.addEventListener('click', imgswap);
     }
     if(type == 'video' || type == 'audio'){
-        var prnt = this.parentElement.parentElement;
+        var prnt = e.parentElement.parentElement;
         //this.parentElement.remove();
         if(prnt.style.display == 'table'){
             if(prnt.lastChild.tagName == 'DIV')
@@ -274,9 +150,9 @@ function imgswap(){
                     c[i].firstChild.addEventListener('click',imgswap);
                 }
             }
-            this.parentElement.style.opacity='0.5';
-            this.removeEventListener('click',imgswap);
-            this.addEventListener('click',hidev);
+            e.parentElement.style.opacity='0.5';
+            e.removeEventListener('click',imgswap);
+            e.addEventListener('click',hidev);
             var dw = document.createElement('div');
             if(name[0] == 'e'){
                 var ei = document.createElement('img');
@@ -284,12 +160,12 @@ function imgswap(){
                 dw.appendChild(ei);
             }
         }else{
-            this.parentElement.style.display='none';
+            e.parentElement.style.display='none';
             var aw = document.createElement('a');
             aw.href='javascript:void(0)';
 //            aw.setAttribute('onclick','hidev(this);');
             aw.addEventListener('click',hidev);
-            aw.setAttribute('thumb',this.parentElement.href);
+            aw.setAttribute('thumb',e.parentElement.href);
             if(type == 'audio' && name[0] == 'e')
                 aw.innerHTML = '<img src="'+p+'/'+name+'.jpg"><br>';
             else
@@ -376,9 +252,13 @@ function hidemenu(){
     document.getElementsByTagName('body')[0].style.marginLeft="5px";
     document.getElementsByTagName('body')[0].style.width="auto";
     document.getElementsByTagName('body')[0].style.border="none";
-    document.getElementById('nav').innerHTML='<a href="javascript:void(0)" onclick="showmenu()">show→</a> ';
+    var links = '<a href="javascript:void(0)" onclick="showmenu()">SideMenu</a> ';
+    document.getElementById('topnav').innerHTML = links;
+    document.getElementById('botnav').innerHTML = links;
     localStorage.menu='hide'
-    document.getElementById('toplinks').innerHTML=  '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/dat/rulesEN">Rules</a> <a href="/res/dat/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ]<br>[ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit/</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span><br>';
+    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/dat/rulesEN">Rules</a> <a href="/res/dat/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ] [ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit/</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span>';
+    document.getElementById('toplinks').innerHTML = links;
+    document.getElementById('botlinks').innerHTML = links;
 }
 
 function showmenu(){
@@ -386,15 +266,15 @@ function showmenu(){
     document.getElementsByTagName('body')[0].style.marginLeft="105px";
     document.getElementsByTagName('body')[0].style.width="auto";
     document.getElementsByTagName('body')[0].style.border="none";
-    document.getElementById('nav').innerHTML='';
-    localStorage.menu=''
+    document.getElementById('topnav').innerHTML='';
     document.getElementById('toplinks').innerHTML='';
+    document.getElementById('botnav').innerHTML='';
+    document.getElementById('botlinks').innerHTML='';
+    localStorage.menu=''
 }
 
 function checkmenu(){
     var e = document.getElementById('navlnks');
-    e.innerHTML = '<span id="nav"></span><a href="javascript:void(0)" onclick="window.scrollTo(0,0);">T</a> <a href="javascript:void(0)" onclick="window.scrollTo(0,document.body.scrollHeight);">B</a>';
-
     var m = localStorage.menu || '';
     if(m=='hide')
         hidemenu();

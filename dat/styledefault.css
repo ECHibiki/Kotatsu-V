@@ -43,12 +43,17 @@ li{
     display:table;
 }
 .msg{
-    background:#BDF;
+    background:#FEB;
     border:2px outset #CCC;
     display:table;
     margin:0 auto;
-    padding:10px;
+    padding:7px;
     min-width:50%;
+}
+.msg2{
+    background:#FFE;
+    border:1px inset #CCC;
+    padding:7px;
 }
 .autotext{
     color:#222;

@@ -2,6 +2,8 @@
 
 #NOTE: Because these settings are set as global variables making changes here requires restarting the server
 
+import re
+
 UsingCloudflare = False
 
 BasePath = '/home/wwwrun/4taba/' # Set this to the server root directory with a trailing /
@@ -16,8 +18,8 @@ BannerRotationTime = 5 # In minutes (This is only used if BannerRandom=False. Wh
 Banners = ( 'banner1.jpg', 'banner2.jpg', 'banner3.jpg' )
 
 # The credentials for connecting to the PostgreSQL database
-DBNAME = ''
-DBUSER = ''
+DBNAME = '4taba'
+DBUSER = 'postgres'
 DBHOST = '127.0.0.1'
 DBPASS = ''
 
@@ -27,9 +29,9 @@ DBPASS = ''
 # The displayMode option may either be "normal", "all" (posting disabled, displays all threads), "listed" (posting disabled, displays all threads from listed boards), "unlisted" (posting disabled, displays all threads from unlisted boards), or "flash" (flash-style thread listing)
 # The uploaders option determines who may upload files in a thread. Options are: "all", "OP", "posters", or "none"
 # The fileTypes option may either be "all", "noflash" (all filetypes except flash/html5), or "flash" (flash/html5)
-BoardInfo = { 'all': ('All Boards', 'main', '', 150, 'all', 'none', ''),
-            #'listed': ('All Listed Boards', 'main', '', 150, 'listed', 'none', ''),
+BoardInfo = { 'listed': ('All Listed Boards', 'main', '', 150, 'listed', 'none', ''),
             'unlisted': ('All Unlisted Boards', 'default', '', 150, 'unlisted', 'none', ''),
+            'all': ('All Boards', 'main', '', 150, 'all', 'none', ''),
             'a': ('Anime', 'yotsubab', 'Anonymous', 150, 'normal', 'all', 'noflash'),
             'ma': ('Manga', 'yotsubab', 'Anonymous', 150, 'normal', 'all', 'noflash'),
             'jp': ('Otaku Culture', 'dis', 'Anonymous', 150, 'normal', 'all', 'noflash'),
@@ -81,24 +83,24 @@ Filters = [
             # URL filter
             re.compile(r'(http://|https://|ftp://)([^ ]*)( |<)') # ( |<) not working right
 
-            [filter_post_link,
-                ['&gt;&gt;'], # >>
-                [' ', '<br>', '(', ')', '[', ']', '{', '}']],
-            [filter_quote,
-                ['&gt;'], # >
-                ['<br>']],
-            [filter_url,
-                ['https://','http://','ftp://'],
-                [' ', '<br>']],
-            [filter_code,
-                ['[code]'],
-                ['[/code]']],
-            [filter_spoiler,
-                ['[spoiler]'],
-                ['[/spoiler]']],
+#            [filter_post_link,
+#                ['&gt;&gt;'], # >>
+#                [' ', '<br>', '(', ')', '[', ']', '{', '}']],
+#            [filter_quote,
+#                ['&gt;'], # >
+#                ['<br>']],
+#            [filter_url,
+#                ['https://','http://','ftp://'],
+#                [' ', '<br>']],
+#            [filter_code,
+#                ['[code]'],
+#                ['[/code]']],
+#            [filter_spoiler,
+#                ['[spoiler]'],
+#                ['[/spoiler]']],
 
             # Example word filter
-            [filter_duck_roll,
-                ['egg'],
-                ['']],
+#            [filter_duck_roll,
+#                ['egg'],
+#                ['']],
 ]

@@ -1,11 +1,12 @@
-<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title>
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>%s</title>
+<link rel="shortcut icon" type="image/png" href="/res/dat/favicon.png"/>
 %s
 <script src="/res/dat/main.js">
 </script>
 <!--<script>applyStyle();</script>-->
 </head>
 
-<body %sonload="mainf()">
+<body %s>
 
 <div class="menu">
 <a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/dat/favicon.png" id="favicon">
@@ -13,6 +14,8 @@
 <a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
 <br>
 <ul>
+<li><a href="/listed">Listed</a></li>
+<li><a href="/unlisted">Unlisted</a></li>
 <li><a href="/all">All</a></li>
 </ul><hr>
 <b>Japan</b>
@@ -44,4 +47,7 @@
 </div>
 <div style="position:absolute;top:0px;right:0px">Page Style: <select onchange="changeStyle(this)"><option value="default">Default</option><option value="tomorrow"%s>Tomorrow</option></select></div>
 <div id="navlnks" style="position:fixed;top:0;right:0;background:#FFF;"></div>
-<span id='toplinks'></span><script>checkmenu()</script>
+
+<div>
+<a href="javascript:void(0)" onclick="window.scrollTo(0,0);">▲</a> <a href="javascript:void(0)" onclick="window.scrollTo(0,document.body.scrollHeight);">▼</a> <span id="topnav"></span> <span id="toplinks"></span>
+</div>
