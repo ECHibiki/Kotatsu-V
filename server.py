@@ -369,13 +369,21 @@ def processComment(comment, board, thread, last50, limited): # Process the user 
 def setOptions(options): # Set options from the "Email" field on the post form
     bump = 1
     email = options if Allow_Email else ''
+    target = 0
+
     options = options.split(' ')
     for i in options:
         if i.lower() in ['sage','さげ','下げ']: # Different ways a post can be saged
             bump = 0
             if not Allow_Email:
                 email = i # Even with email disabled the options used will still show as "mailto"
-    return bump,email
+        try:
+            target = int(i)
+            if target<2:
+                target = 0
+        except(ValueError):
+            pass
+    return bump,email,target
 
 def getStyle(b): # Return the board style
     if b in BoardInfo:
@@ -834,7 +842,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
         images = True if 'y' in [escape(images) for images in post.getlist('images')] else False
         spoiler = True if 'y' in [escape(spoiler) for spoiler in post.getlist('spoiler')] else False
 
-        bump,email = setOptions(options)
+        bump,email,target = setOptions(options)
         if name == '':
             name = username
         if admin and name == admin: name = '<span style="color:#AA0;text-shadow:1px 1px #000;">'+admin+'</span>'
@@ -889,9 +897,8 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
             else:
                 Cur.execute('INSERT INTO board.unlisted VALUES (%s, %s, 0, %s, %s, 0, %s, %s);', (threadnum, timestamp, board, timestamp, title, images))
 
-            Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (time_string text, file_path text, comment text, file_name text, name text, ip text, postnum serial, hidden boolean, image_size text, image_width integer, session text);')
-            Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width), session))
-            #Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, \'2\', 0, %s, 0), (%s, %s, %s, %s, %s, %s, DEFAULT, \'1\', 0, %s, %s);', (title, '', images, '', '', '', '', strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width)))
+            Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (time_string text, file_path text, comment text, file_name text, name text, ip text, postnum serial, hidden boolean, image_size text, image_width integer, session text, subs boolean);')
+            Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width), session))
             DBconnection.commit()
             #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'/'+str(threadnum)+'");}</script></head><body onload="redirect()"><h1>Thread submitted successfully...</h1></body></html>'
             return [page_redirect(path+'/'+str(threadnum)+'/l50', 'Thread submitted successfully...'), set_cookie]
@@ -908,17 +915,25 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
 
                 #Cur.execute('SELECT hidden FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=0;')
                 #dnum = Cur.fetchone()[0]
-                Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width), session))
-                #Cur.execute('UPDATE thread."'+board+'/'+str(mode)+'" SET hidden=%s WHERE postnum=0;', (str(int(dnum)+1),))
 
-                #Cur.execute('SELECT postnum FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=(SELECT max(postnum) FROM thread."'+board+'/'+str(mode)+'");')
-                #postnum = Cur.fetchone()[0]
-                Cur.execute('UPDATE board."'+board+'" SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s;', (str(threadnum),))
-                if listed:
-                    Cur.execute('UPDATE board.listed SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
+                if not target:
+                    Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width), session))
+                    #Cur.execute('UPDATE thread."'+board+'/'+str(mode)+'" SET hidden=%s WHERE postnum=0;', (str(int(dnum)+1),))
+
+                    #Cur.execute('SELECT postnum FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=(SELECT max(postnum) FROM thread."'+board+'/'+str(mode)+'");')
+                    #postnum = Cur.fetchone()[0]
+                    Cur.execute('UPDATE board."'+board+'" SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s;', (str(threadnum),))
+                    if listed:
+                        Cur.execute('UPDATE board.listed SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
+                    else:
+                        Cur.execute('UPDATE board.unlisted SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
+                    DBconnection.commit()
                 else:
-                    Cur.execute('UPDATE board.unlisted SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
-                DBconnection.commit()
+                    Cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'sub\' AND table_name=\''+board+'/'+str(threadnum)+'/'+str(target)+'\');')
+                    if not Cur.fetchone()[0]:
+                        Cur.execute('CREATE TABLE sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" (time_string text, comment text, ip text, postnum serial, hidden boolean, session text);')
+                        Cur.execute('UPDATE thread."'+board+'/'+str(threadnum)+'" SET subs=true WHERE postnum=%s;', (target,))
+                    Cur.execute('INSERT INTO sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" VALUES (%s, %s, %s, DEFAULT, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), comment, ip, session))
             except(psycopg2.ProgrammingError):
                 Cur.execute("ROLLBACK")
                 return [page_error('Error creating post.'), set_cookie]
@@ -949,9 +964,9 @@ def fill_header(header, mode, board, title, userquery, mixed, tboard, imageAllow
         styles = '<link rel="stylesheet" type="text/css" title="default" href="/res/dat/style'+boardStyle+'.css"><link rel="stylesheet" type="text/css" title="default" href="/res/dat/styleThreads.css">'
 
     if mode < 0:
-        header = header % ('/'+board+'/', styles+('<style>.postForm{display:none;}</style>' if board in ['listed','unlisted','all'] else '')+('<style>.pon{display:none;}</style>' if board not in ['listed','unlisted','all'] and not mixed else ''), '', ' bg', BannerCurrent, '/'+(userquery+'/ - Mixed Board<br>/'+board+'/ main' if mixed else board+'/ - '+boardTitle), boardMessage)
+        header = header % ('/'+board+'/', styles+('<style>.postForm{display:none;}</style>' if board in ['listed','unlisted','all'] else '')+('<style>.tag{display:none;}</style>' if board not in ['listed','unlisted','all'] and not mixed else ''), '', ' bg', BannerCurrent, '/'+(userquery+'/ - Mixed Board<br>/'+board+'/ main' if mixed else board+'/ - '+boardTitle), boardMessage)
     else:
-        header = header % ('/'+board+'/ '+title, styles+'<style>.hbox{display:none;}'+('.fbox{display:none;}' if imageAllow==0 else '')+'.tb{background:transparent !important;}</style>', 'style="height:100%;margin-left:105px;padding:0px;border:none;box-shadow:none" class="style'+boardStyle+'" ', '')
+        header = header % ('/'+board+'/ '+title, styles+'<style>.hbox{display:none;}'+('.fbox{display:none;}' if imageAllow==0 else '')+'.tb{background:transparent !important;} .thread{border:none;}</style>', 'style="height:100%;margin-left:105px;padding:0px;border:none;box-shadow:none" class="style'+boardStyle+'" ', '')
     return header
 
 def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, admin, cookieStyle):
@@ -1011,10 +1026,10 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
 
             try:
                 if mode < 0:
-                    Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC LIMIT 2;')
+                    Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC LIMIT 1;')
                     posts = Cur.fetchall()
                     if catalog == 0:
-                        Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC '+('LIMIT 5 OFFSET '+str(thread[2]-3) if thread[2]>5 else 'OFFSET 2')+';')
+                        Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC '+('LIMIT 5 OFFSET '+str(thread[2]-4) if thread[2]>5 else 'OFFSET 1')+';')
                         for i in Cur.fetchall():
                             posts.append(i)
                 else:
@@ -1054,6 +1069,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
 
             if catalog == 0:
                 response_body += '<div style="clear:both;"></div></div></div>'
+                #response_body += '<div style="clear:both;"></div></div>'
             else:
                 response_body += '</div>'
 
@@ -1064,20 +1080,32 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
         if board == 'f' and mode<0:
             response_body += '</table></center>'
         
-    response_body += ('</div>' if catalog==1 else '') + (FbEN if mode>-1 else '') + tableFoot + '<br><br><a href="javascript:void(0)" onclick="window.scrollTo(0,0);">▲</a> <a href="javascript:void(0)" onclick="window.scrollTo(0,document.body.scrollHeight);">▼</a> <span id="botnav"></span> <span id="botlinks"></span><script>checkmenu()</script><hr><div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/dat/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/dat/gentoo-badge3.png" id="badge"></div></div></td></tr></table></body></html>'
+    response_body += ('</div>' if catalog==1 else '') + (FbEN if mode>-1 else '') + tableFoot + '<br><br><a href="javascript:void(0)" onclick="window.scrollTo(0,0);">▲</a> <span id="botnav"></span> <span id="botlinks"></span><script>checkmenu()</script><hr><div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/dat/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/dat/gentoo-badge3.png" id="badge"></div></div></td></tr></table></body></html>'
 
     return response_body_header + tableFoot + response_body
 
-def buildPost(OP, last50, admin, mode, board, thread, post, ip):
+def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
     threadnum, bump_time, post_count, posted_on, creation_time, delection_time, title, imageAllow = thread
-    time_string, file_path, post_comment, file_name, name, post_ip, postnum, hidden, image_size, image_width, session = post
+    if not sub:
+        time_string, file_path, post_comment, file_name, name, post_ip, postnum, hidden, image_size, image_width, session, subs = post
+    else:
+        time_string, post_comment, post_ip, postnum, hidden, session = post
+        file_path = ''
+        file_name = ''
+        name = ''
+        image_size = ''
+        image_width = 25
+        subs = False
     #hidden = bool(hidden)
     fswitch = 1
     response_body = ''
     if OP:
         divclass = 'thread'
     else:
-        divclass = 'post'
+        if not sub:
+            divclass = 'post'
+        else:
+            divclass = ''
 
     # Flash frontpage
     if board == 'f' and mode<0:
@@ -1097,7 +1125,8 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip):
                 fswitch = 1
 
     else:
-        response_body += ('<div'+(' class="style'+getStyle(posted_on)+'"' if mode<0 else '')+'>' if OP==1 else '')+'<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'&nbsp;<span class="title" style="font-size:initial;"><a href="/'+posted_on+'/'+str(threadnum)+'">View</a>|<a onclick="watchThread(\''+posted_on+'/'+str(threadnum)+'\','+str(post_count)+');" href="javascript:void(0)">Watch</a></span></div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> '+time_string+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
+        #response_body += ('<div'+(' class="style'+getStyle(posted_on)+'"' if mode<0 else '')+'>' if OP==1 else '')+'<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'&nbsp;<span class="title" style="font-size:initial;"><a href="/'+posted_on+'/'+str(threadnum)+'">View</a>|<a onclick="watchThread(\''+posted_on+'/'+str(threadnum)+'\','+str(post_count)+');" href="javascript:void(0)">Watch</a></span></div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> '+time_string+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
+        response_body += '<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+('style'+getStyle(posted_on)+' ' if OP else '')+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<div class="threadbody">' if OP else '')+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a> <a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'</div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">'+time_string+'</span>'+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
 
         imglst = file_name.split('/')
         if imglst[0] != '':
@@ -1126,8 +1155,17 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip):
         else:
             comment = '<br>'.join(comment)
         response_body += ('<td style="padding-top:10px'+('; padding-left:25px' if file_path=='' else '')+'">' if not OP else '')+('<blockquote style="margin-left:'+str(image_width)+'px">' if OP else '')+comment+('</td>' if not OP else '</blockquote>')
+
         if not OP:
-            response_body += '</tr></table></div>'
+            response_body += '</tr></table>'
+            if not sub and subs:
+                Cur.execute('SELECT * FROM sub."'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" ORDER BY postnum DESC;')
+                response_body += '<div class="sub">'
+                subposts = Cur.fetchall()
+                for subpost in subposts:
+                    response_body +=  buildPost(False, False, '', 0, posted_on, thread, subpost, ip, True)
+                response_body += '</div>'
+            response_body += '</div>'
         else:
             if mode<0 and post_count-5 > 0:
                 response_body += '<span class="foot">'+str(post_count-5)+' posts omitted</span>'

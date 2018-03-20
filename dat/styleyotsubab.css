@@ -1,25 +1,19 @@
+@charset "UTF-8";
+
 body{
+    font-family:"Arial","Liberation Sans";
     font-size:13px;
-    font-family:"Arial";
-    background:#EEF2FF;
-    #background-image:-moz-linear-gradient(top, #D1D5EE 0%, #EEF2FF 180px);
+    color:#000;
+    background:#eef2ff;
+    background-image:-moz-linear-gradient(top, #d1d5ee 0%, #eef2ff 180px);
     background-repeat:no-repeat;
+
     height:100%;
     margin:10px 0px 30px 105px;
-    background:#EEF2FF;
-    background-image:-moz-linear-gradient(top, #D1D5EE 0%, #EEF2FF 180px);
 }
-h1{
-    color:#d11;
-    text-align:center;
-}
-input{
+input textarea{
+    font-family:"Arial","Liberation Sans";
     font-size:13px;
-    font-family:"Arial";
-}
-textarea{
-    font-size:13px;
-    font-family:"Arial";
 }
 img{
     float:left;
@@ -27,55 +21,61 @@ img{
 }
 hr{
     border:none;
-    border-top:1px solid #B7C5D9 !important;
-}
-ul{
-    margin:0px;
-    padding-left:15px;
-}
-li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
-.postForm{
-    background:#EEF2FF;
-    margin-top:5px;
-    margin-bottom:5px;
-}
-.postForm td{
-    background:#BBD0F0;
-    border-left:1px solid #B7C5D9;
-    border-right:1px solid #B7C5D9;
+    border-top:1px solid #b7c5d9;
 }
 .banner{
     display:table;
 }
 .msg{
-    background:#BBD0F0;
-    border:2px solid #AAB;
+    background:#bbd0f0;
+    border:2px solid #aab;
+
     display:table;
     margin:0 auto;
-    padding:10px;
+    padding:7px;
     min-width:50%;
 }
+.boardTitle{
+    color:#c00;
+    text-align:center;
+}
+.postForm{
+    background:#eef2ff;
+    background:transparent;
+
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.postForm td{
+    background:#bbd0f0;
+}
 .label{
-    background:#98E;
+    background:#98e;
+    border:1px solid #aab;
+
     padding:0px 3px 0px 1px;
 }
 .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    font-family:"Arial", "MS PGothic";
-    background:#EEF2FF;
-    border-right:1px solid #B7C5D9;
+    background:#eef2ff;
+    border-right:1px solid #b7c5d9;
+
     position:fixed;
-    left:0px;
     top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
     margin:0px;
     padding:0px;
     height:100%;
-    width:100px;
-    overflow:hidden;
 }
-.menu hr{
-    border:1px inset #DDD;
+.menu hr{}
+.menu ul{
+    margin:0px;
+    padding-left:15px;
+}
+.menu li{
+    padding-top:2px;
+    padding-bottom:2px;
 }

@@ -1,5 +1,5 @@
-This board displays threads from all boards including unlisted boards.<br>
+This board displays threads from all unlisted boards.<br>
 <br>
 To prevent threads on a particular board from being displayed simply subtract it from /all/ in the URL bar.<br>
 For example, to remove threads from /meta/ visit:<br>
-<a href="/all-meta">&gt;&gt;&gt;/all-meta/</a>
+<a href="/unlisted-meta">&gt;&gt;&gt;/unlisted-meta/</a>

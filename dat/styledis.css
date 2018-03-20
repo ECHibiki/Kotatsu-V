@@ -1,85 +1,84 @@
+@charset "UTF-8";
+
 body{
-    background:#DCB;
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
     font-size:16px;
-    font-family:"MS PGothic","Konatu","Mona","IPAMonaPGothic","Gothic";
     color:#000;
+    background:#dcb;
+    background-image: url(data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=);
+
     height:100%;
     margin:10px 0px 30px 105px;
-    background-image: url(data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=);
 }
-h1{
-    color:#000;
-    text-align:center;
-}
-input{
+input,textarea{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
     font-size:16px;
-    font-family:"MS PGothic","Konatu","Mona","IPAMonaPGothic","Gothic";
-}
-textarea{
-    font-size:16px;
-    font-family:"MS PGothic","Konatu","Mona","IPAMonaPGothic","Gothic";
+    background:#ddd;
+    border:1px inset #888;
 }
 img{
     float:left;
     margin:5px 10px 5px 5px;
 }
-ul{
-    margin:0px;
-    padding-left:15px;
-}
-li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
-.postForm{
-    background:#CFC;
-    border:1px solid black;
-    margin-top:5px;
-    margin-bottom:5px;
-    
-}
-.postForm td{
-    background:#CFC;
-}
 .banner{
     display:table;
 }
 .msg{
-    background:#CFC;
+    background:#eee;
     border:2px outset #000;
+
     display:table;
     margin:0 auto;
     padding:7px;
     min-width:50%;
 }
 .msg2{
-    background:#EEE;
-    border:1px inset #EEE;
+    background:#cfc;
+    border:1px inset #eee;
+
     padding:7px;
 }
-.autotext{
+.boardTitle{
     color:#000;
-    margin-bottom:10px;
+    text-align:center;
+}
+.postForm{
+    background:#eee;
+    border:1px solid #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:5px;
 }
 .label{
-    color:#000;
     background:#CFC;
-    border:none;
+    border:1px inset #888;
+
+    padding:0px 3px 0px 1px;
 }
 .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    font-family:"Arial", "MS PGothic";
-    background:#EDC;
+    background:#edc;
     border-right:1px solid #888;
+
     position:fixed;
-    left:0px;
     top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
     margin:0px;
     padding:0px;
     height:100%;
-    width:100px;
-    overflow:hidden;
 }
 .menu hr{
-    border:1px inset #DDD;
+    border:1px inset #ddd;
+}
+.menu ul{
+    margin:0px;
+    padding-left:15px;
+}
+.menu li{
+    padding-top:2px;
+    padding-bottom:2px;
 }

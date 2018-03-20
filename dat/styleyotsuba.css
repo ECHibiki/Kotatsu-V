@@ -1,24 +1,19 @@
+@charset "UTF-8";
+
 body{
-    color:#800000;
+    font-family:"Arial","Liberation Sans";
     font-size:13px;
-    font-family:"Arial";
-    background:#FFE;
+    color:#800000;
+    background:#ffe;
+    background-image:-moz-linear-gradient(top, #fed6af 0%, #ffe 180px);
+    background-repeat: no-repeat;
+
     height:100%;
     margin:10px 0px 30px 105px;
-    background:#FFE;
-    background-image:-moz-linear-gradient(top, #FED6AF 0%, #FFE 180px);
-    background-repeat: no-repeat;
 }
-h1{
-    text-align:center;
-}
-input{
+input textarea{
+    font-family:"Arial","Liberation Sans";
     font-size:13px;
-    font-family:"Arial";
-}
-textarea{
-    font-size:13px;
-    font-family:"Arial";
 }
 img{
     float:left;
@@ -26,55 +21,59 @@ img{
 }
 hr{
     border:none;
-    border-top:1px solid #D9BFB7 !important;
-}
-ul{
-    margin:0px;
-    padding-left:15px;
-}
-li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
-.postForm{
-    background:transparent;
-    border:none;
-    margin-top:5px;
-    margin-bottom:5px;
-}
-.postForm td{
-    background:#FED6AF;
+    border-top:1px solid #D9BFB7;
 }
 .banner{
     display:table;
 }
 .msg{
-    background:#FED6AF;
+    background:#fed6af;
     border:1px solid #800000;
+
     display:table;
     margin:0 auto;
     padding:10px;
     min-width:50%;
 }
+.boardTitle{
+    text-align:center;
+}
+.postForm{
+    background:transparent;
+
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.postForm td{
+    background:#fed6aF;
+}
 .label{
-    background:#EA8;
-    padding:0px 3px 0px 1px;
+    background:#ea8;
     border:1px solid #800000;
+
+    padding:0px 3px 0px 1px;
 }
 .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    font-family:"Arial", "MS PGothic";
-    background:#FFE;
-    border-right:1px solid #D9BFB7;
+    background:#ffe;
+    border-right:1px solid #d9bfb7;
+
     position:fixed;
-    left:0px;
     top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
     margin:0px;
     padding:0px;
     height:100%;
-    width:100px;
-    overflow:hidden;
 }
-.menu hr{
-    border:1px inset #DDD;
+.menu hr{}
+.menu ul{
+    margin:0px;
+    padding-left:15px;
+}
+.menu li{
+    padding-top:2px;
+    padding-bottom:2px;
 }

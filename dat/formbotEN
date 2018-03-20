@@ -1,8 +1,5 @@
 <form enctype="multipart/form-data" action="" method="post" onsubmit="localStorage.password=document.getElementById('p2').value;return checksize(12582912);">
 <table id="btab">
-<tr class="hbox">
-<td class="label">Title</td><td><input type="text" style="width:210px;" name="title"></td><td class="label">Password</td><td><input type="text" style="width:210px;" name="pass" id="p2"></td>
-</tr>
 <tr>
 <td class="label">Name</td><td><input type="text" style="width:210px;" name="name"></td><td class="label">Email</td><td><input type="text" style="width:210px;" name="email"></td>
 </tr>

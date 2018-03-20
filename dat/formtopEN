@@ -1,7 +1,7 @@
 <center><div style="margin:0 auto;" class="banner"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/dat/%s"></div></center>
 <hr>
 
-<div class="msg"><div class="msg2"><h1>%s</h1>%s</div></div>
+<div class="msg"><div class="msg2"><h1 class="boardTitle">%s</h1>%s</div></div>
 <form align="center" enctype="multipart/form-data" action="" method="post" onsubmit="localStorage.password=document.getElementById('p1').value;return checksize(12582912);">
 <table class="postForm" id="ttab" align="center">
 <tr class="hbox">

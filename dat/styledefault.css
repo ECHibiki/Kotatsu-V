@@ -1,83 +1,81 @@
+@charset "UTF-8";
+
 body{
+    font-family:"Arial","Liberation Sans";
     font-size:13px;
-    font-family:"Arial";
+    color:#000;
+    background:#ddd;
+
     height:100%;
     margin:10px 0px 30px 105px;
-    background:#DDD;
-    #background-image:-moz-linear-gradient(top, #ECD 0%, #FEF 180px);
-    #background-repeat: no-repeat;
-    #background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QcPAhwy1qt2cgAAAShJREFUaN7tmDEShCAMRV3Fxo6C+9/DK9nbADNbbLMzIoZRTAI/3Y7OyuPnJ4HPuq4DIYwx/z+naTq+M89z5h/yT/Ofy8Q4lEdy9VwxPrUfRRv8NoDk6ACAYl8oAID79Vi3Alw1tBhAmoMvAB7Mn3oSoQqJBZBff4oVEOhgeAAAtQC0OFiuAiEEWQDee3igc4BMF2OcpdMAikoQPACAlgGIvQwK1OyylDBKN37bNukA+77HGC+9wQngvb+ffubN5Qr1wLIsjOYmAVhr6ScMnirknFNajozepYvoxPfPElQAsYcEzEIA6Avg2I6gQLUBKTmKwgNdAbxzY1cAILMZa0qh5EgPDwCgTQBiF9OkwNmhHCnUMMCD90KZSx1OBc4I6Q5GCrHWn198AXBLS0vg1X4hAAAAAElFTkSuQmCC')
 }
-h1{
-    color:#C00;
-    text-align:center;
-}
-input{
+input textarea{
+    font-family:"Arial","Liberation Sans";
     font-size:13px;
-    font-family:"Arial";
-}
-textarea{
-    font-size:13px;
-    font-family:"Arial";
 }
 img{
     float:left;
     margin:5px 10px 5px 5px;
 }
-ul{
-    margin:0px;
-    padding-left:15px;
-}
-li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
-.postForm{
-    background:#BDF;
-    border:2px outset #CCC;
-    margin-top:5px;
-    margin-bottom:5px;
-    padding:5px;
-}
 .banner{
     display:table;
 }
 .msg{
-    background:#FEB;
-    border:2px outset #CCC;
+    background:#feb;
+    border:2px outset #ccc;
+
     display:table;
     margin:0 auto;
     padding:7px;
     min-width:50%;
 }
 .msg2{
-    background:#FFE;
+    background:#ffe;
     border:1px inset #CCC;
+
     padding:7px;
 }
-.autotext{
-    color:#222;
+.boardTitle{
+    color:#c00;
+	text-align:center;
+}
+.postForm{
+    background:#bdf;
+    border:2px outset #ccc;
+
     margin-top:5px;
+    margin-bottom:5px;
+    padding:5px;
 }
 .label{
-    background:#FEB;
-    border:2px inset #EDC;
+    background:#feb;
+    border:2px inset #edc;
+
     padding:0px 3px 0px 1px;
 }
 .menu{
-    background:#EDC;
-    border-right:1px solid #888;
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    font-family:"Arial", "MS PGothic";
+    background:#edc;
+    border-right:1px solid #888;
+
     position:fixed;
-    left:0px;
     top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
     margin:0px;
     padding:0px;
     height:100%;
-    width:100px;
-    overflow:hidden;
 }
 .menu hr{
-    border:1px inset #DDD;
+    border:1px inset #ddd;
+}
+.menu ul{
+    margin:0px;
+    padding-left:15px;
+}
+.menu li{
+    padding-top:2px;
+    padding-bottom:2px;
 }
