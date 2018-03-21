@@ -1,36 +1,94 @@
-function watchThread(label, cnt){
-    if(typeof(Storage) !== "undefined"){
-        var t = localStorage.threads || '';
-        var threads = t.split(' ');
-        if(threads.indexOf(label) == -1){
-            if(threads[0] == ''){
-                threads[0] = label;
-            }else{
-                threads.push(label);
-            }
-            localStorage.threads = threads.join(' ');
-        }
+/**
+ *
+ * @source: https://4taba.net/res/dat/main.js
+ *
+ * @licstart  The following is the entire license notice for the 
+ *  JavaScript code in this page.
+ *
+ * Copyright (C) 2018  4taba
+ *
+ *
+ * The JavaScript code in this page is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this page.
+ *
+ */
 
-        var tempobj = document.getElementById('OP'+label).parentElement.parentElement;
-        var temp = tempobj.innerHTML;
-        if(document.body.className=='')
-            var cl = tempobj.className;
-        else
-            var cl = document.body.className;
-        //var ti = temp.indexOf('</div>');
-        var ti = temp.indexOf('<a onclick="watch')-1;
-        localStorage.setItem('t'+label, temp.substring(0, ti)+'</span>');
-        //var idx = temp.indexOf('<a onclick="watch')-2;
-        //var op = temp.substring(ti+6, idx);
-        //op += temp.substring(temp.indexOf('</a>',idx)+5, temp.indexOf('</blockquote>')+13);
-        var op = temp.substring(temp.indexOf('</div>', ti)+6, temp.indexOf('</blockquote>')+13);
+function watchThread(label, timestamp){
+// Three different ways to store watched thread list:
+// 1) No Javascript - this onclick function is ignored and the user makes a call to the server to calculate the new value of their cookie for them
+// 2) Yes Javascript, No localStorage - return false from this function to block server call, use Javascript to update the users threadlist cookie
+// 3) Yes Javascript, Yes localStorage - return false from this function to block side call, use Javascript to update the users threadlist in localStorage
+////
+//// NOTE: Watch button should have property onclick="return watchThread()" which can be used to block the link if it returns false (in this case, if Javascript is enabled)
 
-        localStorage.setItem('o'+label, op);
-        localStorage.setItem('p'+label, cnt.toString());
-        localStorage.setItem('c'+label, cl);
+    if (label == "")
+        return false;
+
+    if (typeof(Storage) !== "undefined"){
+    // USE LOCAL STORAGE
+        var ls = true;
+        var val = localStorage.threads || '';
     }else{
-        alert("Your browser does not support local storage objects. Please email me with your browser details, if enough people have this issue on various browsers I'll try to come up with a solution.");
+    //USE COOKIES
+        var ls = false;
+        var c = document.cookie.split(';');
+        var val = '';
+        for (var i = 0; i < c.length; ++i){
+            var idx = c[i].indexOf('=');
+            if (idx >= 0){
+                var key = c[i].substring(0, idx);
+                var jdx = key.indexOf(' ');
+                if (jdx >= 0)
+                    key = key.substring(0, jdx);
+
+                if (key == 'threads'){
+                    val = c[i].substring(idx+1, c[i].length);
+                    while (val.length>0 && val[0] == " "){
+                        val = val.substring(1, val.length);
+                    }
+                    break;
+                }
+            }
+        }
     }
+
+    var index = 0;
+    var threads = val.split(' ');
+    for (var tdx = 0; tdx<threads.length; ++tdx){
+        var edx = threads[tdx].indexOf('!');
+        if (label == threads[tdx] || label == threads[tdx].substring(0, edx)){
+        // Already watching thread; just update timestamp
+        }else{
+        // Not watching thread yet; add it to the list
+        }
+    }
+
+/*    if(threads.indexOf(label) == -1){
+        if(threads[0] == ''){
+            threads[0] = label;
+        }else{
+            threads.push(label);
+        }
+        localStorage.threads = threads.join(' ');
+    }
+
+    localStorage.setItem('ts'+label, timestamp.toString());*/
+
+    return false;
 }
 
 function unhide(e){
