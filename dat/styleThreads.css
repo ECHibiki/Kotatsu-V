@@ -6,13 +6,30 @@ blockquote{
     margin:0px 0px 10px 0px;
 }
 .thread{
-    display:table;
+    white-space:pre;
+    word-break:normal;
+    word-wrap:break-word;
+    display:block;
 
+    max-width:1600px;
     margin:7px;
-    margin:7px auto;
     padding:7px;
-    width:auto;
     height:auto;
+}
+.post{
+    display:table;
+    height:auto;
+    padding:5px 15px 2px 5px;
+    margin:4px 4px 4px 5px;
+
+
+    #width:auto;
+    #width:800px;
+    max-width:95%;
+    white-space:pre;
+    word-break:normal;
+    word-wrap:break-word;
+    display:inline-block;
 }
 .tb{
     margin:0px 0px 4px 0px;
@@ -51,13 +68,6 @@ blockquote{
 }
 .sp{
     background:#000;
-}
-.post{
-    display:table;
-    width:auto;
-    height:auto;
-    padding:5px 15px 2px 5px;
-    margin:4px 4px 4px 5px;
 }
 .del{
     border:2px solid red !important;

@@ -1142,23 +1142,22 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
                 response_body += '<a href="javascript:void(0)" onclick="mod(\'warn\','+str(postnum)+')">Warn</a> | <a href="javascript:void(0)" onclick="mod(\'del\','+str(postnum)+')">Del</a> | <a href="javascript:void(0)" onclick="mod(\'ban\','+str(postnum)+')">Ban</a>'
 
         if not OP:
-            #response_body += '<table><tr style="vertical-align:top">'
-            pass
+            response_body += '<table><tr style="vertical-align:top">'
         if file_path != '':
             imglst = file_path.split('/')
             response_body += ('<div'+(' style="display:table"' if len(imglst)>1 else '')+'>') if OP else ''
             for imge in imglst:
-                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img src="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'.jpg" onclick="imgswap(this)"></a>'
+                response_body += ('<td>' if not OP else '')+'<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img src="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'.jpg" onclick="imgswap(this)"></a>'+('</td>' if not OP else '')
             response_body += '</div>' if OP else ''
         comment = post_comment.split('<br>')
         if mode<0 and len(comment)>20:
             comment = '<br>'.join(comment[:20])+'<span class="long"><br>...<br>Comment too long. View thread to see entire comment.</span>'
         else:
             comment = '<br>'.join(comment)
-        response_body += '<blockquote style="margin-left:'+str(image_width)+'px">'+comment+'</blockquote>'
+        response_body += ('<td style="padding-top:10px'+('; padding-left:25px' if file_path=='' else '')+'">' if not OP else '')+('<blockquote style="margin-left:'+str(image_width)+'px">' if OP else '')+comment+('</td>' if not OP else '</blockquote>')
 
         if not OP:
-            #response_body += '</tr></table>'
+            response_body += '</tr></table>'
             if not sub and subs:
                 Cur.execute('SELECT * FROM sub."'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" ORDER BY postnum DESC;')
                 response_body += '<div class="sub">'
@@ -1166,7 +1165,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
                 for subpost in subposts:
                     response_body +=  buildPost(False, False, '', 0, posted_on, thread, subpost, ip, True)
                 response_body += '</div>'
-            response_body += '</div><br>'
+            response_body += '</div>'
         else:
             if mode<0 and post_count-5 > 0:
                 response_body += '<span class="foot">'+str(post_count-5)+' posts omitted</span>'
