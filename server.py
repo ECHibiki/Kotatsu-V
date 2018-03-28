@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 # 4taba.net server code
-# Made for Apache + mod_wsgi with python3 (python2 will give encoding or library errors) with Apache configured to serve this script for all requests made to the server aside from static files located at <server_root>/dat
+# Made for Apache + mod_wsgi with python3 (python2 will give encoding or library errors) with Apache configured to serve this script for all requests made to the server aside from static files located at <server_root>/res
 # Before running make sure to complete the following initialization steps first:
 #     * Start postgresql, set the database information inside the "dbinit_4taba" script and then run it to initialize the database
-#     * create a <server_root>/dat/brd directory to hold user uploaded files
+#     * create a <server_root>/res/brd directory to hold user uploaded files
 
-BasePath = '/home/wwwrun/4taba'
 
 import os
 import math
@@ -19,14 +18,16 @@ from PIL import Image
 from shutil import rmtree, copyfile, move
 from random import randint
 
-os.chdir(BasePath)
-import sys
-sys.path.append(BasePath)
-
 #from settings.default_settings import *
 #from settings.local_settings import *
 from default_settings import *
 from local_settings import *
+
+os.chdir(BasePath)
+import sys
+sys.path.append(BasePath)
+
+BoardGreetingDir = BasePath + '/bMessages'
 
 if UsingCloudflare:
     IP_HEADER = 'HTTP_CF_CONNECTING_IP'
@@ -38,11 +39,11 @@ Cur = None
 
 BannerCurrent = ''
 
-with open(BasePath+'dat/headerEN','r') as f:
+with open(BasePath+'res/headerEN','r') as f:
     PageHeader = f.read()
-with open(BasePath+'dat/formtopEN','r') as f:
+with open(BasePath+'res/formtopEN','r') as f:
     FtEN = f.read()
-with open(BasePath+'dat/formbotEN','r') as f:
+with open(BasePath+'res/formbotEN','r') as f:
     FbEN = f.read()
 
 BoardGreetings = {}
@@ -444,11 +445,11 @@ def modAction(password, admin, ip, a, b, t, p): # Uh oh, a mod is taking action
             if len(Cur.fetchall()) == 0:
                 Cur.execute('DROP TABLE board."'+b+'";')
                 #DBconnection.commit()
-            if os.path.exists(BasePath+'dat/brd/'+b+'/'+t):
-                rmtree(BasePath+'dat/brd/'+b+'/'+t)
-            if os.listdir(BasePath+'dat/brd/'+b) == []:
-                if os.path.exists(BasePath+'dat/brd/'+b):
-                    os.rmdir(BasePath+'dat/brd/'+b)
+            if os.path.exists(BasePath+'res/brd/'+b+'/'+t):
+                rmtree(BasePath+'res/brd/'+b+'/'+t)
+            if os.listdir(BasePath+'res/brd/'+b) == []:
+                if os.path.exists(BasePath+'res/brd/'+b):
+                    os.rmdir(BasePath+'res/brd/'+b)
         elif a == 'warn':
             Cur.execute('UPDATE thread."'+b+'/'+t+'" SET comment = comment || \'<br><br><span class="warn">USER WAS WARNED FOR THIS POST</span>\' WHERE postnum=%s;', (p,))
         elif a == 'del':
@@ -480,9 +481,9 @@ def modAction(password, admin, ip, a, b, t, p): # Uh oh, a mod is taking action
                     Cur.execute('DROP TABLE board."'+b+'";')
                     Cur.execute('DELETE FROM main.dat WHERE board=%s;', (b,))
                     #DBconnection.commit()
-                rmtree(BasePath+'dat/brd/'+b+'/'+t)
-                if os.listdir(BasePath+'dat/brd/'+b) == []:
-                    os.rmdir(BasePath+'dat/brd/'+b)
+                rmtree(BasePath+'res/brd/'+b+'/'+t)
+                if os.listdir(BasePath+'res/brd/'+b) == []:
+                    os.rmdir(BasePath+'res/brd/'+b)
             else:
                 Cur.execute('DELETE FROM thread."'+b+'/'+t+'" WHERE postnum=%s;', (p,))
                 Cur.execute('UPDATE board."'+b+'" SET postcount=postcount-1 WHERE threadnum=%s;', (t,))
@@ -504,7 +505,7 @@ def get_path_and_data(environ): # Get the URI path and other headers sent by the
 
     path = escape(environ.get('PATH_INFO').encode('iso-8859-1').decode('utf-8'))
     if path == '/':
-        with open(BasePath+'dat/indexEN','r') as f:
+        with open(BasePath+'res/indexEN','r') as f:
             response_body = f.read()
             Cur.execute('SELECT board FROM board.unlisted ORDER BY bump_time DESC LIMIT 8;')
             boards = Cur.fetchall()
@@ -559,13 +560,13 @@ def send_thread_update(autoupdate, autoupdateoffset, board, mode):
             lcllst = post[1].split('/')
             fsize = post[9].split('/')
             for idi in range(len(imglst)):
-                response_body += '<a href="/res/dat/brd/'+board+'/'+str(mode)+'/'+lcllst[idi]+'">'+imglst[idi]+'</a> ['+fsize[idi]+']<br>'
+                response_body += '<a href="/res/brd/'+board+'/'+str(mode)+'/'+lcllst[idi]+'">'+imglst[idi]+'</a> ['+fsize[idi]+']<br>'
         response_body += '</div>'
         if post[1] != '':
             imglst = post[1].split('/')
             response_body += '<div'+(' style="display:table"' if len(imglst)>1 else '')+'>'
             for imge in imglst:
-                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/dat/brd/'+board+'/'+str(mode)+'/'+imge+'"><img src="/res/dat/brd/'+board+'/'+str(mode)+'/t'+imge+'.jpg"></a>'
+                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/brd/'+board+'/'+str(mode)+'/'+imge+'"><img src="/res/brd/'+board+'/'+str(mode)+'/t'+imge+'.jpg"></a>'
             response_body += '</div>'
         response_body += '<blockquote style="margin-left:'+str(post[10])+'px">'+post[2]+'</blockquote></div>'
 
@@ -587,7 +588,7 @@ def send_board_update(boardupdate, realquery):
                 imageAllow = int(posts[0][2])
                 response_body += '<div class="style'+getStyle(tboard)+'"><div class="thread"><div class="tb" style="margin:0px;padding:0px;"><a class="title" href="/'+tboard+'/'+str(thread[0])+'">'+str(thread[0])+'. '+title+'</a> <span class="tag"><a style="font-size:12px;" href="/'+tboard+'">/'+tboard+'/</a></span></div>'
                 if posts[1][1] != '':
-                    response_body += '<a href="/res/dat/brd/'+tboard+'/'+str(thread[0])+'/'+posts[1][1].split('/')[0]+'"><img class="cimg" src="/res/dat/brd/'+tboard+'/'+str(thread[0])+'/t'+posts[1][1].split('/')[0]+'.jpg"></a>'
+                    response_body += '<a href="/res/brd/'+tboard+'/'+str(thread[0])+'/'+posts[1][1].split('/')[0]+'"><img class="cimg" src="/res/brd/'+tboard+'/'+str(thread[0])+'/t'+posts[1][1].split('/')[0]+'.jpg"></a>'
                 response_body += '<span class="foot">'+str(thread[2])+' replies</span><br>'+posts[1][2]+'</div></div>'
         return response_body
 
@@ -611,7 +612,7 @@ def mod_login(environ):
             Cur.execute("ROLLBACK")
         rtype = 'text/plain'
     else:
-        with open(BasePath+'dat/login','r') as f:
+        with open(BasePath+'res/login','r') as f:
             response_body = f.read()
             rtype = 'text/html'
 
@@ -631,7 +632,7 @@ def getFileUpload(fileitem, post, filename, extension, board, threadnum, spoiler
         width = 25
 
         localname = str(int(time()*1000)+loop)+'.'+extension
-        fullpath = BasePath+'dat/brd/'+board+'/'+str(threadnum)
+        fullpath = BasePath+'res/brd/'+board+'/'+str(threadnum)
         if not os.path.exists(fullpath):
             os.makedirs(fullpath)
         chunkcount = 1
@@ -644,7 +645,7 @@ def getFileUpload(fileitem, post, filename, extension, board, threadnum, spoiler
                 f.write(chunk)
                 chunkcount += 1
         if spoiler:
-            copyfile(BasePath+'dat/spoiler.jpg', fullpath+'/t'+localname+'.jpg')
+            copyfile(BasePath+'res/spoiler.jpg', fullpath+'/t'+localname+'.jpg')
         elif extension in ['jpg','jpeg','png','gif']:
             image = Image.open(fullpath+'/'+localname)
             isize = ', '+str(image.size[0])+'x'+str(image.size[1])
@@ -674,13 +675,13 @@ def getFileUpload(fileitem, post, filename, extension, board, threadnum, spoiler
                     image.save(fullpath+'/t'+localname+'.jpg', 'JPEG', quality=75)
                     width = image.size[0]+25
                 else:
-                    copyfile(BasePath+'dat/audio.jpg', fullpath+'/t'+localname+'.jpg')
+                    copyfile(BasePath+'res/audio.jpg', fullpath+'/t'+localname+'.jpg')
                     width = 153
             elif extension == 'swf':
-                copyfile(BasePath+'dat/flash.png', fullpath+'/t'+localname+'.jpg')
+                copyfile(BasePath+'res/flash.png', fullpath+'/t'+localname+'.jpg')
                 width = 153
             else:
-                copyfile(BasePath+'dat/genericThumb.jpg', fullpath+'/t'+localname+'.jpg')
+                copyfile(BasePath+'res/genericThumb.jpg', fullpath+'/t'+localname+'.jpg')
                 width = 153
         fsize = convertSize(os.path.getsize(fullpath+'/'+localname)) + isize
 
@@ -959,9 +960,9 @@ def fill_header(header, mode, board, title, userquery, mixed, tboard, imageAllow
         boardMessage = UnlistedMessage
 
     if cookieStyle == 'tomorrow':
-        styles = '<link rel="stylesheet" type="text/css" title="tomorrow" href="/res/dat/styletomorrow.css">'
+        styles = '<link rel="stylesheet" type="text/css" title="tomorrow" href="/res/styletomorrow.css">'
     else:
-        styles = '<link rel="stylesheet" type="text/css" title="default" href="/res/dat/style'+boardStyle+'.css"><link rel="stylesheet" type="text/css" title="default" href="/res/dat/styleThreads.css">'
+        styles = '<link rel="stylesheet" type="text/css" title="default" href="/res/style'+boardStyle+'.css"><link rel="stylesheet" type="text/css" title="default" href="/res/styleThreads.css">'
 
     if mode < 0:
         header = header % ('/'+board+'/', styles+('<style>.postForm{display:none;}</style>' if board in ['listed','unlisted','all'] else '')+('<style>.tag{display:none;}</style>' if board not in ['listed','unlisted','all'] and not mixed else ''), '', ' bg', BannerCurrent, '/'+(userquery+'/ - Mixed Board<br>/'+board+'/ main' if mixed else board+'/ - '+boardTitle), boardMessage)
@@ -1000,7 +1001,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
             return 'Thread not found.'
 
     # TABLE FOOTER WITH DYANMIC CATALOG AND PAGE LINKS
-    tableFoot = ('<hr>' if mode<0 else '')+'<a href="/res/dat/report">Report a post</a>'
+    tableFoot = ('<hr>' if mode<0 else '')+'<a href="/res/report">Report a post</a>'
     if displayMode != 'flash':
         tableFoot = '<br>[<a href="/'+userquery+'/c">Catalog</a>] Page: '
         for i in range(1,int(maxThreads/15)+1):
@@ -1064,7 +1065,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
                     response_body += ('<div class="catalog">' if idc==0 else '')+'<div class="style'+getStyle(posted_on)+'"><div class="'+divclass+'"><div class="tb" style="margin:0px;padding:0px;"><a class="title" href="/'+posted_on+'/'+str(thread[0])+'">'+str(thread[0])+'. '+title+'</a> <span class="tag"><a style="font-size:12px;" href="/'+posted_on+'">/'+posted_on+'/</a></span></div>'
                     if post[1] != '':
                         imge = post[1].split('/')[0]
-                        response_body += '<a href="/'+posted_on+'/'+str(thread[0])+'"><img class="cimg" src="/res/dat/brd/'+posted_on+'/'+str(thread[0])+'/t'+imge+'.jpg"></a>'
+                        response_body += '<a href="/'+posted_on+'/'+str(thread[0])+'"><img class="cimg" src="/res/brd/'+posted_on+'/'+str(thread[0])+'/t'+imge+'.jpg"></a>'
                     response_body += '<span class="foot">'+str(thread[2])+' replies</span><br>'+post[2]+'</div>'
 
             if catalog == 0:
@@ -1080,7 +1081,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
         if board == 'f' and mode<0:
             response_body += '</table></center>'
         
-    response_body += ('</div>' if catalog==1 else '') + (FbEN if mode>-1 else '') + tableFoot + '<br><br><a href="javascript:void(0)" onclick="window.scrollTo(0,0);">▲</a> <span id="botnav"></span> <span id="botlinks"></span><script>checkmenu()</script><hr><div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/dat/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/dat/gentoo-badge3.png" id="badge"> ･ <a href="/res/dat/weblabels.html" rel="jslicense">WebLabels for LibreJS</a></div></div></td></tr></table></body></html>'
+    response_body += ('</div>' if catalog==1 else '') + (FbEN if mode>-1 else '') + tableFoot + '<br><br><a href="javascript:void(0)" onclick="window.scrollTo(0,0);">▲</a> <span id="botnav"></span> <span id="botlinks"></span><script>checkmenu()</script><hr><div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/gentoo-badge3.png" id="badge"> ･ <a href="/res/weblabels.html" rel="jslicense">WebLabels for LibreJS</a></div></div></td></tr></table></body></html>'
 
     return response_body_header + tableFoot + response_body
 
@@ -1117,7 +1118,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
                 lcllst = file_path.split('/')
                 fsize = image_size.split('/')
                 for idi in range(len(imglst)):
-                    response_body += '<a style="font-weight:bold" href="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/'+lcllst[idi]+'">'+imglst[idi][:-4]+'</a> ['+fsize[idi]+']'
+                    response_body += '<a style="font-weight:bold" href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+lcllst[idi]+'">'+imglst[idi][:-4]+'</a> ['+fsize[idi]+']'
             response_body += '</center></td><td '+fcolor+'><a style="color:#C00;font-weight:bold" href="/'+posted_on+'/'+str(threadnum)+'/l50">'+title+'</a></td><td '+fcolor+'>'+str(post_count)+' Replies</td><td '+fcolor+'><span class="name">'+name+'</span></td><td '+fcolor+'>'+time_string+'</td><td '+fcolor+'><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>&nbsp;<a href="/'+posted_on+'/'+str(threadnum)+'">View</a></td></td>'
             if fswitch:
                 fswitch = 0
@@ -1133,7 +1134,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
             lcllst = file_path.split('/')
             fsize = image_size.split('/')
             for idi in range(len(imglst)):
-                response_body += '<a href="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/'+lcllst[idi]+'">'+imglst[idi]+'</a> ['+fsize[idi]+']<br>'
+                response_body += '<a href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+lcllst[idi]+'">'+imglst[idi]+'</a> ['+fsize[idi]+']<br>'
         response_body += '</div>'
         if admin:
             if OP == 1:
@@ -1148,7 +1149,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
             imglst = file_path.split('/')
             response_body += ('<div'+(' style="display:table"' if len(imglst)>1 else '')+'>') if OP else ''
             for imge in imglst:
-                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img src="/res/dat/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'.jpg" onclick="imgswap(this)"></a>'
+                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'.jpg" onclick="imgswap(this)"></a>'
             response_body += '</div>' if OP else ''
         comment = post_comment.split('<br>')
         if mode<0 and len(comment)>20:

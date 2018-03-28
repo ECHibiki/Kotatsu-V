@@ -6,13 +6,13 @@ import re
 
 UsingCloudflare = False
 
-BasePath = '/home/wwwrun/4taba/' # Set this to the server root directory with a trailing /
+BasePath = '/home/wwwrun/4taba' # Set this to the server root directory
 FFpath = '/run/current-system/sw/bin/ffmpeg' # Set this to the ffmpeg command for creating thumbnails (On this server ffmpeg was installed manually to a non $PATH directory located at BasePath+"ffmpeg"). However if ffmpeg is installed at a location in your server users $PATH then you can just set this to FFpath='ffmpeg'
 
 Allow_Email = False # Allow users to post any text (including email addresses) in the Email form field
 TimeoutThread = 120 # Amount of seconds users must wait between creating threads
 TimeoutPost = 15 # Amount of seconds users must wait between posts
-BannerPath = BasePath+'dat' # Location where banner images reside
+BannerPath = BasePath+'res' # Location where banner images reside
 BannerRandom = False # Should banner rotation pick a random banner or simply cycle through them in order?
 BannerRotationTime = 5 # In minutes (This is only used if BannerRandom=False. When banners are random they will change every page load rather than using a rotation time)
 Banners = ( 'banner1.jpg', 'banner2.jpg', 'banner3.jpg' )
@@ -47,7 +47,6 @@ BoardInfo = { 'listed': ('All Listed Boards', 'main', '', 150, 'listed', 'none',
             'v': ('Video Games', 'eb', 'Anonymous', 150, 'normal', 'noflash', 'all'),
             'ho': ('Other', 'yotsuba', 'Anonymous', 150, 'normal', 'noflash', 'all') }
 
-BoardGreetingDir = BasePath+'bMessages' # Every file in this directory will be read as a greeting message to be displayed on a board. For example a file named "a" in this directory will set its contents as the greeting message for the /a/ board
 # Note: If you change/remove/add files in the greetings directory you will need to restart the server for it to take effect
 # Note2: Messages are read as HTML. You can create files to display messages on both listed and unlisted boards. If a message isn't found for a listed board then it will be blank, and if a message isn't found for an unlisted board it will use a defualt message defined in the variable "unlistedMessage" below.
 # Note3: Make sure the filenames don't contain any extension such as .txt, or they will be applied to boards such as /a.txt/
@@ -61,6 +60,8 @@ StyleTransparencies = { 'main': ( (238,238,238), (238,221,204) ),
                         'dis': ( (239,239,239), (239,239,239) ),
                         'eb': ( (238,238,238), (221,221,238) ) }
 
+# NOTE: To set the board greetings for listed boards (the ones defined above) create a file inside the bMessages directory for it
+
 UnlistedTitle = 'Unlisted' # The board title to display for unlisted boards
 UnlistedCSS = 'default' # The CSS file to load for unlisted boards (note: the filename loaded is always "style"+unlistedCSS+".css", so in this case it would be "styledefault.css")
 UnlistedUsername = 'Anonymous' # The default username to use on unlisted boards
@@ -68,7 +69,7 @@ UnlistedMaxThreads = 150 # Maximum number of threads on unlisted boards
 UnlistedDisplayMode = 'normal' # The display mode for unlisted boards (only "normal" or "flash" make any sense here)
 UnlistedUploaders = 'none'
 UnlistedFiletypes = ''
-UnlistedMessage = 'This board has no pre-defined topic. Feel free to use it however you like after reading the <a href="/res/dat/faqEN">FAQ</a> and the <a href="/res/dat/rulesEN">global rules</a>.' # The default greeting for unlisted boards
+UnlistedMessage = 'This board has no pre-defined topic. Feel free to use it however you like after reading the <a href="/res/faqEN">FAQ</a> and the <a href="/res/rulesEN">global rules</a>.' # The default greeting for unlisted boards
 UnlistedLifetime = 0 # Set this to the number of hours threads on unlisted boards can go without receiving replies before they are deleted. 0 means they live forever (or at least until they fall off the last page of the board)
 
 # List of post filters (this includes quotes, post links, URL highlighting, etc)

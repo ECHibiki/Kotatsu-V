@@ -3,7 +3,7 @@ var btimer;
 function mainf(){
     var b = Math.floor((Math.random()*2)+1).toString();
     var e = document.getElementById('banner');
-    e.src = '/res/dat/banner'+b.toString()+'.jpg';
+    e.src = '/res/banner'+b.toString()+'.jpg';
 
     if(typeof(Storage) !== "undefined"){
         var t = localStorage.threads || '';
@@ -447,7 +447,7 @@ function hidemenu(){
     document.getElementsByTagName('body')[0].style.border="none";
     document.getElementById('nav').innerHTML='<a href="javascript:void(0)" onclick="showmenu()">show→</a> ';
     localStorage.menu='hide'
-    document.getElementById('toplinks').innerHTML=  '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/dat/rulesEN">Rules</a> <a href="/res/dat/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ]<br>[ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span><br>';
+    document.getElementById('toplinks').innerHTML=  '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ]<br>[ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span><br>';
 }
 
 function showmenu(){

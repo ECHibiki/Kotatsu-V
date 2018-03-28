@@ -19,10 +19,15 @@ Nothing here yet.
 
 ## Server Setup
 
-- Edit file `settings/default_settings.py` to your preferences
-- Remember to set the `BoardGreetingDir` to a directory where you will keep board MOTD's
-    - For example, to set the greeting on the board /a/ you would create a new file inside your `BoardGreetingDir` named "a" with the greeting text
-    - This directory can be anywhere and does not have to lie in the server root. It is read from only when the server starts up and is not served from
-- Run `dbinit_4taba` to initialize the database (make sure you set the correct database information in `settings/default_settings.py` first)
+- Copy file `default_settings.py` to `local_settings.py` and edit it to your liking
+    - Essential variables to change:
+        - UsingCloudflare
+        - BasePath
+        - FFpath
+        - DBNAME
+        - DBUSER
+        - DBHOST
+        - DBPASS
+- Run `dbinit_4taba` to initialize the database (make sure you set the correct database information in `local_settings.py` first)
 
-Static data such as CSS files go in the `dat` directory, and user uploaded files will be saved to `dat/brd/<board>/<thread number>`
+Static data such as CSS files go in the `res` directory, and user uploaded files will be saved to `res/brd/<board>/<thread number>`

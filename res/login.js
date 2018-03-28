@@ -1,7 +1,7 @@
 function mainf(){
     var b = Math.floor((Math.random()*2)+1).toString();
     var e = document.getElementById('banner');
-    e.src = '/res/dat/banner'+b.toString()+'.jpg';
+    e.src = '/res/banner'+b.toString()+'.jpg';
 
 }
 

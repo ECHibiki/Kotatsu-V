@@ -1,6 +1,6 @@
 /**
  *
- * @source: https://4taba.net/res/dat/main.js
+ * @source: https://4taba.net/res/main.js
  *
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
@@ -31,11 +31,12 @@ function watchThread(label, timestamp){
 // Three different ways to store watched thread list:
 // 1) No Javascript - this onclick function is ignored and the user makes a call to the server to calculate the new value of their cookie for them
 // 2) Yes Javascript, No localStorage - return false from this function to block server call, use Javascript to update the users threadlist cookie
-// 3) Yes Javascript, Yes localStorage - return false from this function to block side call, use Javascript to update the users threadlist in localStorage
+// 3) Yes Javascript, Yes localStorage - return false from this function to block server call, use Javascript to update the users threadlist in localStorage
 ////
 //// NOTE: Watch button should have property onclick="return watchThread()" which can be used to block the link if it returns false (in this case, if Javascript is enabled)
 
     if (label == "")
+        alert('Error: Thread label is blank.');
         return false;
 
     if (typeof(Storage) !== "undefined"){
@@ -43,7 +44,7 @@ function watchThread(label, timestamp){
         var ls = true;
         var val = localStorage.threads || '';
     }else{
-    //USE COOKIES
+    // USE COOKIES
         var ls = false;
         var c = document.cookie.split(';');
         var val = '';
@@ -72,119 +73,92 @@ function watchThread(label, timestamp){
         var edx = threads[tdx].indexOf('!');
         if (label == threads[tdx] || label == threads[tdx].substring(0, edx)){
         // Already watching thread; just update timestamp
+            threads[tdx] = label+'!'+timestamp;
         }else{
         // Not watching thread yet; add it to the list
+            threads.push(label+'!'+timestamp;
         }
     }
 
-/*    if(threads.indexOf(label) == -1){
-        if(threads[0] == ''){
-            threads[0] = label;
-        }else{
-            threads.push(label);
-        }
+    if (ls){
         localStorage.threads = threads.join(' ');
+    }else{
+        document.cookie='threads='+threads.join(' ')+'; expires=Tue, 19 Jan 2038 03:14:07 UTC; domain=.4taba.net; path=/';
     }
-
-    localStorage.setItem('ts'+label, timestamp.toString());*/
 
     return false;
 }
 
-function unhide(e){
-    var a = e.parentElement;
-    e.setAttribute('onclick','hide(this);');
-    e.innerHTML='[ - ] ';
-    var b = a.getElementsByTagName('img');
-    if(typeof b[0] !== 'undefined')
-        for(var i=0, j; j=b[i]; ++i)
-            j.style.display = 'block';
-    b = a.getElementsByTagName('blockquote');
-    b[0].style.display = 'block';
-}
-
-function hide(e){
-    var a = e.parentElement;
-    e.setAttribute('onclick','unhide(this);');
-    e.innerHTML = '[ + ] ';
-    var b = a.getElementsByTagName('img');
-    if(typeof b[0] !== 'undefined')
-        for(var i=0, j; j=b[i]; ++i)
-            j.style.display = 'none';
-    b = a.getElementsByTagName('blockquote');
-    b[0].style.display = 'none';
-}
-
 function autoUpdate(){
     var url = window.location.pathname.split('/');
-    url.splice(2, 0, 'a');
-    e = document.getElementsByClassName('post');
-    url = url.slice(0,4).join('/') + '/'
-    if(e[0])
-        url += (Number(e[e.length-1].id)+1).toString();
-    else
-        url += '2';
+    var board = url[1];
+    var thread = url[2];
+    var timestamp = document.getElementById('timestamp').innerHTML;
+    var req_url = '/update/'+board+'/'+thread+'!'+timestamp
+
     var request = new XMLHttpRequest();
     request.onreadystatechange = function(){
         if(request.readyState==4 && request.status==200){
-            if(request.responseText != ''){
-                document.getElementById("1").innerHTML += request.responseText.substring(4, request.responseText.length);
-                el = document.getElementsByTagName('img');
-                for(var i=0, a; a=el[i]; ++i){
-                    if(a.src.indexOf('banner')==-1 && a.src.indexOf('badge')==-1)
-                        a.addEventListener('click', imgswap);
-                }
-            }
+            if(request.responseText != '')
+                document.getElementById("1").innerHTML += request.responseText;
         }
     }
+
     request.open("GET", url, true);
     request.send(null);
 }
 
 function checksize(max){
-    var f = document.getElementsByName('file');
-    for(var i = 0; i<2; ++i){
-        if(f[i].files && f[i].files.length==1 && f[i].files[0].size > max){
-            alert('Maximum upload size is '+(max/1024/1024)+'MB.');
-            return false;
-        }
+    maxb = max * 1024**2;
+    var f = document.getElementsByName('file')[0];
+    if(f.files && f.files[0].size > maxb){
+        alert('Maximum upload size is '+(max)+'MB.');
+        return false;
     }
     return true;
 }
 
 function imgswap(e){
+    // First time around this function called through onclick="imgswap(this)" and so e already = this.
+    // Second (and further) time around function is called from event listeners and e is undefined.
     if (typeof e.src == 'undefined')
         e = this;
 
     var type = '';
     var lst = e.src.split('/');
-    var p = lst.slice(0, lst.length-1).join('/');
+    var p = e.src.slice(0, lst.length-1).join('/');
     var name = lst[lst.length-1];
     var ext = ''
-    if(name[0] == 't'){
-        name = name.substring(1,name.length-4);
-        var split = name.split('.');
-        ext = split[split.length-1];
-        if(['jpg','jpeg','png','gif'].indexOf(ext) > -1)
-            type = 'img';
-        else if(['webm','mp4'].indexOf(ext) > -1)
-            type = 'video'
-        else if(['mp3','ogg','flac','wav'].indexOf(ext) > -1)
-            type = 'audio'
-        if(ext == 'm4a'){
-            type = 'audio';
-            ext = 'mp4';
-        }
-//        else if(name.slice(name.length-3,name.length)=='.14')
-//            type = 2
-        //this.style.maxWidth=Number(document.body.offsetWidth-48).toString()+"px";
-    }else{
+
+    var mime = getRealFileType()
+
+    /*if(['JPEG','PNG','GIF'].indexOf(mime) > -1)
         type = 'img';
-        name = 't'+name+'.jpg';
-        //this.style.width="initial";
+    else if(['WebM','MP4'].indexOf(mime) > -1)
+        type = 'video'
+    else if(['MP3','OGG','FLAC','WAV'].indexOf(mime) > -1)
+        type = 'audio'
+    if(ext == 'M4A'){
+        type = 'audio';
+        mime = 'mp4';
+    }*/
+    type='img';
+
+    var swap = e.getAttribute('data-swap') || '';
+    var orig = e.src;
+
+    e.style.opacity="0.5";
+    if (type == 'img'){
+        e.setAttribute('data-swap', orig);
+        e.src = swap;
     }
-    //this.style.opacity="0.5";
-    if(type=='img'){
+
+
+
+
+
+
+    /*if(type=='img'){
         var prnt = e.parentElement;
         var nw = document.createElement('img');
         if(localStorage.mmc=='open') 
@@ -249,12 +223,12 @@ function imgswap(e){
         prnt.appendChild(dw);
         dw.style.maxWidth=Number(document.body.offsetWidth-48).toString()+"px";
         prnt = dw;
-    }
+    }*/
     if(window.scrollY>prnt.parentElement.offsetTop)
         prnt.parentElement.parentElement.scrollIntoView();
 }
 
-function hidev(){
+/*function hidev(){
     if(this.tagName == 'A'){
         var p = this.parentElement.parentElement;
         //var s = e.getAttribute('thumb');
@@ -282,17 +256,17 @@ function hidev(){
     //nw.addEventListener('click', imgswap);
     if(window.scrollY>p.parentElement.offsetTop)
         p.parentElement.scrollIntoView();
-}
+}*/
 
 
-function srchk(e){
+/*function srchk(e){
     if(e.keyCode==13){
         e.preventDefault();
         srch();
     }
-}
+}*/
 
-function srch(){
+/*function srch(){
     var text = document.getElementById('srchbr').value.toLowerCase();
     var threads = document.getElementsByClassName('thread');
     
@@ -303,7 +277,7 @@ function srch(){
             thread.style.display='inline-block';
         }
     }
-}
+}*/
 
 function hidemenu(){
     document.getElementsByClassName('menu')[0].style.display='none';
@@ -314,7 +288,7 @@ function hidemenu(){
     document.getElementById('topnav').innerHTML = links;
     document.getElementById('botnav').innerHTML = links;
     localStorage.menu='hide'
-    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/dat/rulesEN">Rules</a> <a href="/res/dat/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ] [ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit/</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span>';
+    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ] [ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit/</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span>';
     document.getElementById('toplinks').innerHTML = links;
     document.getElementById('botlinks').innerHTML = links;
 }
@@ -340,7 +314,7 @@ function checkmenu(){
     e.innerHTML = '←Hide';
 }
 
-function addFile(p, n){
+/*function addFile(p, n){
     n += 1;
     if(n==5)
         return 0;
@@ -364,9 +338,9 @@ function remFile(p, n){
     document.getElementById(p+'af').setAttribute('onclick','addFile(\''+p+'\','+n.toString()+')');
     if(n>1)
         document.getElementById(p+'rf').setAttribute('onclick','remFile(\''+p+'\','+n.toString()+')');
-}
+}*/
 
-function changeStyle(style){
+/*function changeStyle(style){
     document.cookie = 'style='+style.value+';path=/';
     location.reload();
 }
@@ -374,4 +348,4 @@ function changeStyle(style){
 function changeSortBy(sort){
     document.cookie = 'sortby='+sort.value+';path=/';
     location.reload();
-}
+}*/
