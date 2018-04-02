@@ -73,35 +73,49 @@ UnlistedMessage = 'This board has no pre-defined topic. Feel free to use it howe
 UnlistedLifetime = 0 # Set this to the number of hours threads on unlisted boards can go without receiving replies before they are deleted. 0 means they live forever (or at least until they fall off the last page of the board)
 
 # List of post filters (this includes quotes, post links, URL highlighting, etc)
-#   Parameter 1 - Callback function to filter text if a match is found
-#       Callback is called with parameters (start, middle, end) where start is the opening delimeter which was matched, end is the closing delimeter that was matched, and middle is all the text in between
-#       Callback function should return new text to replace the matched text, including the delimeters if you want them to remain
-#   Parameter 2 - List of opening delimiters to begin matching
-#   Parameter 3 - List of closing delimiters to end matching
+# Now using regex formatting
 # NOTE: Filters are applied one after the other, so order can make a difference
-#       Posts are already escaped (e.g. ">" characters show up as "&gt;") and newlines are already converted to <br>
+# NOTE: Posts are already escaped (e.g. ">" characters show up as "&gt;") and newlines are already converted to <br>
 Filters = [
-            # URL filter
-            re.compile(r'(http://|https://|ftp://)([^ ]*)( |<)') # ( |<) not working right
+            # === Post link filters === (Order is important here)
+                ('cross-board-cross-thread-post-link',
+                 re.compile(r'[^">]&gt;&gt;&gt;/([^/ ]*)/([0-9]+)/([0-9]+)'),
+                 '<a href="/\1/\2#\3">&gt;&gt;&gt;/\1/\2/\3</a>')
 
-#            [filter_post_link,
-#                ['&gt;&gt;'], # >>
-#                [' ', '<br>', '(', ')', '[', ']', '{', '}']],
-#            [filter_quote,
-#                ['&gt;'], # >
-#                ['<br>']],
-#            [filter_url,
-#                ['https://','http://','ftp://'],
-#                [' ', '<br>']],
-#            [filter_code,
-#                ['[code]'],
-#                ['[/code]']],
-#            [filter_spoiler,
-#                ['[spoiler]'],
-#                ['[/spoiler]']],
+                ('cross-board-cross-thread-link',
+                 re.compile('[^">]&gt;&gt;&gt;/([^/ ]*)/([0-9]+)'),
+                 '<a href="/\1/\2">&gt;&gt;&gt;/\1/\2</a>')
 
-            # Example word filter
-#            [filter_duck_roll,
-#                ['egg'],
-#                ['']],
+                ('cross-board-link',
+                 re.compile('[^">]&gt;&gt;&gt;/([^/ ]*)/'),
+                 '<a href="/\1">&gt;&gt;&gt;/\1/</a>')
+
+                ('cross-thread-link',
+                 re.compile(r'[^">]&gt;&gt;&gt;([0-9]+)/([0-9]+)'),
+                 '<a href="/%s/\1#\2">&gt;&gt;&gt;/%s/\1/\2</a>') # %s's filled in by board in 'processComment' function
+
+                ('post-link',
+                 re.compile(r'[^">]&gt;&gt;([0-9]+)'),
+                 '<a href="#\1">&gt;&gt;\1</a>')
+            # =========================
+
+            ('quote',
+             re.compile(r'(^&gt;[^<]*)'),
+             '<span class="quote">\1</span>')
+
+            ('url',
+             re.compile(r'(^|>)(&gt;[^<]*)'),
+             '<a href="\1\2">\1\2</a>\3')
+
+            ('code',
+             re.compile(r'\[code\](.*)\[/code\]'),
+             '<span class="code">\1</span>')
+
+            ('japanese',
+             re.compile(r'\[ja\](.*)\[/ja\]'),
+             '<span class="ja">\1</span>')
+
+            ('spoiler',
+             re.compile(r'\[spoiler\](.*)\[/spoiler\]'),
+             '<span class="spoiler">\1</span>')
 ]

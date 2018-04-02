@@ -259,113 +259,14 @@ def processQuery(userquery): # Process the board query sent by the user (e.g. pr
 
     return [userquery, board, realquery, mixed]
 
-def processComment(comment, board, thread, last50, limited): # Process the user comment to add things such as "greentext", post links, URL's, etc.
-    # NOTE: Sorry if this function is confugsing. It looks this way because it was implemented as a stream editor (e.g. it passes through the string only once, character by character, and makes all the changes). I'm aware that it could be made MUCH cleaner, smaller, and easier to read using more "pythonic" syntax, but that would result in scanning the string multiple times which might be slower
-    i = 0
-    i2 = 0
-    tag = 0
-    quit = 0 # Quit is only used on posts containing banned text (e.g. links to CP)
-    insert = ''
-    while i < len(comment):
-        if comment[i] == '&' and comment[i+1:i+4] == 'gt;': # This finds ">" in the users comment which are escaped as "&gt;"
-            if len(comment)>i+4 and comment[i+4] == '&' and comment[i+5:i+8] == 'gt;':
-                i2 = i+8
-                while i2 < len(comment) and comment[i2] not in ' 　<-,.':
-                    i2 += 1
-                inner = comment[i:i2]
-                h = inner[8:].split('/')
-                if len(h) == 4 and h[0] == '' and h[2].isdigit() and h[3].isdigit():
-                    insert = '<a href="/'+h[1]+'/'+h[2]+'#'+h[3]+'">'+inner+'</a>'
-                elif len(h) == 3 and h[0] == '' and h[2] == '':
-                    insert = '<a href="/'+h[1]+'">'+inner+'</a>'
-                elif len(h) == 3 and h[0] == '' and h[2].isdigit():
-                    h[1] = h[1].split('+')[0]
-                    q = inner.split('+')
-                    inner = q[0]+'/'
-                    if len(q)>1:
-                        r = q[1].split('/')
-                        inner += '/'.join(r[1:])
-                    insert = '<a href="/'+h[1]+'/'+h[2]+'">'+inner+'</a>'
-                elif len(h) == 2 and h[0].isdigit() and h[1].isdigit():
-                    insert = '<a href="/'+board+'/'+h[0]+'#'+h[1]+'">'+inner+'</a>'
-                elif len(h) == 1 and h[0].isdigit():
-                    insert = '<a href="/'+board+'/'+str(thread)+'#'+h[0]+'">'+inner+'</a>'
-                else:
-                    insert = inner
-            elif not limited and (i==0 or (i>3 and comment[i-4:i]=='<br>')):
-                i2 = i+4
-                while i2 < len(comment) and comment[i2] != '<':
-                    i2 += 1
-                insert = '<span class="quote">' + comment[i:i2] + '</span>'
-            else:
-                i2 = i
-                insert = ''
+def processComment(comment, board): # Process the user comment to add things such as "greentext", post links, URL's, etc.
+    for filt in Filters:
+        if filt[0] == 'cross-thread-link':
+            comment = re.sub(filt[1], filt[2] % (board, board), comment)
+        else:
+            comment = re.sub(filt[1], filt[2], comment)
 
-            comment = comment[0:i] + insert + comment[i2:]
-            i += len(insert)
-
-        elif comment[i] == '[':
-            if comment[i:i+4] == '[ja]' and not limited:
-                tag = 1
-                i2 = i+4
-                while i2 < len(comment) and comment[i2:i2+5] != '[/ja]':
-                    i2 += 1
-                insert, quit = processComment(comment[i+4:i2], board, thread, last50, 1)
-                insert = '<span class="ja">' + insert + '</span>'
-            elif comment[i:i+4] == '[cb]' and not limited:
-                tag = 1
-                i2 = i+4
-                while i2 < len(comment) and comment[i2:i2+5] != '[/cb]':
-                    i2 += 1
-                insert = '<div class="cb">' + comment[i+4:i2] + '</div>'
-            elif comment[i:i+4] == '[sp]':
-                tag = 1
-                i2 = i+4
-                while i2 < len(comment) and comment[i2:i2+5] != '[/sp]':
-                    i2 += 1
-                insert = '<span class="sp">' + comment[i+4:i2] + '</span>'
-            if i2+5 <= len(comment) and tag == 1:
-                tag = 0
-                i2 += 5
-            else:
-                insert = ''
-                i2 = i
-            tag = 0
-            comment = comment[0:i] + insert + comment[i2:]
-            i += len(insert)
-        elif comment[i] == 'h':
-            if comment[i:i+7] == 'http://':
-                tag = 1
-                i2 = i+7
-                while i2 < len(comment) and comment[i2] not in ' <':
-                    i2 += 1
-                insert = '<a href="' + comment[i:i2] + '">' + comment[i:i2] + '</a>'
-            elif comment[i:i+8] == 'https://':
-                tag = 1
-                i2 = i+8
-                while i2 < len(comment) and comment[i2] not in ' <':
-                    i2 += 1
-                insert = '<a href="' + comment[i:i2] + '">' + comment[i:i2] + '</a>'
-            elif comment[i:i+6] == 'ftp://':
-                tag = 1
-                i2 = i+6
-                while i2 < len(comment) and comment[i2] not in ' <':
-                    i2 += 1
-                insert = '<a href="' + comment[i:i2] + '">' + comment[i:i2] + '</a>'
-            for j in ['BLOCKED_URL_1','BLOCKED_URL_2']: # Drop posts containing particular website links (e.g. links posted by CP spammers) NOTE: the actual list used by 4taba.net is not shown here to avoid advertising CP sites
-                if j in insert:
-                    quit = 1
-            if tag == 1:
-                tag = 0
-            else:
-                insert = ''
-                i2 = i
-            comment = comment[0:i] + insert + comment[i2:]
-            i += len(insert)
-
-        i += 1
-                
-    return [comment, quit]
+    return comment
 
 def setOptions(options): # Set options from the "Email" field on the post form
     bump = 1
@@ -832,7 +733,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
             if len(comment)>200:
                 response_body = 'Post body has too many lines.'
                 return [response_body, set_cookie]
-            comment,quit = processComment('<br>'.join(comment), board, threadnum, last50, 0)
+            comment,quit = processComment('<br>'.join(comment), board)
         except:
             comment = ''
             quit = 0
