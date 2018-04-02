@@ -1,4 +1,4 @@
-<center><div style="margin:0 auto;" class="banner"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/%s"></div></center>
+<center><div style="margin:0 auto;" class="banner"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/banners/%s"></div></center>
 <hr>
 
 <div class="msg"><div class="msg2"><h1 class="boardTitle">%s</h1>%s</div></div>

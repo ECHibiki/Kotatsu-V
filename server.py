@@ -23,6 +23,7 @@ from random import randint
 from default_settings import *
 from local_settings import *
 
+if BasePath[-1] != '/': BasePath += '/'
 os.chdir(BasePath)
 import sys
 sys.path.append(BasePath)
@@ -73,8 +74,8 @@ def application(environ, start_response):
 
     # Process user query (which board or multi-boards they are requesting to view)
     userquery, board, realquery, mixed = processQuery(userquery)
-    if '"' in board:
-        return send_and_finish('INVALID BOARD NAME', start_response)
+    if '"' in board or board[0] == '.' or board in boardBlacklist:
+        return send_and_finish(page_error('INVALID BOARD NAME'), start_response)
         
     # Send thread-updates if requested
     if autoupdate:
@@ -144,27 +145,28 @@ def convertSize(size): # Convert file sizes to human readable
 
 def processPath(path, ip): # Take the URI path (e.g. 4taba.net/all/5 has path: "/all/5") and return the relevant information
     # PATH MAP:
-    # For N=0 N can be eliminated
     #
-    # / = index
+    # / = HOME
     # /B = page 0 of board B
     # /B/pN = page N of board B
     # /B/c = catalog of board B
     # /B/cN = page N of catalog on board B (only useful on boards such as "all" which technically can show threads beyond the board thread limit)
     # /B/# = thread # of board B
-    # /B/a/#/o = autoupdate thread # on board B at offset o (the offset is the last post the user received in the thread they are auto-updating)
+    # /B/update/#!t = autoupdate thread # from board B at returning new posts after time t
     if path[-1] == '/': path = path[:-1]
     path = path.split('/')
+    while len(path) < 5:
+        path.append('') # This eliminates the need to perform redundant list length checks
     userquery = '' # userquery is the actual B value (remember it can be combinations of boards like "a+ma")
     mode = -1 # -1 means viewing the thread listing. 0 and higher means viewing a particular thread.
     last50 = False
     catalog = False
     autoupdate = False
     autoupdateoffset = 0
-    boardupdate = False
     modParams = [] # Parameters sent to the server by a moderator for things such as deleting posts/threads
     login = False # Is the user requesting a mod login?
     report = False # Is the user reporting a post?
+
     try:
         if path[1] == 'res': # User resources. Such as the post reporting form.
             if len(path) == 3 and path[2] == 'report':
@@ -249,6 +251,7 @@ def processQuery(userquery): # Process the board query sent by the user (e.g. pr
         mixed = False
     if len(board) > 10:
         board = board[:10]
+
 #    realquery = 'SELECT * FROM t'+' EXCEPT SELECT * FROM t'.join((' INTERSECT SELECT * FROM t'.join((' UNION SELECT * FROM t'.join(userquery.split('+'))).split('/'))).split('-'))
     #realquery = 'SELECT * FROM "b'+'" UNION SELECT * FROM "b'.join(userquery.split('+'))+'"'
     if e>-1:

@@ -94,7 +94,7 @@ function autoUpdate(){
     var board = url[1];
     var thread = url[2];
     var timestamp = document.getElementById('timestamp').innerHTML;
-    var req_url = '/update/'+board+'/'+thread+'!'+timestamp
+    var req_url = '/'+board+'/update/'+thread+'!'+timestamp
 
     var request = new XMLHttpRequest();
     request.onreadystatechange = function(){
