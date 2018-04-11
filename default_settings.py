@@ -35,23 +35,23 @@ DBPASS = ''
 BoardInfo = {
     # Listed boards
     #KEY   ( NAME             STYLE      USERNAME     THREADS POSTS DISPLAY   OP-UP      POSTER-UP )
-    'ni':  ('二次元裏',      'dis',     '名無しさん', 150,    200, 'normal', 'img+vid', 'img+vid'),
-    'd':   ('二次元エロ',    'yotsuba', '名無しさん', 150,    200, 'normal', 'img+vid', 'img+vid'),
-    'cc':  ('Computer Club', 'default', 'Anonymous',  150,    200, 'normal', 'img+vid', 'img+vid'),
+    'ni':  ('日本裏'  ,      'mona',     '名無しさん', 150,    200, 'normal', 'img+vid', 'img+vid'),
+    'd':   ('二次元エロ',    'yotsuba', 'Anonymous', 150,    200, 'normal', 'img+vid', 'img+vid'),
+    'cc':  ('Computer Club', 'computer', 'guest@cc',  150,    200, 'normal', 'img+vid', 'img+vid'),
     'f':   ('Flash/HTML5',   'yotsuba', 'Anonymous',  15,     200, 'flash',  'flash',   ''       ),
     'ho':  ('Other',         'yotsuba', 'Anonymous',  150,    200, 'normal', 'img+vid', 'img+vid'),
 
     # Unlisted boards
     #KEY    ( NAME               STYLE      USERNAME    THREADS  POSTS  DISPLAY   OP-UP            POSTER-UP )
-    '*':    ('Unlisted',        'default', 'Anonymous', 150,     200,  'normal', 'img+vid',       'img+vid'      ),
-    'meta': ('Meta Discussion', 'default', 'Anonymous', 150,     200,  'normal', 'img+vid+flash', 'img+vid+flash'),
+    '*':    ('Unlisted',        'unlisted', 'Anonymous', 150,     200,  'normal', 'img+vid',       'img+vid'      ),
+    'meta': ('Meta Discussion', 'unlisted', 'Anonymous', 150,     200,  'normal', 'img+vid+flash', 'img+vid+flash'),
 
     ### Avoid modifying these for now
     ### These are special boards. Modifying them should be fairly easy still,
     ### but will require some changes inside the server code, otherwise something might break.
     #KEY        ( NAME                   STYLE      USERNAME  THREADS  POSTS  DISPLAY   OP-UP  POSTER-UP )
     'listed':   ('All Listed Boards',   'main',    '',        0,       0,    'normal', '',    ''),
-    'unlisted': ('All Unlisted Boards', 'default', '',        0,       0,    'normal', '',    ''), 
+    'unlisted': ('All Unlisted Boards', 'unlisted', '',        0,       0,    'normal', '',    ''), 
     'all':      ('All Boards',          'main',    '',        0,       0,    'normal', '',    ''),
 }
 
@@ -65,11 +65,10 @@ BoardBlacklist = ['', 'res', 'bin']
 # These are the simulated transparency colors for thumbnails. Add an entry for each CSS stylesheet and give the background color in (R,G,B) format one for the OP background color and one for the regular post background color
 StyleTransparencies = {
                     'main':     ( (238,238,238), (238,221,204) ),
-                    'default':  ( (238,238,238), (238,221,204) ),
+                    'unlisted': ( (238,238,238), (238,221,204) ),
                     'yotsuba':  ( (255,255,238), (240,224,214) ),
-                    'yotsubab': ( (238,242,255), (214,218,240) ),
-                    'dis':      ( (239,239,239), (239,239,239) ),
-                    'eb':       ( (238,238,238), (221,221,238) ),
+                    'mona':     ( (221,221,221), (238,238,238) ),
+                    'computer': ( (239,239,239), (239,239,239) ),
 }
 
 # List of post filters (this includes quotes, post links, URL highlighting, etc)
