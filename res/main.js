@@ -76,7 +76,7 @@ function watchThread(label, timestamp){
             threads[tdx] = label+'!'+timestamp;
         }else{
         // Not watching thread yet; add it to the list
-            threads.push(label+'!'+timestamp;
+            threads.push(label+'!'+timestamp);
         }
     }
 
@@ -126,31 +126,34 @@ function imgswap(e){
 
     var type = '';
     var lst = e.src.split('/');
-    var p = e.src.slice(0, lst.length-1).join('/');
+    var p = lst.slice(0, lst.length-1).join('/');
     var name = lst[lst.length-1];
-    var ext = ''
+    if (name[0] == 't')
+        var expanded = false;
+    else
+        var expanded = true;
 
-    var mime = getRealFileType()
+    var mime = e.getAttribute('data-ftype');
 
-    /*if(['JPEG','PNG','GIF'].indexOf(mime) > -1)
+    if(['JPEG','PNG','GIF'].indexOf(mime) > -1)
         type = 'img';
     else if(['WebM','MP4'].indexOf(mime) > -1)
         type = 'video'
     else if(['MP3','OGG','FLAC','WAV'].indexOf(mime) > -1)
         type = 'audio'
-    if(ext == 'M4A'){
+    if(mime == 'M4A'){
         type = 'audio';
         mime = 'mp4';
-    }*/
-    type='img';
-
-    var swap = e.getAttribute('data-swap') || '';
-    var orig = e.src;
+    }
 
     e.style.opacity="0.5";
     if (type == 'img'){
-        e.setAttribute('data-swap', orig);
-        e.src = swap;
+        if (expanded)
+            e.src = p+'/t'+name
+        else
+            e.src = p+'/'+name.substring(1, name.length)
+
+        e.addEventListener('load', function() { e.style.opacity="1.0"; }, false);
     }
 
 
@@ -224,8 +227,12 @@ function imgswap(e){
         dw.style.maxWidth=Number(document.body.offsetWidth-48).toString()+"px";
         prnt = dw;
     }*/
-    if(window.scrollY>prnt.parentElement.offsetTop)
-        prnt.parentElement.parentElement.scrollIntoView();
+
+
+
+
+    //if(window.scrollY>prnt.parentElement.offsetTop)
+    //    prnt.parentElement.parentElement.scrollIntoView();
 }
 
 /*function hidev(){

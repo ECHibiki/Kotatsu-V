@@ -1,4 +1,4 @@
-<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="stylesheet" type="text/css" href="/res/dat/stylemain.css"><link rel="stylesheet" type="text/css" href="/res/styleInfo.css"></head>
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="stylesheet" type="text/css" href="/res/styles/main.css"><link rel="stylesheet" type="text/css" href="/res/styles/threads.css"></head>
 <body style="background-image:url('/res/bgb.png');font-family:'MS PGothic'">
 <div class="menu">
 <a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/favicon.png" id="favicon">
@@ -12,24 +12,16 @@
 </ul><hr>
 <b>Japan</b>
 <ul>
-<li><a href="/a">Anime</a></li>
-<li><a href="/ma">Manga</a></li>
-<li><a href="/jp">Otaku Culture</a></li>
+<li><a href="/ni">日本裏</a></li>
 <li><a href="/d">二次元エロ</a></li>
-<li><a href="/ni">日本語と英語</a></li>
 </ul><br><hr>
 <b>Computers</b>
 <ul>
-<li><a href="/hw">Hardware</a></li>
-<li><a href="/sw">Software</a></li>
-<li><a href="/pr">Programming</a></li>
+<li><a href="/cc">Computer Club</a></li>
 </ul><br><hr>
 <b>Miscellaneous</b>
 <ul>
 <li><a href="/f">Flash & HTML5</a></li>
-<li><a href="/lit">Literature</a></li>
-<li><a href="/sci">Science & Mathematics</a></li>
-<li><a href="/v">Video Games</a></li>
 <li><a href="/ho">Other</a></li>
 </ul><br><hr>
 <a href="/res/rulesEN">[Rules]</a><br>

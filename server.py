@@ -6,11 +6,13 @@
 #     * Start postgresql, set the database information inside the "dbinit_4taba" script and then run it to initialize the database
 #     * create a <server_root>/res/brd directory to hold user uploaded files
 
+BasePath = '/home/wwwrun/4taba/' # Set this to the server root directory
 
 import os
 import math
 import binascii
 import psycopg2
+import magic
 from cgi import parse_qs, escape, FieldStorage
 from urllib.parse import unquote_plus, parse_qs
 from time import strftime, time, gmtime
@@ -18,17 +20,15 @@ from PIL import Image
 from shutil import rmtree, copyfile, move
 from random import randint
 
-#from settings.default_settings import *
-#from settings.local_settings import *
-from default_settings import *
-from local_settings import *
-
 if BasePath[-1] != '/': BasePath += '/'
 os.chdir(BasePath)
 import sys
 sys.path.append(BasePath)
 
-BoardGreetingDir = BasePath + '/bMessages'
+#from settings.default_settings import *
+#from settings.local_settings import *
+from default_settings import *
+from local_settings import *
 
 if UsingCloudflare:
     IP_HEADER = 'HTTP_CF_CONNECTING_IP'
@@ -48,8 +48,8 @@ with open(BasePath+'res/formbotEN','r') as f:
     FbEN = f.read()
 
 BoardGreetings = {}
-for i in os.listdir(BoardGreetingDir):
-    with open(os.path.join(BoardGreetingDir, i), 'r') as f:
+for i in os.listdir(BasePath+'/bMessages'):
+    with open(os.path.join(BasePath+'/bMessages', i), 'r') as f:
         BoardGreetings[i] = f.read()
 
 
@@ -65,36 +65,26 @@ def application(environ, start_response):
     if response_body:
         return send_and_finish(response_body, start_response)
 
-    # Parse path and return path information
-    userquery, mode, last50, catalog, autoupdate, autoupdateoffset, boardupdate, modParams, login, report = processPath(path, ip)
-
-    # Get user report if reporting a post
-    if report:
-        return send_and_finish(reportPost(environ, ip), start_response)
+    if len(path) > 4 and path[:4] == '/bin':
+        # Process all content under /bin
+        return send_and_finish(processBin(path, ip), start_response)
+    else:
+        # Parse path and return path information
+        userquery, mode, last50, catalog, update, updatetimestamp = processPath(path, ip)
 
     # Process user query (which board or multi-boards they are requesting to view)
     userquery, board, realquery, mixed = processQuery(userquery)
-    if '"' in board or board[0] == '.' or board in boardBlacklist:
+    if '"' in board or board[0] == '.' or board in BoardBlacklist:
         return send_and_finish(page_error('INVALID BOARD NAME'), start_response)
         
     # Send thread-updates if requested
-    if autoupdate:
-        response_body = send_thread_update(autoupdate, autoupdateoffset, board, mode)
-        return send_and_finish(response_body, start_response)
-
-    # Send board-updates if requested
-    if boardupdate:
-        response_body = send_board_update(boardupdate, realquery)
-        return send_and_finish(response_body, start_response)
-
-    # Handle mod logins
-    if login:
-        response_body = mod_login(environ)
+    if update:
+        response_body = send_thread_update(update, updatetimestamp, board, mode)
         return send_and_finish(response_body, start_response)
 
     # Process new thread or post if given
     if environ.get('REQUEST_METHOD') == 'POST':
-        response_body, new_session = new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
+        response_body, new_session = new_post_or_thread(environ, path, mode, board, last50, ip, admin)
         if response_body:
             return send_and_finish(response_body, start_response, new_session)
 
@@ -152,71 +142,55 @@ def processPath(path, ip): # Take the URI path (e.g. 4taba.net/all/5 has path: "
     # /B/c = catalog of board B
     # /B/cN = page N of catalog on board B (only useful on boards such as "all" which technically can show threads beyond the board thread limit)
     # /B/# = thread # of board B
-    # /B/update/#!t = autoupdate thread # from board B at returning new posts after time t
+    # /B/update/#!t = update thread # from board B at returning new posts after time t
     if path[-1] == '/': path = path[:-1]
-    path = path.split('/')
+    path = path[1:].split('/')
     while len(path) < 5:
         path.append('') # This eliminates the need to perform redundant list length checks
     userquery = '' # userquery is the actual B value (remember it can be combinations of boards like "a+ma")
     mode = -1 # -1 means viewing the thread listing. 0 and higher means viewing a particular thread.
     last50 = False
     catalog = False
-    autoupdate = False
-    autoupdateoffset = 0
-    modParams = [] # Parameters sent to the server by a moderator for things such as deleting posts/threads
-    login = False # Is the user requesting a mod login?
-    report = False # Is the user reporting a post?
+    update = False
+    updatetimestamp = 0
 
+    userquery = path[0]
     try:
-        if path[1] == 'res': # User resources. Such as the post reporting form.
-            if len(path) == 3 and path[2] == 'report':
-                report = 1
-        elif path[1] == 'mod': # Moderator resources.
-            if len(path)==5 and path[2] == 'del':
-                modParams = ['delt',path[3],path[4],'']
-                mode = -1
-                userquery = 'listed'
-            elif len(path)==6:
-                modParams = [path[2],path[3],path[4],path[5]]
-            elif len(path)==3 and path[2]=='login':
-                login = 1
-        elif path[1]: # User is just requesting a (non-blank) board or thread to view/post on
-            userquery = path[1]
-            if len(path) > 2:
-                if path[2][0] in ['p','c']:
-                    mode = int(path[2][1:])-1 if len(path[2])>1 else 0
-                    if mode > -1:
-                        mode = (mode + 1) * -1
-                    if path[2][0] == 'c':
-                        catalog = 1
-                elif path[2][0] == 'b':
-                    if len(path[2]) > 1:
-                        boardupdate = 2
-                    else:
-                        boardupdate = 1
-                elif len(path) > 3 and path[3] == 'l50':
-                    last50 = 1
-                    mode = int(path[2])
-                elif len(path) > 4:
-                    if path[2] == 'a':
-                        mode = int(path[3])
-                        userquery = path[1]
-                        autoupdate = 1
-                        autoupdateoffset = int(path[4])
-                    if path[2] == 'd':
-                        mode = int(path[3])
-                        userquery = path[1]
-                        autoupdate = 2
+        if path[1]:
+            if path[1][0] in ['p','c']:
+                mode = int(path[1][1:])-1
+                if mode > -1:
+                    mode = (mode + 1) * -1
+                if path[1][0] == 'c':
+                    catalog = 1
+            elif path[1][0] == 'b':
+                if len(path[1]) > 1:
+                    boardupdate = 2
                 else:
+                    boardupdate = 1
+            elif path[1] == 'update':
+                if path[1] == 'a':
                     mode = int(path[2])
-
-    except(ValueError):
-        userquery = ''
-        mode = -1
-        catalog = 0
+                    userquery = path[0]
+                    update = 1
+                    updatetimestamp = int(path[3])
+                if path[1] == 'd':
+                    mode = int(path[2])
+                    userquery = path[0]
+                    update = 2
+            elif path[2] == 'l50':
+                last50 = 1
+                mode = int(path[1])
+            else:
+                mode = int(path[1])
+    except:
+        pass
 
     userquery = ''.join(ch for ch in userquery if ch not in ' \/"')
-    return [userquery, mode, last50, catalog, autoupdate, autoupdateoffset, boardupdate, modParams, login, report]
+    return [userquery, mode, last50, catalog, update, updatetimestamp]
+
+def binContent(path):
+    pass
 
 def processQuery(userquery): # Process the board query sent by the user (e.g. prepare an SQL string for multiple board requests like "a+ma") and also any timestamp filter (marked by exclamation point, used for the board-watcher) and return the main board
     e = userquery.find('!')
@@ -290,12 +264,8 @@ def setOptions(options): # Set options from the "Email" field on the post form
             pass
     return bump,email,target
 
-def getStyle(b): # Return the board style
-    if b in BoardInfo:
-        style = BoardInfo[b][1]
-    else:
-        style = UnlistedCSS
-    return style
+def getStyle(board):
+    return BoardInfo[board][1] if board in BoardInfo else BoardInfo['*'][1]
 
 def getBan(ip):
     try:
@@ -448,9 +418,9 @@ def get_path_and_data(environ): # Get the URI path and other headers sent by the
 
     return ['', path, admin, cookieStyle, ip]
 
-def send_thread_update(autoupdate, autoupdateoffset, board, mode):
-    if autoupdate == 1:
-        Cur.execute('SELECT * FROM thread."'+board+'/'+str(mode)+'" WHERE postnum>=%s ORDER BY postnum ASC;', (str(autoupdateoffset),))
+def send_thread_update(update, updatetimestamp, board, mode):
+    if update == 1:
+        Cur.execute('SELECT * FROM thread."'+board+'/'+str(mode)+'" WHERE postnum>=%s ORDER BY postnum ASC;', (str(updatetimestamp),))
     posts = Cur.fetchall()
     response_body = str(len(posts))+'   ' if len(posts) > 0 else ''
     for idx, post in enumerate(posts):
@@ -522,111 +492,121 @@ def mod_login(environ):
 
     return response_body
 
-def getFileUpload(fileitem, post, filename, extension, board, threadnum, spoiler, OP, dim):
+def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
     loop = 0
-    filestring = ''
-    localstring = ''
-    sizestring = ''
-    localname = ''
-    while loop<4:
-        loop += 1
 
-        fsize='0 B'
-        isize = ''
-        width = 25
+    fsize='0 B'
+    isize = ''
+    width = 25
 
-        localname = str(int(time()*1000)+loop)+'.'+extension
-        fullpath = BasePath+'res/brd/'+board+'/'+str(threadnum)
-        if not os.path.exists(fullpath):
-            os.makedirs(fullpath)
-        chunkcount = 1
-        with open(fullpath+'/'+localname,'wb',10000) as f:
-            for chunk in fbuffer(fileitem.file):
-                if chunkcount >= 1259:
-                    response_body = '<html><body><h1>Filesize too large. Maximum upload size is 12MB.</h1></body></html>'
-                    os.remove(fullpath+'/'+localname)
-                    return response_body
-                f.write(chunk)
-                chunkcount += 1
-        if spoiler:
-            copyfile(BasePath+'res/spoiler.jpg', fullpath+'/t'+localname+'.jpg')
-        elif extension in ['jpg','jpeg','png','gif']:
-            image = Image.open(fullpath+'/'+localname)
-            isize = ', '+str(image.size[0])+'x'+str(image.size[1])
-            if extension in ['png','gif']:
-                image = image.convert('RGBA')
-                imageb = Image.new('RGB', image.size, StyleTransparencies[getStyle(board)][0])
-                imageb.paste(image, image)
-                image = imageb
-            image.thumbnail((dim, dim),Image.ANTIALIAS)
-            image.save(fullpath+'/t'+localname+'.jpg', 'JPEG', quality=75)
-            width = image.size[0]+25
-        elif extension in ['webm','mp4','flv']:
-            os.system(FFpath+' -i '+fullpath+'/'+localname+' -vf thumbnail -frames:v 1 '+fullpath+'/t'+localname+'.jpg')
-            image = Image.open(fullpath+'/t'+localname+'.jpg')
-            image.thumbnail((dim, dim),Image.ANTIALIAS)
-            image.save(fullpath+'/t'+localname+'.jpg', 'JPEG', quality=75)
-            width = image.size[0]+25
-        else:
-            if extension in ['mp3','m4a','ogg','flac','wav']:
-                os.system(FFpath+' -i '+fullpath+'/'+localname+' '+fullpath+'/e'+localname+'.jpg')
-                if os.path.exists(fullpath+'/e'+localname+'.jpg'):
-                    os.rename(fullpath+'/'+localname, fullpath+'/e'+localname)
-                    localname = 'e' + localname
-                    image = Image.open(fullpath+'/'+localname+'.jpg')
-                    isize = ', '+str(image.size[0])+'x'+str(image.size[1])
-                    image.thumbnail((dim, dim),Image.ANTIALIAS)
-                    image.save(fullpath+'/t'+localname+'.jpg', 'JPEG', quality=75)
-                    width = image.size[0]+25
-                else:
-                    copyfile(BasePath+'res/audio.jpg', fullpath+'/t'+localname+'.jpg')
-                    width = 153
-            elif extension == 'swf':
-                copyfile(BasePath+'res/flash.png', fullpath+'/t'+localname+'.jpg')
-                width = 153
-            else:
-                copyfile(BasePath+'res/genericThumb.jpg', fullpath+'/t'+localname+'.jpg')
-                width = 153
-        fsize = convertSize(os.path.getsize(fullpath+'/'+localname)) + isize
+    localname = str(int(time()*1000))
+    fullpath = BasePath+'res/brd/'+board+'/'+str(threadnum)+'/'
+    fullname = fullpath + localname
+    thumbname = fullpath + 't' + localname
+    if not os.path.exists(fullpath):
+        os.makedirs(fullpath)
+    chunkcount = 1
+    with open(fullname,'wb',10000) as f:
+        for chunk in fbuffer(fileitem.file):
+            if chunkcount >= 1259:
+                os.remove(fullname)
+                return ['' ,'' ,0, page_error('Error: Filesize too large. Maximum upload size is 12MB.')]
+            f.write(chunk)
+            chunkcount += 1
 
-        if loop==1:
-            filestring = filename
-            localstring = localname
-            sizestring = fsize
-        else:
-            filestring += '/'+filename
-            localstring += '/'+localname
-            sizestring += '/'+fsize
-            width = 25
-        try:
-            fileitem = post['file'+str(loop+1)]
-            #filename = fileitem.filename
-            filename = escape(fileitem.filename)
-            filename.replace('/','')
-            if filename == '':
+    #test = magic.from_file(fullname).decode('utf-8')
+    test = magic.from_file(fullname)
+    stest = test.split(' ')[0]
+    if stest in ['JPEG','PNG','GIF']:
+        filetype = stest
+    elif test == 'WebM':
+        filetype = 'WebM'
+    elif test == 'Matroska data':
+        filetype = 'MKV'
+    elif 'MP4' in test:
+        filetype = 'MP4'
+    elif 'Macromedia Flash' in test:
+        filetype = 'SWF'
+    elif 'Zip archive':
+        filetype = 'HTML5'
+
+    if board == 'f' and filetype != 'SWF':
+        return ['', '', 0, page_error('Error: Only flash files allowed on /f/')]
+
+    if spoiler:
+        copyfile(BasePath+'res/spoiler.jpg', thumbname)
+    elif filetype in ['JPEG','PNG','GIF']:
+        image = Image.open(fullname)
+        isize = ', '+str(image.size[0])+'x'+str(image.size[1])
+        if filetype in ['PNG','GIF']:
+            image = image.convert('RGBA')
+            imageb = Image.new('RGB', image.size, StyleTransparencies[getStyle(board)][OP])
+            imageb.paste(image, image)
+            image = imageb
+        image.thumbnail((dim, dim),Image.ANTIALIAS)
+        image.save(thumbname, 'JPEG', quality=75)
+        width = image.size[0]+25
+    elif filetype in ['WebM','MP4','MKV']:
+        os.system(FFpath+' -i '+fullname+' -vf thumbnail -frames:v 1 '+thumbname)
+        image = Image.open(thumbname)
+        image.thumbnail((dim, dim),Image.ANTIALIAS)
+        image.save(thumbname, 'JPEG', quality=75)
+        width = image.size[0]+25
+    elif filetype == 'HTML5':
+        shutil.move(fullname, fullname+'.html5')
+        if not os.path.exists(fullname):
+            os.makedirs(fullname)
+        zip_ref = zipfile.ZipFile(fullname+'.html5', 'r')
+        zsize = 0
+        zdx = 0
+        while True:
+            try:
+                zsize += zip_ref.infolist()[zdx].file_size
+                zdx += 1
+            except(IndexError):
                 break
-            extension = filename.split('.')
-            filename = '.'.join(extension[:-1])
-            if len(filename)>33:
-                filename = filename[:33]+'..'
-            extension = extension[-1].lower()
-            filename = filename+'.'+extension
-            spoiler = [escape(spoiler) for spoiler in post.getlist('spoiler'+str(loop+1))]
-            if 'y' in spoiler:
-                spoiler = 1
-            else:
-                spoiler = 0
-        except(KeyError):
-            break
+        if zsize <= 1228800:
+            zip_ref.extractall(fullname)
+            zip_ref.close()
+            copyfile(BasePath+'res/html5.png', thumbpath)
+            width = 153
+            with open(fullname+'/index.html','w') as f:
+                temp = sandbox % (board+'/'+str(threadnum)+'/'+localname+'.html', board+'/'+str(threadnum)+'/'+localname)
+                f.write(temp)
+        else:
+            os.remove(fullname)
+            return ['', '', 0, page_error('Error: File decompresses to larger than the maximum filesize. Please fix your zip file and try again.')]
+    elif filetype in ['MP3','M4A','OGG','FLAC','WAV']:
+        os.system(FFpath+' -i '+fullname+' '+thumbname)
+        if os.path.exists(thumbname):
+            image = Image.open(thumbname)
+            isize = ', '+str(image.size[0])+'x'+str(image.size[1])
+            image.thumbnail((dim, dim),Image.ANTIALIAS)
+            image.save(thumbname, 'JPEG', quality=75)
+            width = image.size[0]+25
+        else:
+            copyfile(BasePath+'res/audio.jpg', thumbname)
+            width = 153
+    elif filetype == 'SWF':
+        copyfile(BasePath+'res/flash.png', thumbname)
+        width = 153
+    else:
+        copyfile(BasePath+'res/genericThumb.jpg', thumbname)
+        width = 153
+    fsize = filetype + ', '+ convertSize(os.path.getsize(fullname)) + isize
 
-    return [filestring, localstring, sizestring, width]
+    return [localname, fsize, width, '']
 
-def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams):
+
+def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
     set_cookie = []
+
     if board in BoardInfo: # listed board
         listed = True
+        lboard = board
     else:
         listed = False
+        lboard = '*'
 
     Cur.execute('SELECT time FROM '+('main.thread_cooldown' if mode<0 else 'main.post_cooldown')+' where ip=%s;', (ip,))
     timestamp2 = Cur.fetchone()
@@ -670,17 +650,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
     post = FieldStorage(fp=environ['wsgi.input'],environ=environ,keep_blank_values=True)
     #password = escape(post.getfirst('pass'))
 
-    if board in BoardInfo:
-        username = BoardInfo[board][2]
-    else:
-        username = UnlistedUsername
-
-    try:
-        value = escape(post.getfirst('submit'))
-    except(AttributeError):
-        pass
-    #    modAction(password, admin, ip, *modParams)
-    #    value=''
+    username = BoardInfo[lboard][2]
 
     if board in ['listed','unlisted','all','res','mod','watcher','settings','']:
         return ['', set_cookie]
@@ -689,204 +659,184 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin, modParams)
     if ban:
         return [ban, set_cookie]
 
-    if value == 'Submit':
+    try:
+        title = escape(post.getfirst('title'))
+        if len(title)>150:
+            title=title[:150]+'...'
+    except:
+        title = ''
+
+    try:
+        name = escape(post.getfirst('name'))
+        if len(name)>50:
+            name=name[:50]+'...'
+    except:
+        name = ''
+
+    try:
+        options = escape(post.getfirst('email'))
+    except:
+        options = ''
+
+    if mode < 0: # on main page get thread number for OP post linking
         try:
-            title = escape(post.getfirst('title'))
-            if len(title)>150:
-                title=title[:150]+'...'
-        except:
-            title = ''
+            Cur.execute('SELECT last_value FROM board."'+board+'_threadnum_seq";')
+            threadnum = int(Cur.fetchone()[0]) + 1
+        except(psycopg2.ProgrammingError):
+            threadnum = 1
+    else: #inside thread threadnum is just mode
+        threadnum = mode
 
-        try:
-            name = escape(post.getfirst('name'))
-            if len(name)>50:
-                name=name[:50]+'...'
-        except:
-            name = ''
-
-        try:
-            options = escape(post.getfirst('email'))
-        except:
-            options = ''
-
-        if mode < 0: # on main page get thread number for OP post linking
-            try:
-                Cur.execute('SELECT last_value FROM board."'+board+'_threadnum_seq";')
-                threadnum = int(Cur.fetchone()[0]) + 1
-            except(psycopg2.ProgrammingError):
-                threadnum = 1
-        else: #inside thread threadnum is just mode
-            threadnum = mode
-
-        try:
-            #comment = '<br>'.join(escape(post.getfirst('comment')).split('\n'))
-            #comment = escape(post.getfirst('comment')).replace('\n','<br>')
-            comment = escape(post.getfirst('comment'))
-            if len(comment)>8000:
-                response_body = 'Post body was too long.'
-                return [response_body, set_cookie]
-            if comment.find('\r\n') != -1:
-                comment = comment.split('\r\n')
-            elif comment.find('\n') != -1:
-                if comment.find('\r') != -1:
-                    comment = comment.replace('\r','')
-                comment = comment.split('\n')
-            else:
-                comment = comment.split('\r')
-            if len(comment)>200:
-                response_body = 'Post body has too many lines.'
-                return [response_body, set_cookie]
-            comment,quit = processComment('<br>'.join(comment), board)
-        except:
-            comment = ''
-            quit = 0
-
-        if quit:
-            return ['Post contains illegal content: dropped', set_cookie]
-
-        images = True if 'y' in [escape(images) for images in post.getlist('images')] else False
-        spoiler = True if 'y' in [escape(spoiler) for spoiler in post.getlist('spoiler')] else False
-
-        bump,email,target = setOptions(options)
-        if name == '':
-            name = username
-        if admin and name == admin: name = '<span style="color:#AA0;text-shadow:1px 1px #000;">'+admin+'</span>'
-        if email: name = '<a href="mailto:'+email+'">'+name+'</a>'
-
-        if images or board == 'f':
-            fileitem = post['file']
-            filename = escape(fileitem.filename)
-            filename.replace('/','')
-            if filename!='':
-                extension = filename.split('.')
-                if len(extension) == 1:
-                    filename = extension[0]
-                    extension = ''
-                else:
-                    filename = '.'.join(extension[:-1])
-                    if len(filename)>33:
-                        filename = filename[:33]+'..'
-                    extension = extension[-1].lower()
-                    filename = filename+'.'+extension
-            else:
-                extension=''
+    try:
+        #comment = '<br>'.join(escape(post.getfirst('comment')).split('\n'))
+        #comment = escape(post.getfirst('comment')).replace('\n','<br>')
+        comment = escape(post.getfirst('comment'))
+        if len(comment)>8000:
+            response_body = 'Post body was too long.'
+            return [response_body, set_cookie]
+        if comment.find('\r\n') != -1:
+            comment = comment.split('\r\n')
+        elif comment.find('\n') != -1:
+            if comment.find('\r') != -1:
+                comment = comment.replace('\r','')
+            comment = comment.split('\n')
         else:
-            filename = ''
-            extension = ''
+            comment = comment.split('\r')
+        if len(comment)>200:
+            response_body = 'Post body has too many lines.'
+            return [response_body, set_cookie]
+        comment = processComment('<br>'.join(comment), board)
+    except:
+        comment = ''
+        quit = 0
 
-        if board == 'f' and filename != '' and extension != 'swf':
-            return ['Only flash files allowed on /f/', set_cookie]
+    images = True if 'y' in [escape(images) for images in post.getlist('images')] else False
+    spoiler = True if 'y' in [escape(spoiler) for spoiler in post.getlist('spoiler')] else False
 
-        if filename != '' and comment == '':
-            comment = '<br>ｷﾀ━━━(ﾟ∀ﾟ)━━━!!'
+    bump,email,target = setOptions(options)
+    if name == '':
+        name = username
+    if admin and name == admin: name = '<span style="color:#AA0;text-shadow:1px 1px #000;">'+admin+'</span>'
+    if email: name = '<a href="mailto:'+email+'">'+name+'</a>'
 
-        if mode < 0 and (comment != '' or filename != ''): # new thread
+    if images or board == 'f':
+        fileitem = post['file']
+        filename = escape(fileitem.filename)
+        filename.replace('/','')
+        if len(filename)>33:
+            filename = filename[:33]+'..'
+    else:
+        filename = ''
+
+    if filename != '' and comment == '':
+        comment = '<br>ｷﾀ━━━(ﾟ∀ﾟ)━━━!!'
+
+    if mode < 0 and (comment != '' or filename != ''): # new thread
 #                Cur.execute('SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s);', ('b'+board,))
 #                threadnum = 0
 #                if Cur.fetchone()[0]: #board exists
-            if threadnum == 1: # new board
-                Cur.execute('CREATE TABLE board."'+board+'" (threadnum serial, bump_time integer, post_count integer, board text, creation_time integer, deletion_time integer, title text, imageAllow boolean);')
-                #Cur.execute('INSERT INTO main.dat VALUES (%s, 1);', (board,))
+        if threadnum == 1: # new board
+            Cur.execute('CREATE TABLE board."'+board+'" (threadnum serial, bump_time integer, post_count integer, board text, creation_time integer, deletion_time integer, title text, imageAllow boolean);')
+            #Cur.execute('INSERT INTO main.dat VALUES (%s, 1);', (board,))
 #                    threadnum = 1
 
-            if filename:
-                filestring, localstring, sizestring, width = getFileUpload(fileitem, post, filename, extension, board, threadnum, spoiler, 1, 256)
+        if filename:
+            localname, fsize , width, ferror = getFileUpload(fileitem, board, threadnum, spoiler, 1, 256)
+            if ferror:
+                return [page_error(ferror), set_cookie]
+        else:
+            filename = localname = fsize = ''
+            width = 25
+
+        #Cur.execute('UPDATE main.dat SET thread_count=thread_count+1 WHERE board=%s;', (board,))
+        Cur.execute('INSERT INTO board."'+board+'" VALUES (DEFAULT, %s, 0, %s, %s, 0, %s, %s);', (timestamp, board, timestamp, title, images))
+        if listed:
+            Cur.execute('INSERT INTO board.listed VALUES (%s, %s, 0, %s, %s, 0, %s, %s);', (threadnum, timestamp, board, timestamp, title, images))
+        else:
+            Cur.execute('INSERT INTO board.unlisted VALUES (%s, %s, 0, %s, %s, 0, %s, %s);', (threadnum, timestamp, board, timestamp, title, images))
+
+        Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (time_string text, file_path text, comment text, file_name text, name text, ip text, postnum serial, hidden boolean, image_size text, image_width integer, session text, subs boolean);')
+        Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, comment, filename, name, ip, fsize, str(width), session))
+        DBconnection.commit()
+        #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'/'+str(threadnum)+'");}</script></head><body onload="redirect()"><h1>Thread submitted successfully...</h1></body></html>'
+        return [page_redirect(path+'/'+str(threadnum), 'Thread submitted successfully...'), set_cookie]
+    elif comment != '' or filename != '': #just a post
+        try:
+            Cur.execute('SELECT imageAllow FROM board."'+board+'" WHERE threadnum=%s;', (threadnum,))
+            imageAllow = bool(Cur.fetchone()[0])
+
+            if imageAllow and filename:
+                localname, fsize, width, ferror = getFileUpload(fileitem, board, threadnum, spoiler, 0, 150)
+                if ferror:
+                    return [page_error(ferror), set_cookie]
             else:
-                filestring = localstring = sizestring = ''
+                filename = localname = fsize = ''
                 width = 25
 
-            #Cur.execute('UPDATE main.dat SET thread_count=thread_count+1 WHERE board=%s;', (board,))
-            Cur.execute('INSERT INTO board."'+board+'" VALUES (DEFAULT, %s, 0, %s, %s, 0, %s, %s);', (timestamp, board, timestamp, title, images))
-            if listed:
-                Cur.execute('INSERT INTO board.listed VALUES (%s, %s, 0, %s, %s, 0, %s, %s);', (threadnum, timestamp, board, timestamp, title, images))
+            #Cur.execute('SELECT hidden FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=0;')
+            #dnum = Cur.fetchone()[0]
+
+            if not target:
+                Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, comment, filename, name, ip, fsize, str(width), session))
+                #Cur.execute('UPDATE thread."'+board+'/'+str(mode)+'" SET hidden=%s WHERE postnum=0;', (str(int(dnum)+1),))
+
+                #Cur.execute('SELECT postnum FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=(SELECT max(postnum) FROM thread."'+board+'/'+str(mode)+'");')
+                #postnum = Cur.fetchone()[0]
+                Cur.execute('UPDATE board."'+board+'" SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s;', (str(threadnum),))
+                if listed:
+                    Cur.execute('UPDATE board.listed SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
+                else:
+                    Cur.execute('UPDATE board.unlisted SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
+                DBconnection.commit()
             else:
-                Cur.execute('INSERT INTO board.unlisted VALUES (%s, %s, 0, %s, %s, 0, %s, %s);', (threadnum, timestamp, board, timestamp, title, images))
+                Cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'sub\' AND table_name=\''+board+'/'+str(threadnum)+'/'+str(target)+'\');')
+                if not Cur.fetchone()[0]:
+                    Cur.execute('CREATE TABLE sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" (time_string text, comment text, ip text, postnum serial, hidden boolean, session text);')
+                    Cur.execute('UPDATE thread."'+board+'/'+str(threadnum)+'" SET subs=true WHERE postnum=%s;', (target,))
+                Cur.execute('INSERT INTO sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" VALUES (%s, %s, %s, DEFAULT, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), comment, ip, session))
+        except(psycopg2.ProgrammingError):
+            Cur.execute("ROLLBACK")
+            return [page_error('Error creating post.'), set_cookie]
+        #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'");}</script></head><body onload="redirect()"><h1>Post submitted successfully...</h1></body></html>'
+        return [page_redirect(path, 'Post submitted successfully...'), set_cookie]
+    else:
+        return [page_error('Please provide a comment or file.'), set_cookie]
 
-            Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (time_string text, file_path text, comment text, file_name text, name text, ip text, postnum serial, hidden boolean, image_size text, image_width integer, session text, subs boolean);')
-            Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width), session))
-            DBconnection.commit()
-            #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'/'+str(threadnum)+'");}</script></head><body onload="redirect()"><h1>Thread submitted successfully...</h1></body></html>'
-            return [page_redirect(path+'/'+str(threadnum)+'/l50', 'Thread submitted successfully...'), set_cookie]
-        elif comment != '' or filename != '': #just a post
-            try:
-                Cur.execute('SELECT imageAllow FROM board."'+board+'" WHERE threadnum=%s;', (threadnum,))
-                imageAllow = bool(Cur.fetchone()[0])
+    #return ['', set_cookie]
 
-                if imageAllow and filename:
-                    filestring, localstring, sizestring, width = getFileUpload(fileitem, post, filename, extension, board, threadnum, spoiler, 0, 150)
-                else:
-                    filestring = localstring = sizestring = ''
-                    width = 25
-
-                #Cur.execute('SELECT hidden FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=0;')
-                #dnum = Cur.fetchone()[0]
-
-                if not target:
-                    Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localstring, comment, filestring, name, ip, sizestring, str(width), session))
-                    #Cur.execute('UPDATE thread."'+board+'/'+str(mode)+'" SET hidden=%s WHERE postnum=0;', (str(int(dnum)+1),))
-
-                    #Cur.execute('SELECT postnum FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=(SELECT max(postnum) FROM thread."'+board+'/'+str(mode)+'");')
-                    #postnum = Cur.fetchone()[0]
-                    Cur.execute('UPDATE board."'+board+'" SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s;', (str(threadnum),))
-                    if listed:
-                        Cur.execute('UPDATE board.listed SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
-                    else:
-                        Cur.execute('UPDATE board.unlisted SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
-                    DBconnection.commit()
-                else:
-                    Cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'sub\' AND table_name=\''+board+'/'+str(threadnum)+'/'+str(target)+'\');')
-                    if not Cur.fetchone()[0]:
-                        Cur.execute('CREATE TABLE sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" (time_string text, comment text, ip text, postnum serial, hidden boolean, session text);')
-                        Cur.execute('UPDATE thread."'+board+'/'+str(threadnum)+'" SET subs=true WHERE postnum=%s;', (target,))
-                    Cur.execute('INSERT INTO sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" VALUES (%s, %s, %s, DEFAULT, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), comment, ip, session))
-            except(psycopg2.ProgrammingError):
-                Cur.execute("ROLLBACK")
-                return [page_error('Error creating post.'), set_cookie]
-            #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'");}</script></head><body onload="redirect()"><h1>Post submitted successfully...</h1></body></html>'
-            return [page_redirect(path, 'Post submitted successfully...'), set_cookie]
-        else:
-            return [page_error('Please provide a comment or file.'), set_cookie]
-
-    return ['', set_cookie]
-
-def fill_header(header, mode, board, title, userquery, mixed, tboard, imageAllow, cookieStyle):
+def fill_header(header, mode, board, lboard, title, userquery, mixed, tboard, imageAllow, cookieStyle):
     if BannerRandom:
         BannerCurrent = Banners[randint(0, len(Banners))]
     else:
         BannerCurrent = Banners[int(int(time()) / (BannerRotationTime*60)) % len(Banners)]
-    boardStyle = getStyle(board)
+    boardStyle = BoardInfo[lboard][1]
 
-    if board in BoardInfo:
-        boardTitle = BoardInfo[board][0]
-        boardMessage = BoardGreetings[board] if board in BoardGreetings else ''
-    else:
-        boardTitle = UnlistedTitle
-        boardMessage = UnlistedMessage
+    boardTitle = BoardInfo[lboard][0]
+    boardMessage = BoardGreetings[board if board in BoardGreetings else '*']
 
     if cookieStyle == 'tomorrow':
-        styles = '<link rel="stylesheet" type="text/css" title="tomorrow" href="/res/styletomorrow.css">'
+        styles = '<link rel="stylesheet" type="text/css" title="tomorrow" href="/res/styles/tomorrow.css">'
     else:
-        styles = '<link rel="stylesheet" type="text/css" title="default" href="/res/style'+boardStyle+'.css"><link rel="stylesheet" type="text/css" title="default" href="/res/styleThreads.css">'
+        #styles = '<link rel="stylesheet" type="text/css" title="default" href="/res/styles/'+boardStyle+'.css"><link rel="stylesheet" type="text/css" title="default" href="/res/styles/threads.css">'
+        styles = '<link rel="stylesheet" type="text/css" title="default" href="/res/styles/threads.css">'
 
     if mode < 0:
-        header = header % ('/'+board+'/', styles+('<style>.postForm{display:none;}</style>' if board in ['listed','unlisted','all'] else '')+('<style>.tag{display:none;}</style>' if board not in ['listed','unlisted','all'] and not mixed else ''), '', ' bg', BannerCurrent, '/'+(userquery+'/ - Mixed Board<br>/'+board+'/ main' if mixed else board+'/ - '+boardTitle), boardMessage)
+        header = header % ('/'+board+'/', styles, 'class="'+boardStyle+'"', ' bg', BannerCurrent, '/'+(userquery+'/ - Mixed Board<br>/'+board+'/ main' if mixed else board+'/ - '+boardTitle), boardMessage)
     else:
-        header = header % ('/'+board+'/ '+title, styles+'<style>.hbox{display:none;}'+('.fbox{display:none;}' if imageAllow==0 else '')+'.tb{background:transparent !important;} .thread{border:none;}</style>', 'style="height:100%;margin-left:105px;padding:0px;border:none;box-shadow:none" class="style'+boardStyle+'" ', '')
+        header = header % ('/'+board+'/ '+title, styles, 'style="height:100%;margin-left:105px;padding:0px;border:none;box-shadow:none" class="threadcontainer '+boardStyle+'" ', '')
     return header
 
 def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, admin, cookieStyle):
     error = 0
 
-    if board in BoardInfo:
-        displayMode = BoardInfo[board][4]
-        maxThreads = BoardInfo[board][3]
-    else:
-        displayMode = UnlistedDisplayMode
-        maxThreads = UnlistedMaxThreads
+    lboard = board if board in BoardInfo else '*'
+
+    displayMode = BoardInfo[lboard][5]
+    maxThreads = BoardInfo[lboard][3]
     
     if mode < 0:
-        response_body_header = PageHeader + FtEN
-        response_body_header = fill_header(response_body_header, mode, board, '', userquery, mixed, '', 0, cookieStyle)
+        response_body_header = PageHeader + '<center><div style="margin:0 auto;" class="banner"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/banners/%s"></div></center><hr><div class="msg"><div class="msg2"><h1 class="boardTitle">%s</h1>%s</div></div>' + (FtEN if board not in ['listed', 'unlisted', 'all'] else '')
+        response_body_header = fill_header(response_body_header, mode, board, lboard, '', userquery, mixed, '', 0, cookieStyle)
         try:
             if catalog == 0:
                 Cur.execute('('+realquery+') ORDER BY bump_time DESC OFFSET %s LIMIT 15;', (str(-15*(mode+1)),))
@@ -946,7 +896,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
                 break
 
             if mode > -1:
-                response_body_header = fill_header(PageHeader, mode, board, title, '', 0, posted_on, imageAllow, cookieStyle)
+                response_body_header = fill_header(PageHeader, mode, board, lboard, title, '', 0, posted_on, imageAllow, cookieStyle)
             for idx, post in enumerate(posts):
                 if last50 and idx != 0 and idx < len(posts)-50: #SKIP POSTS IF LAST50
                     continue
@@ -1005,7 +955,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
     fswitch = 1
     response_body = ''
     if OP:
-        divclass = 'thread'
+        divclass = 'threadcontainer'
     else:
         if not sub:
             divclass = 'post'
@@ -1031,7 +981,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
 
     else:
         #response_body += ('<div'+(' class="style'+getStyle(posted_on)+'"' if mode<0 else '')+'>' if OP==1 else '')+'<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'&nbsp;<span class="title" style="font-size:initial;"><a href="/'+posted_on+'/'+str(threadnum)+'">View</a>|<a onclick="watchThread(\''+posted_on+'/'+str(threadnum)+'\','+str(post_count)+');" href="javascript:void(0)">Watch</a></span></div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> '+time_string+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
-        response_body += '<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+('style'+getStyle(posted_on)+' ' if OP else '')+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<div class="threadbody">' if OP else '')+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'">['+str(threadnum)+']. '+title+'</a>&nbsp;<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a> <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a>'+('<span> | Text Only</span>' if not imageAllow else '')+'</div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">'+time_string+'</span>'+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
+        response_body += '<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+(getStyle(posted_on)+' ' if mode<0 else '')+divclass+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<div class="threadbody">' if OP else '')+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'"><span style="font-size:16px;color:#000">【'+str(threadnum)+'】</span> '+title+'</a>&nbsp;<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a>'+(' <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a>' if mode>-1 or board in ['listed','unlisted','all'] else '')+('<span> | Text Only</span>' if not imageAllow else '')+'</div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">'+time_string+'</span>'+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
 
         imglst = file_name.split('/')
         if imglst[0] != '':
@@ -1053,7 +1003,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
             imglst = file_path.split('/')
             response_body += ('<div'+(' style="display:table"' if len(imglst)>1 else '')+'>') if OP else ''
             for imge in imglst:
-                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'.jpg" onclick="imgswap(this)"></a>'
+                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img data-ftype="'+fsize[0].split(',')[0]+'" src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'" onclick="imgswap(this)"></a>'
             response_body += '</div>' if OP else ''
         comment = post_comment.split('<br>')
         if mode<0 and len(comment)>20:
@@ -1071,7 +1021,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
                 for subpost in subposts:
                     response_body +=  buildPost(False, False, '', 0, posted_on, thread, subpost, ip, True)
                 response_body += '</div>'
-            response_body += '</div><br>'
+            response_body += '</div>'
         else:
             if mode<0 and post_count-5 > 0:
                 response_body += '<span class="foot">'+str(post_count-5)+' posts omitted</span>'

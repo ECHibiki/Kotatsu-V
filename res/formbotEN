@@ -6,10 +6,7 @@
 <tr>
 <td class="label">Comment</td><td colspan="3"><textarea style="width:500px;" rows="4" name="comment"></textarea></td>
 </tr>
-<tr class="hbox">
-<td class="label">Images</td><td colspan="3"><input type="radio" name="images" value="y" checked>Enabled / <input type="radio" name="images" value="n">Disabled</td>
-</tr>
-<tr class="fbox obox">
+<tr>
 <td class="label">File</td><td colspan="2"><input type="file" name="file"></td><td><input type="checkbox" name="spoiler" value="y">Spoiler Image</input></td>
 </tr>
 <tr>

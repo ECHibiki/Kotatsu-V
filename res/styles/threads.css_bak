@@ -13,7 +13,7 @@ blockquote{
 
     max-width:1600px;
     margin:7px;
-    padding:7px;
+    padding:2px;
     height:auto;
 }
 .post{
@@ -36,7 +36,7 @@ blockquote{
     padding:2px 0px 2px 0px;
 }
 .title{
-    font-size:24px;
+    font-size:28px;
     font-weight:bold;
 }
 .name{
@@ -196,6 +196,52 @@ img.cimg{
 .catalog .styledis .title{
     font-size:16px;
 }
+
+
+
+
+
+.stylenew{
+    font-family:"MS PGothic","Mona","Konatu","Textar","Monapo","IPAMonaPGothic","Gothic";
+    font-size:16px;
+    background:#efefef;
+    border:1px solid #000;
+}
+.stylenew .threadbody{
+}
+.stylenew .tb{
+    background:#fc9;
+}
+.stylenew .title{
+    color:#c00;
+}
+.stylenew .name{
+    color:#008000;
+}
+.stylenew .date{
+    color:#c4a;
+    #font-weight:bold;
+}
+.stylenew .post{
+    margin:0px;
+}
+.stylenew .quote{
+    color:#789922;
+}
+.stylenew blockquote{
+    margin-top:5px;
+}
+.catalog .stylenew .thread{
+    font-size:14px;
+}
+.catalog .stylenew .title{
+    font-size:16px;
+}
+
+
+
+
+
 
 .styleyotsuba{
     color:#800000;
