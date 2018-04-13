@@ -8,6 +8,7 @@
 
 BasePath = '/home/wwwrun/4taba/' # Set this to the server root directory
 
+import warnings
 import os
 import math
 import binascii
@@ -58,7 +59,7 @@ for i in os.listdir(BasePath+'/bMessages'):
 #############################################################
 def application(environ, start_response):
     databaseConnection() # Connect to database, or reconnect if timed out
-    Cur.execute('ROLLBACK') # Get rid of any errors from previous runs so the server doesn't hang
+    DBconnection.rollback() # Get rid of any errors from previous runs so the server doesn't hang
 
     # Get path and user data, send response and quit when appropriate
     response_body, path, admin, cookieStyle, ip = get_path_and_data(environ)
@@ -104,6 +105,7 @@ def databaseConnection():
         temp += ["host='"+DBHOST+"'"] if DBHOST else []
         temp += ["password='"+DBPASS+"'"] if DBPASS else []
         DBconnection = psycopg2.connect(' '.join(temp))
+    DBconnection.autocommit = True
     Cur = DBconnection.cursor()
 
 def send_and_finish(response, start_response, set_cookies=[]): # Calling this function sends the final message to the user
@@ -236,10 +238,12 @@ def processQuery(userquery): # Process the board query sent by the user (e.g. pr
 
     return [userquery, board, realquery, mixed]
 
-def processComment(comment, board): # Process the user comment to add things such as "greentext", post links, URL's, etc.
+def processComment(comment, board, thread): # Process the user comment to add things such as "greentext", post links, URL's, etc.
     for filt in Filters:
         if filt[0] == 'cross-thread-link':
             comment = re.sub(filt[1], filt[2] % (board, board), comment)
+        elif filt[0] == 'post-link':
+            comment = re.sub(filt[1], filt[2] % (board, thread), comment)
         else:
             comment = re.sub(filt[1], filt[2], comment)
 
@@ -273,100 +277,81 @@ def getBan(ip):
         ban = Cur.fetchone()[0]
     except(TypeError):
         ban = ''
-        Cur.execute("ROLLBACK")
+        DBconnection.rollback()
     if ban:
         if ban == 'global':
             return '<html><body><h1>Your IP has a been banned.</h1></body></html>'
     return ''
 
-def reportPost(environ, ip): # User is reporting a post (Currently this is very unelegant, it just adds the reports to a text file on the server. In the future there will be a way for mods to view the reports without having to SSH into the server first)
-    timestamp = str(int(time()))
-    post = FieldStorage(fp=environ['wsgi.input'],environ=environ,keep_blank_values=True)
-
-    ban = getBan(ip)
-    if ban:
-        return ban
-
-    try:
-        board = escape(post.getfirst('board'))
-        tnum = escape(post.getfirst('tnum'))
-        pnum = escape(post.getfirst('pnum'))
-        reason = escape(post.getfirst('reason'))
-    except:
-        return 'Please fill out the form Properly.'
-    reportBody = 'Board: '+board+'\nThread Number: '+tnum+'\nPost Number: '+pnum+'\nReason: '+reason+'\n\n'
-    with open(BasePath+'reports','a') as f:
-        f.write(reportBody)
-    return '<html><body>The following report has been submitted:<br><br>'+reportBody.replace('\n','<br>')+'<hr><h1>Thank you for your report.</h1></body></html>'
-
-def modAction(password, admin, ip, a, b, t, p): # Uh oh, a mod is taking action
+def modAction(admin, ip, action, board, thread, post):
     databaseConnection()
 
-    if b in BoardInfo: # listed board
+    if admin: #real admin
+        if action == 'delt': # delete thread
+            deleteThread(board, thread)
+        elif a == 'del':
+            deletePost(board, thread, post)
+    elif a == 'udel': # User deleting his own post/thread
+        Cur.execute('SELECT ip FROM thread."'+board+'/'+thread+'" WHERE postnum=%s;', (post,))
+        if ip==Cur.fetchone()[0]:
+            if post=='1': #delete thread
+                deleteThread(board, thread)
+            else:
+                deletePost(board, thread, post)
+
+def deleteThread(board, thread):
+    databaseConnection()
+    warnings.resetwarnings()
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ START')
+
+    if board in BoardInfo: # listed board
         listed = True
     else:
         listed = False
-    if admin: #real admin
-        if a == 'delt': # delete thread
-            Cur.execute('DELETE FROM board."'+b+'" WHERE threadnum=%s;', (t,))
-            if listed:
-                Cur.execute('DELETE FROM board.listed WHERE board=%s AND threadnum=%s;', (b, t))
-            else:
-                Cur.execute('DELETE FROM board.unlisted WHERE board=%s AND threadnum=%s;', (b, t))
-            Cur.execute('DROP TABLE thread."'+b+'/'+t+'";')
-            DBconnection.commit()
-            Cur.execute('SELECT * FROM board."'+b+'" LIMIT 1;')
-            if len(Cur.fetchall()) == 0:
-                Cur.execute('DROP TABLE board."'+b+'";')
-                #DBconnection.commit()
-            if os.path.exists(BasePath+'res/brd/'+b+'/'+t):
-                rmtree(BasePath+'res/brd/'+b+'/'+t)
-            if os.listdir(BasePath+'res/brd/'+b) == []:
-                if os.path.exists(BasePath+'res/brd/'+b):
-                    os.rmdir(BasePath+'res/brd/'+b)
-        elif a == 'warn':
-            Cur.execute('UPDATE thread."'+b+'/'+t+'" SET comment = comment || \'<br><br><span class="warn">USER WAS WARNED FOR THIS POST</span>\' WHERE postnum=%s;', (p,))
-        elif a == 'del':
-            Cur.execute('DELETE FROM thread."'+b+'/'+t+'" WHERE postnum=%s;', (p,))
-            Cur.execute('UPDATE board."'+b+'" SET post_count=post_count-1 WHERE threadnum=%s;', (t,))
-            if listed:
-                Cur.execute('UPDATE board.listed SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (t, b))
-            else:
-                Cur.execute('UPDATE board.unlisted SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (t, b))
-        elif a == 'ban':
-            Cur.execute('SELECT ip FROM thread."'+b+'/'+t+'" WHERE postnum=%s;', (p,))
-            ip = Cur.fetchone()[0]
-            Cur.execute('INSERT INTO main.ban VALUES (%s, 2);', (ip,))
-            Cur.execute('UPDATE thread."'+b+'/'+t+'" SET comment = comment || \'<br><br><span class="band">USER WAS BANNED FOR THIS POST</span>\' WHERE postnum=%s;', (p,))
 
-    elif a == 'udel': # User deleting his own post/thread
-        Cur.execute('SELECT a FROM thread."'+b+'/'+t+'" WHERE postnum=%s;', (p,))
-        if ip==Cur.fetchone()[0]:
-            if p=='1': #delete thread
-                Cur.execute('DELETE FROM board."'+b+'" WHERE threadnum=%s;', (t,))
-                if listed:
-                    Cur.execute('DELETE FROM board.listed WHERE board=%s AND threadnum=%s;', (b, t))
-                else:
-                    Cur.execute('DELETE FROM board.unlisted WHERE board=%s AND threadnum=%s;', (b, t))
-                Cur.execute('DROP TABLE thread."'+b+'/'+t+'";')
-                DBconnection.commit()
-                Cur.execute('SELECT * FROM board."'+b+'" LIMIT 1;')
-                if len(Cur.fetchall()) == 0:
-                    Cur.execute('DROP TABLE board."'+b+'";')
-                    Cur.execute('DELETE FROM main.dat WHERE board=%s;', (b,))
-                    #DBconnection.commit()
-                rmtree(BasePath+'res/brd/'+b+'/'+t)
-                if os.listdir(BasePath+'res/brd/'+b) == []:
-                    os.rmdir(BasePath+'res/brd/'+b)
-            else:
-                Cur.execute('DELETE FROM thread."'+b+'/'+t+'" WHERE postnum=%s;', (p,))
-                Cur.execute('UPDATE board."'+b+'" SET postcount=postcount-1 WHERE threadnum=%s;', (t,))
-                if listed:
-                    Cur.execute('UPDATE board.listed SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (t, b))
-                else:
-                    Cur.execute('UPDATE board.unlisted SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (t, b))
+    Cur.execute('DELETE FROM board."'+board+'" WHERE threadnum=%s;', (thread,))
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ DELETED')
+    if listed:
+        Cur.execute('DELETE FROM board.listed WHERE board=%s AND threadnum=%s;', (board, thread))
+    else:
+        Cur.execute('DELETE FROM board.unlisted WHERE board=%s AND threadnum=%s;', (board, thread))
+    #DBconnection.commit()
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ COMMITED')
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ DELETED2 INFO: DROP TABLE thread."'+board+'/'+thread+'";')
+    DBconnection.rollback()
+    Cur.execute('DROP TABLE thread."'+board+'/'+thread+'";')
+    DBconnection.rollback()
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ DELETED3')
+    #DBconnection.commit()
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ COMMITED2')
+    Cur.execute('SELECT threadnum FROM board."'+board+'" LIMIT 1;')
+    if len(Cur.fetchall()) == 0:
+        Cur.execute('DROP TABLE board."'+board+'";')
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ IF1')
+    if os.path.exists(BasePath+'res/brd/'+board+'/'+thread):
+        rmtree(BasePath+'res/brd/'+board+'/'+thread)
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ IF2')
+    if os.listdir(BasePath+'res/brd/'+board) == []:
+        os.rmdir(BasePath+'res/brd/'+board)
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ IF3')
+    #DBconnection.commit()
+    warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ COMMITED3')
 
-    DBconnection.commit()
+def deletePost(board, thread, post):
+    databaseConnection()
+    if board in BoardInfo: # listed board
+        listed = True
+    else:
+        listed = False
+
+    Cur.execute('DELETE FROM thread."'+board+'/'+thread+'" WHERE postnum=%s;', (post,))
+    Cur.execute('UPDATE board."'+board+'" SET post_count=post_count-1 WHERE threadnum=%s;', (thread,))
+    if listed:
+        Cur.execute('UPDATE board.listed SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (thread, board))
+    else:
+        Cur.execute('UPDATE board.unlisted SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (thread, board))
+    #DBconnection.commit()
+    
 
 def get_path_and_data(environ): # Get the URI path and other headers sent by the user request
     admin = ''
@@ -401,7 +386,7 @@ def get_path_and_data(environ): # Get the URI path and other headers sent by the
                         if temp:
                             admin = temp[0]
                     except(psycopg2.ProgrammingError):
-                        Cur.execute("ROLLBACK")
+                        DBconnection.rollback()
             elif data[0] == 'style':
                 if data[1] == 'tomorrow':
                     cookieStyle = 'tomorrow'
@@ -477,13 +462,13 @@ def mod_login(environ):
             if password == Cur.fetchone()[0]:
                 code = str(binascii.b2a_hex(os.urandom(15)))[2:-1]
                 Cur.execute('UPDATE main.mod SET cookie=%s WHERE name=%s;', (code, mid))
-                DBconnection.commit()
+                #DBconnection.commit()
                 response_body = code
             else:
                 response_body = 'fail'
         except(psycopg2.ProgrammingError):
             response_body = 'fail'
-            Cur.execute("ROLLBACK")
+            DBconnection.rollback()
         rtype = 'text/plain'
     else:
         with open(BasePath+'res/login','r') as f:
@@ -519,6 +504,8 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
     stest = test.split(' ')[0]
     if stest in ['JPEG','PNG','GIF']:
         filetype = stest
+    elif 'MPEG' in test:
+        filetype = 'MP3'
     elif test == 'WebM':
         filetype = 'WebM'
     elif test == 'Matroska data':
@@ -527,7 +514,7 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
         filetype = 'MP4'
     elif 'Macromedia Flash' in test:
         filetype = 'SWF'
-    elif 'Zip archive':
+    elif 'Zip archive' in test:
         filetype = 'HTML5'
 
     if board == 'f' and filetype != 'SWF':
@@ -547,13 +534,13 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
         image.save(thumbname, 'JPEG', quality=75)
         width = image.size[0]+25
     elif filetype in ['WebM','MP4','MKV']:
-        os.system(FFpath+' -i '+fullname+' -vf thumbnail -frames:v 1 '+thumbname)
+        os.system(FFpath+' -i '+fullname+' -vf thumbnail -frames:v 1 -f singlejpeg '+thumbname+' 2>/dev/null')
         image = Image.open(thumbname)
         image.thumbnail((dim, dim),Image.ANTIALIAS)
         image.save(thumbname, 'JPEG', quality=75)
         width = image.size[0]+25
     elif filetype == 'HTML5':
-        shutil.move(fullname, fullname+'.html5')
+        move(fullname, fullname+'.html5')
         if not os.path.exists(fullname):
             os.makedirs(fullname)
         zip_ref = zipfile.ZipFile(fullname+'.html5', 'r')
@@ -577,14 +564,15 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
             os.remove(fullname)
             return ['', '', 0, page_error('Error: File decompresses to larger than the maximum filesize. Please fix your zip file and try again.')]
     elif filetype in ['MP3','M4A','OGG','FLAC','WAV']:
-        os.system(FFpath+' -i '+fullname+' '+thumbname)
-        if os.path.exists(thumbname):
-            image = Image.open(thumbname)
+        os.system(FFpath+' -i '+fullname+' -f singlejpeg '+fullpath+'f'+localname+' 2>/dev/null')
+        if os.path.exists(fullpath+'f'+localname):
+            image = Image.open(fullpath+'f'+localname)
             isize = ', '+str(image.size[0])+'x'+str(image.size[1])
             image.thumbnail((dim, dim),Image.ANTIALIAS)
             image.save(thumbname, 'JPEG', quality=75)
             width = image.size[0]+25
         else:
+            copyfile(BasePath+'res/audio.jpg', fullpath+'f'+localname)
             copyfile(BasePath+'res/audio.jpg', thumbname)
             width = 153
     elif filetype == 'SWF':
@@ -635,7 +623,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
                             session = data[0]
                     except(psycopg2.ProgrammingError):
                         session = ''
-                        Cur.execute("ROLLBACK")
+                        DBconnection.rollback()
             elif data[0] == 'style':
                 if data[1] == 'tomorrow':
                     cookieStyle = 'tomorrow'
@@ -705,12 +693,12 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
         if len(comment)>200:
             response_body = 'Post body has too many lines.'
             return [response_body, set_cookie]
-        comment = processComment('<br>'.join(comment), board)
+        comment = processComment('<br>'.join(comment), board, str(threadnum))
     except:
         comment = ''
         quit = 0
 
-    images = True if 'y' in [escape(images) for images in post.getlist('images')] else False
+    images = False if 'n' in [escape(images) for images in post.getlist('images')] else True
     spoiler = True if 'y' in [escape(spoiler) for spoiler in post.getlist('spoiler')] else False
 
     bump,email,target = setOptions(options)
@@ -757,7 +745,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
 
         Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (time_string text, file_path text, comment text, file_name text, name text, ip text, postnum serial, hidden boolean, image_size text, image_width integer, session text, subs boolean);')
         Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, comment, filename, name, ip, fsize, str(width), session))
-        DBconnection.commit()
+        #DBconnection.commit()
         #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'/'+str(threadnum)+'");}</script></head><body onload="redirect()"><h1>Thread submitted successfully...</h1></body></html>'
         return [page_redirect(path+'/'+str(threadnum), 'Thread submitted successfully...'), set_cookie]
     elif comment != '' or filename != '': #just a post
@@ -787,7 +775,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
                     Cur.execute('UPDATE board.listed SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
                 else:
                     Cur.execute('UPDATE board.unlisted SET '+('bump_time='+timestamp+',' if bump else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
-                DBconnection.commit()
+                #DBconnection.commit()
             else:
                 Cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'sub\' AND table_name=\''+board+'/'+str(threadnum)+'/'+str(target)+'\');')
                 if not Cur.fetchone()[0]:
@@ -795,7 +783,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
                     Cur.execute('UPDATE thread."'+board+'/'+str(threadnum)+'" SET subs=true WHERE postnum=%s;', (target,))
                 Cur.execute('INSERT INTO sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" VALUES (%s, %s, %s, DEFAULT, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), comment, ip, session))
         except(psycopg2.ProgrammingError):
-            Cur.execute("ROLLBACK")
+            DBconnection.rollback()
             return [page_error('Error creating post.'), set_cookie]
         #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'");}</script></head><body onload="redirect()"><h1>Post submitted successfully...</h1></body></html>'
         return [page_redirect(path, 'Post submitted successfully...'), set_cookie]
@@ -826,8 +814,32 @@ def fill_header(header, mode, board, lboard, title, userquery, mixed, tboard, im
         header = header % ('/'+board+'/ '+title, styles, 'style="height:100%;margin-left:105px;padding:0px;border:none;box-shadow:none" class="threadcontainer '+boardStyle+'" ', '')
     return header
 
+def prune_threads(board):
+    databaseConnection()
+    if board not in ['all', 'listed']:
+        max_threads = BoardInfo[board][3] if board in BoardInfo else BoardInfo['*'][3]
+        Cur.execute('SELECT threadnum,bump_time,board FROM board."'+board+'" ORDER BY bump_time DESC OFFSET '+str(max_threads)+';')
+        threads = Cur.fetchall()
+        timestamp = int(time())
+
+        PruneTime = 60*1
+        counter = 0
+        for thread in threads:
+        
+            counter+=1
+            if counter>100:
+                return 'count exceeded:<br>'+str(threads)
+            if thread[1] + PruneTime < timestamp:
+                deleteThread(thread[2], str(thread[0]))
+
+        warnings.warn('==========================')
+        return ''
+
 def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, admin, cookieStyle):
     error = 0
+    result = prune_threads(board)
+    if result:
+        return page_error(result)
 
     lboard = board if board in BoardInfo else '*'
 
@@ -846,7 +858,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
             threads = Cur.fetchall()
         except(psycopg2.ProgrammingError):
             error = 1
-            Cur.execute("ROLLBACK")
+            DBconnection.rollback()
     else:
         #VIEWING A THREAD
         Cur.execute('SELECT * FROM board."'+board+'" WHERE threadnum=%s;', (str(mode),))
@@ -887,12 +899,13 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
                         Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC '+('LIMIT 5 OFFSET '+str(thread[2]-4) if thread[2]>5 else 'OFFSET 1')+';')
                         for i in Cur.fetchall():
                             posts.append(i)
+                        DBconnection.rollback()
                 else:
                     Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC;')
                     posts = Cur.fetchall()
             except(psycopg2.ProgrammingError):
                 response_body += '<h1>PAGE LOADING ERROR</h1>'
-                Cur.execute("ROLLBACK")
+                DBconnection.rollback()
                 break
 
             if mode > -1:
@@ -1016,8 +1029,8 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
             #response_body += '</tr></table>'
             if not sub and subs:
                 Cur.execute('SELECT * FROM sub."'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" ORDER BY postnum DESC;')
-                response_body += '<div class="sub">'
                 subposts = Cur.fetchall()
+                response_body += '<div class="sub">'
                 for subpost in subposts:
                     response_body +=  buildPost(False, False, '', 0, posted_on, thread, subpost, ip, True)
                 response_body += '</div>'
@@ -1034,4 +1047,4 @@ def page_redirect(dest, msg):
     return '<!DOCTYPE HTML><html><head><meta charset="utf-8"><script>function redirect(){window.location.replace("'+dest+'");}</script></head><body onload="redirect()"><h1>'+msg+'</h1></body></html>'
 
 def page_error(msg):
-    return '<!DOCTYPE HTML><html><head><meta charset="utf-8"></head><body><h2>'+msg+'</h2></body></html>'
+    return '<!DOCTYPE HTML><html><head><meta charset="utf-8"><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><title>Error</title></head><body><h2>'+msg+'</h2></body></html>'

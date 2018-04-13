@@ -41,6 +41,9 @@
 
 
 /* BEGIN GENERIC STYLES */ 
+img{
+    max-width:100%;
+}
 blockquote{
     white-space:pre-wrap;
     margin:0px 0px 10px 0px;

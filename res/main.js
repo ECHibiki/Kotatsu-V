@@ -124,27 +124,40 @@ function imgswap(e){
     if (typeof e.src == 'undefined')
         e = this;
 
-    var type = '';
-    var lst = e.src.split('/');
-    var p = lst.slice(0, lst.length-1).join('/');
-    var name = lst[lst.length-1];
-    if (name[0] == 't')
-        var expanded = false;
-    else
+    if (e.hasAttribute('src')){
+        var type = '';
+        var lst = e.src.split('/');
+        var p = lst.slice(0, lst.length-1).join('/');
+        var name = lst[lst.length-1];
+
+        if (name[0] == 't')
+            var expanded = false;
+        else
+            var expanded = true;
+    }else{
+        var thumb = e.dataset['thumb'];
         var expanded = true;
-
-    var mime = e.getAttribute('data-ftype');
-
-    if(['JPEG','PNG','GIF'].indexOf(mime) > -1)
-        type = 'img';
-    else if(['WebM','MP4'].indexOf(mime) > -1)
-        type = 'video'
-    else if(['MP3','OGG','FLAC','WAV'].indexOf(mime) > -1)
-        type = 'audio'
-    if(mime == 'M4A'){
-        type = 'audio';
-        mime = 'mp4';
     }
+
+    var mime = e.dataset['ftype'];
+
+    if(['JPEG','PNG','GIF'].indexOf(mime) > -1){
+        type = 'img';
+    }else if(['WebM','MP4'].indexOf(mime) > -1){
+        type = 'video'
+        var srctype = 'webm';
+    }else if(mime == 'MP3'){
+        type = 'audio';
+        var srctype = 'mpeg';
+    }else if(mime == 'M4A'){
+        type = 'audio';
+        var srctype = 'mp4';
+    }else if(mime == 'FLAC'){
+    }else if(mime == 'WAV'){
+    }else if(mime == 'OGG'){
+    }
+
+    var prnt = e.parentElement;
 
     e.style.opacity="0.5";
     if (type == 'img'){
@@ -154,85 +167,62 @@ function imgswap(e){
             e.src = p+'/'+name.substring(1, name.length)
 
         e.addEventListener('load', function() { e.style.opacity="1.0"; }, false);
-    }
 
-
-
-
-
-
-    /*if(type=='img'){
-        var prnt = e.parentElement;
-        var nw = document.createElement('img');
-        if(localStorage.mmc=='open') 
-            nw.style.maxWidth=Number(document.body.offsetWidth-48).toString()+"px";
-        nw.src = p+'/'+name;
-        prnt.appendChild(nw);
-        prnt.removeChild(e);
-        nw.addEventListener('click', imgswap);
-    }
-    if(type == 'video' || type == 'audio'){
-        var prnt = e.parentElement.parentElement;
-        //this.parentElement.remove();
-        if(prnt.style.display == 'table'){
-            if(prnt.lastChild.tagName == 'DIV')
-                prnt.removeChild(prnt.lastChild);
-            var c = prnt.children;
-            for(var i=0; i<c.length; ++i){
-                if(c[i].style.opacity == '0.5'){
-                    c[i].style.opacity='1.0';
-                    c[i].firstChild.removeEventListener('click',hidev);
-                    c[i].firstChild.addEventListener('click',imgswap);
-                }
-            }
-            e.parentElement.style.opacity='0.5';
-            e.removeEventListener('click',imgswap);
-            e.addEventListener('click',hidev);
-            var dw = document.createElement('div');
-            if(name[0] == 'e'){
-                var ei = document.createElement('img');
-                ei.src = p+'/'+name + '.jpg';
-                dw.appendChild(ei);
-            }
+    }else if(type == 'video'){
+        if (expanded){
+            prnt.nextSibling.remove();
+            prnt.firstChild.remove();
+            prnt.innerHTML = '<img data-ftype="'+mime+'" src="'+thumb+'" onclick="imgswap(this)">';
         }else{
-            e.parentElement.style.display='none';
-            var aw = document.createElement('a');
-            aw.href='javascript:void(0)';
-//            aw.setAttribute('onclick','hidev(this);');
-            aw.addEventListener('click',hidev);
-            aw.setAttribute('thumb',e.parentElement.href);
-            if(type == 'audio' && name[0] == 'e')
-                aw.innerHTML = '<img src="'+p+'/'+name+'.jpg"><br>';
-            else
-                aw.innerHTML = '[ - ]<br>';
-            var dw = document.createElement('div');
+            var nv = document.createElement('video');
+
+            nv.addEventListener('loadeddata', function() {
+                var src = prnt.firstChild.src;
+                prnt.innerHTML = '<span data-ftype="'+mime+'" data-thumb="'+src+'">[ - ]</span><br>';
+                prnt.firstChild.addEventListener('click', imgswap)
+                prnt.parentElement.insertBefore(nv, prnt.nextSibling);
+            }, false);
+
+            nv.setAttribute('controls', '1');
+            nv.setAttribute('autoplay', '1');
+            nv.setAttribute('loop', '1');
+            nv.volume = 0.1;
+            nv.innerHTML = '<source src="'+p+'/'+name.substring(1, name.length)+'" type="video/'+srctype+'">Your browser does not support the video element.';
+
+
         }
-        dw.style.display='table';
-        var nw = document.createElement(type);
-        nw.setAttribute('controls','2');
-        nw.setAttribute('autoplay','1');
-        if(localStorage.getItem('volume')===null)
-            nw.volume=0.1;
-        else
-            nw.volume=Number(localStorage.volume)/100
-        nw.setAttribute('loop','1');
-        var sc = document.createElement('source');
-        sc.setAttribute('type',type+'/'+ext);
-        sc.src = p+'/'+name;
-        nw.appendChild(sc);
-        if(aw)
-            dw.appendChild(aw);
-        dw.appendChild(nw);
-        prnt.appendChild(dw);
-        dw.style.maxWidth=Number(document.body.offsetWidth-48).toString()+"px";
-        prnt = dw;
-    }*/
+    }else if(type == 'audio'){
+        if (expanded){
+            prnt.nextSibling.remove();
+            prnt.firstChild.remove();
+            prnt.innerHTML = '<img data-ftype="'+mime+'" src="'+thumb+'" onclick="imgswap(this)">';
+        }else{
+            var nd = document.createElement('div');
+            var ni = document.createElement('img');
+            var na = document.createElement('audio');
 
+            na.addEventListener('loadeddata', function() {
+                var src = prnt.firstChild.src;
+                prnt.innerHTML = '<span data-ftype="'+mime+'" data-thumb="'+src+'">[ - ]</span><br>';
+                prnt.firstChild.addEventListener('click', imgswap)
+                ni.src = p+'/f'+name.substring(1, name.length)
+                prnt.parentElement.insertBefore(nd, prnt.nextSibling);
+            }, false);
 
+            nd.appendChild(na);
+            nd.appendChild(ni);
 
+            na.setAttribute('controls', '1');
+            na.setAttribute('autoplay', '1');
+            na.setAttribute('loop', '1');
+            na.volume = 0.1;
+            na.innerHTML = '<source src="'+p+'/'+name.substring(1, name.length)+'" type="audio/'+srctype+'">Your browser does not support the audio element.';
+        }
+    }
 
-    //if(window.scrollY>prnt.parentElement.offsetTop)
-    //    prnt.parentElement.parentElement.scrollIntoView();
+    if(window.scrollY>prnt.offsetTop)
+        prnt.parentElement.scrollIntoView();
+    return false;
 }
 
 /*function hidev(){

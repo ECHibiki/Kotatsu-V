@@ -13,6 +13,7 @@ temp += ["user='"+DBUSER+"'"] if DBUSER else []
 temp += ["host='"+DBHOST+"'"] if DBHOST else []
 temp += ["password='"+DBPASS+"'"] if DBPASS else []
 DBconnection = psycopg2.connect(' '.join(temp))
+DBconnection.autocommit = True
 cur = DBconnection.cursor()
 
 cur.execute('DROP SCHEMA IF EXISTS main CASCADE;')

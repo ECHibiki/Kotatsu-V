@@ -16,6 +16,14 @@ BannerRandom = False # Should banner rotation pick a random banner or simply cyc
 BannerRotationTime = 5 # In minutes (This is only used if BannerRandom=False. When banners are random they will change every page load rather than using a rotation time)
 Banners = ( 'banner1.jpg', 'banner2.jpg', 'banner3.jpg' ) # List of images inside res/banners to use for banners
 
+# Threads are only pruned after meeting BOTH of the following conditions:
+#   1) When all threads on a board are sorted by bump-order
+#      and the thread is beyond the maximum number of threads
+#      configured for that board
+#   2) The time since it last received a bump is greater than
+#      the PruneTime set below
+PruneTime = 9676800 # 4 months
+
 # The credentials for connecting to the PostgreSQL database
 DBNAME = '4taba'
 DBUSER = 'postgres'
@@ -34,25 +42,25 @@ DBPASS = ''
 # POSTER-UP - set upload filetypes allowed by normal (non opening) posts
 BoardInfo = {
     # Listed boards
-    #KEY   ( NAME             STYLE      USERNAME     THREADS POSTS DISPLAY   OP-UP      POSTER-UP )
-    'ni':  ('日本裏'  ,      'mona',     '名無しさん', 150,    200, 'normal', 'img+vid', 'img+vid'),
-    'd':   ('二次元エロ',    'yotsuba', 'Anonymous', 150,    200, 'normal', 'img+vid', 'img+vid'),
-    'cc':  ('Computer Club', 'computer', 'guest@cc',  150,    200, 'normal', 'img+vid', 'img+vid'),
-    'f':   ('Flash/HTML5',   'yotsuba', 'Anonymous',  15,     200, 'flash',  'flash',   ''       ),
-    'ho':  ('Other',         'yotsuba', 'Anonymous',  150,    200, 'normal', 'img+vid', 'img+vid'),
+    #KEY   ( NAME             STYLE       USERNAME     THREADS POSTS  DISPLAY   OP-UP      POSTER-UP )
+    'ni':  ('日本裏'  ,      'mona',     '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid'),
+    'd':   ('二次元エロ',    'yotsuba',  'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid'),
+    'cc':  ('Computer Club', 'computer', 'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid'),
+    'f':   ('Flash/HTML5',   'yotsuba',  'Anonymous',  30,     200,  'flash',  'flash',   ''       ),
+    'ho':  ('Other',         'yotsuba',  'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid'),
 
     # Unlisted boards
-    #KEY    ( NAME               STYLE      USERNAME    THREADS  POSTS  DISPLAY   OP-UP            POSTER-UP )
-    '*':    ('Unlisted',        'unlisted', 'Anonymous', 150,     200,  'normal', 'img+vid',       'img+vid'      ),
-    'meta': ('Meta Discussion', 'unlisted', 'Anonymous', 150,     200,  'normal', 'img+vid+flash', 'img+vid+flash'),
+    #KEY    ( NAME               STYLE      USERNAME    THREADS POSTS  DISPLAY   OP-UP            POSTER-UP )
+    '*':    ('Unlisted',        'unlisted', 'Anonymous', 150,    200, 'normal', 'img+vid',       'img+vid'      ),
+    'meta': ('Meta Discussion', 'unlisted', 'Anonymous', 150,    200, 'normal', 'img+vid+flash', 'img+vid+flash'),
 
     ### Avoid modifying these for now
     ### These are special boards. Modifying them should be fairly easy still,
     ### but will require some changes inside the server code, otherwise something might break.
-    #KEY        ( NAME                   STYLE      USERNAME  THREADS  POSTS  DISPLAY   OP-UP  POSTER-UP )
-    'listed':   ('All Listed Boards',   'main',    '',        0,       0,    'normal', '',    ''),
-    'unlisted': ('All Unlisted Boards', 'unlisted', '',        0,       0,    'normal', '',    ''), 
-    'all':      ('All Boards',          'main',    '',        0,       0,    'normal', '',    ''),
+    #KEY        ( NAME                   STYLE       USERNAME THREADS POSTS  DISPLAY   OP-UP  POSTER-UP )
+    'listed':   ('All Listed Boards',   'main',     '',       0,      0,    'normal', '',    ''),
+    'unlisted': ('All Unlisted Boards', 'unlisted', '',       1500,   0,    'normal', '',    ''), 
+    'all':      ('All Boards',          'main',     '',       0,      0,    'normal', '',    ''),
 }
 
 # List of disallowed board names. In addition to this list any boards containing quotes or beginning with a period are also disallowed for security reasons
@@ -93,12 +101,14 @@ Filters = [
                 ('cross-thread-link',
                  re.compile(r'[^">]&gt;&gt;&gt;([0-9]+)/([0-9]+)'),
                  '<a href="/%s/\1#\2">&gt;&gt;&gt;/%s/\1/\2</a>'),
-                 #NOTE: There is an if-statement in the server code that will look for the label: cross-thread-link
+                 #NOTE: This is not necessarily the most elegant solution
+                 #      But for now, there is an if-statement in the server code that will look for the label: cross-thread-link
                  #      and fill in the %s's here with the board name
 
                 ('post-link',
                  re.compile(r'[^">]&gt;&gt;([0-9]+)'),
-                 '<a href="#\1">&gt;&gt;\1</a>'),
+                 '<a href="/%s/%s#\1">&gt;&gt;\1</a>'),
+                 #NOTE: Same here
             # =========================
 
             ('quote',
