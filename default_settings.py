@@ -23,6 +23,7 @@ Banners = ( 'banner1.jpg', 'banner2.jpg', 'banner3.jpg' ) # List of images insid
 #   2) The time since it last received a bump is greater than
 #      the PruneTime set below
 PruneTime = 9676800 # 4 months
+AutoPrune = False # Enable this option to turn on auto thread pruning
 
 # The credentials for connecting to the PostgreSQL database
 DBNAME = '4taba'

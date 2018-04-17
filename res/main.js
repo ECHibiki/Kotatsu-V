@@ -285,7 +285,7 @@ function hidemenu(){
     document.getElementById('topnav').innerHTML = links;
     document.getElementById('botnav').innerHTML = links;
     localStorage.menu='hide'
-    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ] [ <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ma">/ma/</a> <a href="/jp">/jp/</a> <a href="/d">/d/</a> <a href="/ni">/ni/</a> ] [ <a href="/hw">/hw/</a> <a href="/sw">/sw/</a> <a href="/pr">/pr/</a> ] [ <a href="/f">/f/</a> <a href="/lit">/lit/</a> <a href="/sci">/sci/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span>';
+    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ] [ <a href="/listed">/listed/</a> <a href="/unlisted">/unlisted/</a> <a href="/all">/all/</a> ] [ <a href="/ni">/ni/</a> <a href="/d">/d/</a> ] [ <a href="/cc">/cc/</a> ] [ <a href="/f">/f/</a> <a href="/ho">/ho/</a> ]</b></span>';
     document.getElementById('toplinks').innerHTML = links;
     document.getElementById('botlinks').innerHTML = links;
 }

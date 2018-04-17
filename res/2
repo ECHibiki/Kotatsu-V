@@ -1,5 +1,5 @@
 <!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><link rel="stylesheet" type="text/css" href="/res/styles/main.css"><link rel="stylesheet" type="text/css" href="/res/styles/threads.css"></head>
-<body style="background-image:url('/res/temp/bgj2.png');font-family:'MS PGothic'">
+<body style="background-image:url('/res/bgb.png');font-family:'MS PGothic'">
 
 <div class="menu">
 <a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/favicon.png" id="favicon">
@@ -32,38 +32,20 @@
 </div>
 
 
+<center>
 
-<!--<div class="outer" style="width:500px"><h1>Roadmap to v1.0</h1>
-<ul>
-<li>Post deletion</li>
-<li>Mod interface</li>
-<li>Per-board theme changing</li>
-</ul>
-</div>-->
-
-<table class="outer" align="center" style="background:transparent;border:none;margin-top:50px">
-<tr><td></td>
-<td class="inner" style="text-align:center;font-size:32px;font-weight:bold;color:#c00;padding:5px">Welcome to Shitaba Channel!</td>
-<td></td></tr><tr>
-
-<td class="outer" style="background:#eee;border:1px outset #000;width:330px">
-<div class="inner" style="height:198px;padding:5px">
-<br>
+<table><tr><td>
 <a href="/res/announcements.html">Announcements</a><br>
-<br>
-- (2018-04-14) <b>Site updated to <a href="https://github.com/4taba/4taba">Github version</a>.</b><br>
+- (2018-04-14) Site updated to <a href="https://github.com/4taba/4taba">Github</a> version.<br>
 - <br>
 - <br>
-<br><hr>
-<ul>
-<li><a href="/res/faqEN">F.A.Q.</a></li>
-<li><a href="/res/rulesEN">Rules</a></li>
-<li><a href="/res/contactEN">Contact</a></li>
-</ul>
-</div>
 </td>
+<td>
 
-<td class="inner" style="background-image:url('/res/bgr.png');padding-top:0px;height:210px"><img src="/res/logo.png" style="padding:0px;float:none;display:block;margin:auto"></td>
+<table class="outer" align="center" style="margin-top:50px">
+<tr><td class="inner" colspan="3" style="text-align:center;font-size:32px;font-weight:bold;color:#c5c">Welcome to the lower leaves!</td></tr>
+<tr><td class="inner" style="background-image:url('/res/bgr.png');padding-top:0px;"><img src="/res/logo.png" style="padding:0px;margin:0px;float:none;display:block;margin:auto;"><br></td></tr>
+</table>
 
 <!--<td class="inner" style="vertical-align:middle;text-align:center;font-size:32px;font-weight:bold;color:#c5c">
 下<br>葉<br>ち<br>ゃ<br>ん
@@ -74,9 +56,7 @@
 へ<br>よ<br>う<br>こ<br>そ
 </td>-->
 
-<td class="outer" style="background:#eee;border:1px outset #000;width:330px">
-<div class="inner" style="height:198px;padding:5px;white-space:pre">
-
+</td><td class="outer" style="white-space:pre">
 　　　　　　　 ＿＿＿_
 　 　 　 　 ／　　　　　＼
 　　　　 ／　 　⌒　　⌒ ＼　　 なんじゃ<a href="/res/terminal.html">こりゃ</a>
@@ -88,16 +68,21 @@
 | | /　　 /　　　　　　　　　r.　 （ こ） | |　　　　　　　　　　　　　|
 | | |　⌒ ーnｎｎ 　 　 　 　|＼ (⊆ｿ .|_|_＿＿＿＿_＿＿＿＿_|
 ￣ ＼＿_､("二）￣￣￣￣￣ｌ二二ｌ二二　 ＿|_|＿_|＿
-</div>
-</td></tr></table>
+</td>
+
+</tr></table>
 
 
+
+</table><hr>
 <div class="outer"><div class="inner">
-<h1>Board List</h1>
+View the <a href="/res/faqEN">F.A.Q. here.</a><br>
+<span style="color:#C00;"><b><em>All</em></b> boards, including untitled boards, are subject to the <a href="/res/rulesEN">global rules</a>.</span><br>
+<!--Leave any feedback or feature requests here <a href="/meta/12">&gt;&gt;/meta/12</a><br>-->
+<!--Please report bugs at <a href="/meta/2">&gt;&gt;/meta/2</a><br>-->
+<br>
 <table style="min-width:700px"><tr><td colspan="2">
-<a href="/listed">View all listed boards</a> [<a href="/listed/c">catalog</a>]<br>
-<a href="/unlisted">View all unlisted boards</a> [<a href="/unlisted/c">catalog</a>]<br>
-<a href="/all">View all boards</a> [<a href="/all/c">catalog</a>]<br>
+<a href="/all">View all board threads</a> [<a href="/all/c">All threads catalog</a>]<br><br>
 </td></tr><tr><td>
 <table style="border:none">
 <tr><td style="border:none"><u><h3>Japan</h3></u></td><td style="border:none"><u><h3>Computers</h3></u></td><td style="border:none"><u><h3>Miscellaneous</h3></u></td></tr>
@@ -115,6 +100,14 @@
 </table>
 </div></div>
 
+
+<div class="outer" style="width:500px"><h1>Roadmap to v1.0</h1>
+<ul>
+<li>Post deletion</li>
+<li>Mod interface</li>
+<li>Per-board theme changing</li>
+</ul>
+</div>
 
 <hr>
 <div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/gentoo-badge3.png" id="badge"></div>

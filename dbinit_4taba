@@ -47,9 +47,9 @@ cur.execute('CREATE TABLE main.cookie (cookie text, last_checked integer);')
 cur.execute('CREATE TABLE main.event (ip text, event_list text[]);')
 
 # board.listed contains all listed boards and needs to be initialized
-cur.execute('CREATE TABLE board.listed (threadnum integer, bump_time integer, post_count integer, board text, creation_time integer, deletion_time integer, title text, imageAllow boolean);')
+cur.execute('CREATE TABLE board.listed (threadnum integer, last_post_time integer, bump_time integer, post_count integer, board text, creation_time integer, title text, imageAllow boolean, sticky boolean);')
 # board.unlisted is the same as board.all but only for unlisted boards
-cur.execute('CREATE TABLE board.unlisted (threadnum integer, bump_time integer, post_count integer, board text, creation_time integer, deletion_time integer, title text, imageAllow boolean);')
+cur.execute('CREATE TABLE board.unlisted (threadnum integer, last_post_time integer, bump_time integer, post_count integer, board text, creation_time integer, title text, imageAllow boolean, sticky boolean);')
 
 DBconnection.commit()
 print('done')
