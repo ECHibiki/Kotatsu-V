@@ -1,0 +1,161 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i python3 -p python36Packages.psycopg2
+
+import os
+import psycopg2
+import default_settings
+import local_settings
+
+from default_settings import *
+from local_settings import *
+
+
+
+BasePath = '/home/wwwrun/4taba/' # Set this to the server root directory
+
+
+
+temp = ["dbname='postgres'"] 
+temp += ["user='"+DBUSER+"'"] if DBUSER else []
+temp += ["host='"+DBHOST+"'"] if DBHOST else []
+temp += ["password='"+DBPASS+"'"] if DBPASS else []
+DBconnection = psycopg2.connect(' '.join(temp))
+DBconnection.autocommit = True
+cur = DBconnection.cursor()
+
+cur.execute('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\';')
+data = cur.fetchall()
+
+newdata = {}
+for table in data:
+    cur.execute('SELECT * FROM "'+table[0]+'";')
+    newdata[table[0]] = cur.fetchall()
+
+cur.close()
+DBconnection.close()
+
+temp = ["dbname='"+DBNAME+"'"]
+temp += ["user='"+DBUSER+"'"] if DBUSER else []
+temp += ["host='"+DBHOST+"'"] if DBHOST else []
+temp += ["password='"+DBPASS+"'"] if DBPASS else []
+DBconnection = psycopg2.connect(' '.join(temp))
+DBconnection.autocommit = True
+cur = DBconnection.cursor()
+
+BoardMap = {
+    'ma': 'a',
+
+    'jp': 'ni',
+
+    'hw': 'cc',
+    'sw': 'cc',
+    'pr': 'cc',
+}
+def boardMap(board):
+    return BoardMap[board] if board in BoardMap else board
+
+def nameMap(name, board):
+    lboard = board if board in BoardInfo else '*'
+    newName =  BoardInfo[lboard][2]
+
+    if name == 'Anonymous':
+        return newName
+    return name.replace('>Anonymous<', '>'+newName+'<')
+
+def commentFilter(comment, old_board, old_thread, new_board, new_thread):
+    return comment
+
+def filenameMap(filename):
+    #if len(filename)>9 and filename[0] == 't' and filename[-8] == '.' and filename[-4:] == '.jpg':
+    #    filename = filename[:-8]
+    #elif len(filename)>9 and filename[0] == 'e' and filename[-8] == '.' and filename[-4:] == '.jpg':
+    #    filename = 't'+filename[1:-8]
+    #elif len(filename)>5 and filename[-4] == '.':
+    #    filename = filename[1:-4]
+    #elif len(filename)>8 and filename[-8:] == '.zip.jpg':
+    #    filename = 't'+filename[:-8]
+    #elif len(filename)>4 and filename[-4:] == '.zip':
+    #    filename = filename[:-4] + '.html5'
+
+    idx = filename.rfind('.')
+    if idx > 0:
+        return filename[0:idx]
+    else:
+        return filename
+
+ThreadShifts = {}
+
+for row in newdata['amod']:
+    cur.execute('INSERT INTO main.mod VALUES (%s, %s, %s);', (row[0], row[1], row[2]))
+
+for key in newdata:
+    if '\n' in key or '\r' in key or key == '' or key[0] == '.' or '"' in key or "'" in key or key in ['ball', 'bunlisted', 'blisted']:
+        continue
+
+    if key[0] == 'b':
+        board = key[1:]
+        board = boardMap(board)
+        lboard = board if board in BoardInfo else '*'
+        listed = BoardInfo[lboard][8]
+
+        cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'board\' AND table_name=%s);', (board,))
+        if not cur.fetchone()[0]:
+            cur.execute('CREATE TABLE board."'+board+'" (threadnum serial, last_post_time integer, bump_time integer, post_count integer, board text, creation_time integer, title text, imageAllow boolean, sticky boolean);')
+            print('created new table board."'+board+'"')
+        for row in newdata[key]:
+            # GET TITLE
+            title = ''
+            imageAllow = 'f'
+            for c in newdata['t'+row[3]+'/'+str(row[0])]:
+                if c[6] == 0:
+                    title = c[0]
+                    imageAllow = 't' if c[2] == '1' else 'f'
+                    break
+            # =========
+            # Check for thread number conflict
+            threadnum = row[0]
+            while True:
+                cur.execute('SELECT EXISTS(SELECT 1 FROM board."'+board+'" WHERE threadnum=%s);', (threadnum,))
+                if cur.fetchone()[0]:
+                    threadnum += 1
+                else:
+                    break
+            ThreadShifts[row[3]+'/'+str(row[0])] = boardMap(row[3])+'/'+str(threadnum)
+
+            cur.execute('INSERT INTO board."'+board+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, \'f\');', (threadnum, row[1], row[1], row[2], boardMap(row[3]), row[4], title, imageAllow))
+            cur.execute('INSERT INTO board."'+('listed' if listed else 'unlisted')+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, \'f\');', (threadnum, row[1], row[1], row[2], boardMap(row[3]), row[4], title, imageAllow))
+
+    elif key[0] == 't':
+        try:
+            cur.execute('CREATE TABLE thread."'+ThreadShifts[key[1:]]+'" (postnum serial, time_string text, file_path text, file_name text, name text, ip text, image_size text, image_width integer, session text, subs boolean, comment text);')
+        except(KeyError):
+            print('\nDROPPING THREAD: '+key[1:]+' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n')
+            continue
+        print('created new table '+key[1:]+' -> thread."'+ThreadShifts[key[1:]]+'"')
+
+        old_board, old_thread = key[1:].split('/')
+        new_board, new_thread = ThreadShifts[key[1:]].split('/')
+
+        if key[1:] != ThreadShifts[key[1:]]:
+            source = BasePath+'res/brd/'+old_board+'/'+old_thread
+            dest = BasePath+'res/brd/'+new_board+'/'+new_thread
+            ddir = BasePath+'res/brd/'+new_board
+            if os.path.exists(source):
+                if not os.path.exists(dest):
+                    if not os.path.exists(ddir):
+                        os.makedirs(ddir)
+                    print('################### moving '+old_board+'/'+old_thread+' -> '+new_board+'/'+new_thread)
+                    os.rename(BasePath+'res/brd/'+old_board+'/'+old_thread, BasePath+'res/brd/'+new_board+'/'+new_thread)
+                else:
+                    print('\n\n\nERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Moving to backup dir\n\n\n')
+                    os.rename(BasePath+'res/brd/'+old_board+'/'+old_thread, BasePath+'res/brd/'+new_board+'/'+new_thread+'_bak')
+
+        for row in newdata[key]:
+            if row[6] == 0:
+                continue
+            
+            cur.execute('INSERT INTO thread."'+ThreadShifts[key[1:]]+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, false, %s);', (int(row[6]), row[0], filenameMap(row[1]), row[3], nameMap(row[4], boardMap(old_board)), row[5], row[9], row[10], '', commentFilter(row[2], old_board, old_thread, new_board, new_thread)))
+
+
+cur.close()
+DBconnection.close()

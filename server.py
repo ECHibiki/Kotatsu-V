@@ -75,7 +75,7 @@ def application(environ, start_response):
 
     # Process user query (which board or multi-boards they are requesting to view)
     userquery, board, realquery, mixed = processQuery(userquery)
-    if '"' in board or board[0] == '.' or board in BoardBlacklist:
+    if '"' in board or "'" in board or '\n' in board or '\r' in board or board == '' or board[0] == '.' or board in BoardBlacklist:
         return send_and_finish(page_error('INVALID BOARD NAME'), start_response)
         
     # Send thread-updates if requested
@@ -311,10 +311,7 @@ def deleteThread(board, thread):
 
     Cur.execute('DELETE FROM board."'+board+'" WHERE threadnum=%s;', (thread,))
     warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ DELETED')
-    if listed:
-        Cur.execute('DELETE FROM board.listed WHERE board=%s AND threadnum=%s;', (board, thread))
-    else:
-        Cur.execute('DELETE FROM board.unlisted WHERE board=%s AND threadnum=%s;', (board, thread))
+    Cur.execute('DELETE FROM board.'+('listed' if listed else 'unlisted')+' WHERE board=%s AND threadnum=%s;', (board, thread))
     #DBconnection.commit()
     warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ COMMITED')
     warnings.warn('@@@@@@@@@@@@@@@@@@@@@@@@@@ DELETED2 INFO: DROP TABLE thread."'+board+'/'+thread+'";')
@@ -346,10 +343,7 @@ def deletePost(board, thread, post):
 
     Cur.execute('DELETE FROM thread."'+board+'/'+thread+'" WHERE postnum=%s;', (post,))
     Cur.execute('UPDATE board."'+board+'" SET post_count=post_count-1 WHERE threadnum=%s;', (thread,))
-    if listed:
-        Cur.execute('UPDATE board.listed SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (thread, board))
-    else:
-        Cur.execute('UPDATE board.unlisted SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (thread, board))
+    Cur.execute('UPDATE board.'+('listed' if listed else 'unlisted')+' SET post_count=post_count-1 WHERE threadnum=%s AND board=%s;', (thread, board))
     #DBconnection.commit()
     
 
@@ -739,13 +733,10 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
 
         #Cur.execute('UPDATE main.dat SET thread_count=thread_count+1 WHERE board=%s;', (board,))
         Cur.execute('INSERT INTO board."'+board+'" VALUES (DEFAULT, %s, %s, 0, %s, %s, %s, %s, \'f\');', (timestamp, timestamp, board, timestamp, title, images))
-        if listed:
-            Cur.execute('INSERT INTO board.listed VALUES (%s, %s, %s, 0, %s, %s, %s, %s, \'f\');', (threadnum, timestamp, timestamp, board, timestamp, title, images))
-        else:
-            Cur.execute('INSERT INTO board.unlisted VALUES (%s, %s, %s, 0, %s, %s, %s, %s, \'f\');', (threadnum, timestamp, timestamp, board, timestamp, title, images))
+        Cur.execute('INSERT INTO board.'+('listed' if listed else 'unlisted')+' VALUES (%s, %s, %s, 0, %s, %s, %s, %s, \'f\');', (threadnum, timestamp, timestamp, board, timestamp, title, images))
 
-        Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (time_string text, file_path text, comment text, file_name text, name text, ip text, postnum serial, hidden boolean, image_size text, image_width integer, session text, subs boolean);')
-        Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, comment, filename, name, ip, fsize, str(width), session))
+        Cur.execute('CREATE TABLE thread."'+board+'/'+str(threadnum)+'" (postnum serial, time_string text, file_path text, file_name text, name text, ip text, image_size text, image_width integer, session text, subs boolean, comment text);')
+        Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, filename, name, ip, fsize, str(width), session, comment))
         #DBconnection.commit()
         #response_body = '<html><head><script>function redirect(){window.location.replace("'+(path if noko else '/'.join(path.split('/')[:2]))+'/'+str(threadnum)+'");}</script></head><body onload="redirect()"><h1>Thread submitted successfully...</h1></body></html>'
         return [page_redirect(path+'/'+str(threadnum), 'Thread submitted successfully...'), set_cookie]
@@ -767,23 +758,20 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
             #dnum = Cur.fetchone()[0]
 
             if not target:
-                Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (%s, %s, %s, %s, %s, %s, DEFAULT, false, %s, %s, %s, false);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, comment, filename, name, ip, fsize, str(width), session))
+                Cur.execute('INSERT INTO thread."'+board+'/'+str(threadnum)+'" VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), localname, filename, name, ip, fsize, str(width), session, comment))
                 #Cur.execute('UPDATE thread."'+board+'/'+str(mode)+'" SET hidden=%s WHERE postnum=0;', (str(int(dnum)+1),))
 
                 #Cur.execute('SELECT postnum FROM thread."'+board+'/'+str(mode)+'" WHERE postnum=(SELECT max(postnum) FROM thread."'+board+'/'+str(mode)+'");')
                 #postnum = Cur.fetchone()[0]
                 Cur.execute('UPDATE board."'+board+'" SET last_post_time='+timestamp+','+('bump_time='+timestamp+',' if bump and not sticky else '')+'post_count=post_count+1 WHERE threadnum=%s;', (str(threadnum),))
-                if listed:
-                    Cur.execute('UPDATE board.listed SET last_post_time='+timestamp+','+('bump_time='+timestamp+',' if bump and not sticky else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
-                else:
-                    Cur.execute('UPDATE board.unlisted SET last_post_time='+timestamp+','+('bump_time='+timestamp+',' if bump and not sticky else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
+                Cur.execute('UPDATE board.'+('listed' if listed else 'unlisted')+' SET last_post_time='+timestamp+','+('bump_time='+timestamp+',' if bump and not sticky else '')+'post_count=post_count+1 WHERE threadnum=%s AND board=%s;', (str(threadnum), board))
                 #DBconnection.commit()
             else:
-                Cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'sub\' AND table_name=\''+board+'/'+str(threadnum)+'/'+str(target)+'\');')
+                Cur.execute('SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema=\'sub\' AND table_name=%s);', (board+'/'+str(threadnum)+'/'+str(target),))
                 if not Cur.fetchone()[0]:
-                    Cur.execute('CREATE TABLE sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" (time_string text, comment text, ip text, postnum serial, hidden boolean, session text);')
+                    Cur.execute('CREATE TABLE sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" (postnum serial, time_string text, ip text, session text, comment text);')
                     Cur.execute('UPDATE thread."'+board+'/'+str(threadnum)+'" SET subs=true WHERE postnum=%s;', (target,))
-                Cur.execute('INSERT INTO sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" VALUES (%s, %s, %s, DEFAULT, false, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), comment, ip, session))
+                Cur.execute('INSERT INTO sub."'+board+'/'+str(threadnum)+'/'+str(target)+'" VALUES (DEFAULT, %s, %s, %s, %s);', (strftime('(%a)%b %d %Y %X',gmtime()), ip, session, comment))
         except(psycopg2.ProgrammingError):
             DBconnection.rollback()
             return [page_error('Error creating post.'), set_cookie]
@@ -934,20 +922,14 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
                     OP = False
 
                 if catalog == 0:
-
-                    if post[8] == 1:
-                        ban = 1
-                    else:
-                        ban = 0
-
                     response_body += buildPost(OP, last50, admin, mode, board, thread, post, ip)
 
                 else: #CATALOG VIEW
                     response_body += ('<div class="catalog">' if idc==0 else '')+'<div class="style'+getStyle(posted_on)+'"><div class="'+divclass+'"><div class="tb" style="margin:0px;padding:0px;"><a class="title" href="/'+posted_on+'/'+str(thread[0])+'">'+str(thread[0])+'. '+title+'</a> <span class="tag"><a style="font-size:12px;" href="/'+posted_on+'">/'+posted_on+'/</a></span></div>'
-                    if post[1] != '':
-                        imge = post[1].split('/')[0]
-                        response_body += '<a href="/'+posted_on+'/'+str(thread[0])+'"><img class="cimg" src="/res/brd/'+posted_on+'/'+str(thread[0])+'/t'+imge+'.jpg"></a>'
-                    response_body += '<span class="foot">'+str(thread[3])+' replies</span><br>'+post[2]+'</div>'
+                    if post[2] != '':
+                        imge = post[2].split('/')[0]
+                        response_body += '<a href="/'+posted_on+'/'+str(thread[0])+'"><img class="cimg" src="/res/brd/'+posted_on+'/'+str(thread[0])+'/t'+imge+'"></a>'
+                    response_body += '<span class="foot">'+str(thread[3])+' replies</span><br>'+post[10]+'</div>'
 
             if catalog == 0:
                 response_body += '<div style="clear:both;"></div></div></div>'
@@ -969,16 +951,15 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
 def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
     threadnum, last_post_time, bump_time, post_count, posted_on, creation_time, title, imageAllow, sticky = thread
     if not sub:
-        time_string, file_path, post_comment, file_name, name, post_ip, postnum, hidden, image_size, image_width, session, subs = post
+        postnum, time_string, file_path, file_name, name, post_ip, image_size, image_width, session, subs, post_comment = post
     else:
-        time_string, post_comment, post_ip, postnum, hidden, session = post
+        postnum, time_string, post_ip, session, post_comment = post
         file_path = ''
         file_name = ''
         name = ''
         image_size = ''
         image_width = 25
         subs = False
-    #hidden = bool(hidden)
     fswitch = 1
     response_body = ''
     if OP:

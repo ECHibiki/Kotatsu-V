@@ -7,7 +7,7 @@ import re
 # Set this to True if your traffic will go through cloudflare
 UsingCloudflare = False
 
-FFpath = 'ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel free to set an absolute path or add additional command line arguments
+FFpath = '/run/current-system/sw/bin/ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel free to set an absolute path or add additional command line arguments
 
 Allow_Email = False # Allow users to post any text (including email addresses) in the Email form field
 TimeoutThread = 120 # Amount of seconds users must wait between creating threads
@@ -47,6 +47,7 @@ DBPASS = ''
 BoardInfo = {
     # Listed boards
     #KEY   ( NAME             STYLE       USERNAME     THREADS POSTS  DISPLAY   OP-UP      POSTER-UP  LISTED )
+    'a':  ('Anime & Manga',  'yotsubab', 'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'ni':  ('日本裏'  ,      'mona',     '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'd':   ('二次元エロ',    'yotsuba',  'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'cc':  ('Computer Club', 'computer', 'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
