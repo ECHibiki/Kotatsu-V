@@ -7,7 +7,7 @@ import re
 # Set this to True if your traffic will go through cloudflare
 UsingCloudflare = False
 
-FFpath = '/run/current-system/sw/bin/ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel free to set an absolute path or add additional command line arguments
+FFpath = 'ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel free to set an absolute path or add additional command line arguments
 
 Allow_Email = False # Allow users to post any text (including email addresses) in the Email form field
 TimeoutThread = 120 # Amount of seconds users must wait between creating threads
@@ -68,8 +68,13 @@ BoardInfo = {
     'all':      ('All Boards',          'main',     '',       -1,     0,    'normal', '',    '',         True   ),
 }
 
-# List of disallowed board names. In addition to this list any boards containing quotes or beginning with a period are also disallowed for security reasons
 BoardBlacklist = ['', 'res', 'bin']
+BoardDisallowedChars = ['"', "'", '\n', '\r', '/',
+                        '	', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '　', # big list of whitespace
+                        '᠎', '​', '‌', '‍', '﻿', # more whitespace
+                        
+                        # This char is on its own line because it doesn't display right in vim. Don't trust it.
+                        '⁠']
 
 # Note: If you change/remove/add files in the greetings directory you will need to restart the server for it to take effect
 # Note2: Messages are read as HTML. You can create files to display messages on both listed and unlisted boards. If a message isn't found for a listed board then it will be blank, and if a message isn't found for an unlisted board it will use a defualt message defined in the variable "unlistedMessage" below.

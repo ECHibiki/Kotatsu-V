@@ -1,7 +1,9 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i python3 -p python36Packages.psycopg2
+#!nix-shell -i python3 -p python36Packages.psycopg2 python36Packages.python_magic
 
 import os
+import magic
+import shutil
 import psycopg2
 import default_settings
 import local_settings
@@ -50,6 +52,8 @@ BoardMap = {
     'hw': 'cc',
     'sw': 'cc',
     'pr': 'cc',
+
+    'v' : 'ho',
 }
 def boardMap(board):
     return BoardMap[board] if board in BoardMap else board
@@ -63,7 +67,10 @@ def nameMap(name, board):
     return name.replace('>Anonymous<', '>'+newName+'<')
 
 def commentFilter(comment, old_board, old_thread, new_board, new_thread):
-    return comment
+    newcomment = comment.replace('<a href="/'+old_board+'/'+old_thread, '<a href="/'+new_board+'/'+new_thread)
+    newcomment = newcomment.replace('<a href="/'+old_thread, '<a href="/'+new_thread)
+    newcomment = newcomment.replace('<a href="/'+old_board, '<a href="/'+new_board)
+    return newcomment
 
 def filenameMap(filename):
     #if len(filename)>9 and filename[0] == 't' and filename[-8] == '.' and filename[-4:] == '.jpg':
@@ -89,11 +96,29 @@ for row in newdata['amod']:
     cur.execute('INSERT INTO main.mod VALUES (%s, %s, %s);', (row[0], row[1], row[2]))
 
 for key in newdata:
-    if '\n' in key or '\r' in key or key == '' or key[0] == '.' or '"' in key or "'" in key or key in ['ball', 'bunlisted', 'blisted']:
+    board = key[1:]
+    delete = False
+    if key[0] == 't':
+        board = board.split('/')
+        if len(board) > 2:
+            delete = True
+        else:
+            board = board[0]
+    if board == '' or board in BoardBlacklist or board[0] == '.' or board in ['all', 'unlisted', 'listed']:
+        delete = True
+    for char in BoardDisallowedChars:
+        if char in board:
+            delete = True
+
+    if delete:
+        print('\n\n&&&&&&&&& DROPPING TABLE: ['+key+']')
+        if key[0] == 'b' and os.path.exists(BasePath+'res/brd/'+board):
+            print(' AND REMOVING DIR')
+            shutil.rmtree(BasePath+'res/brd/'+board)
+        print('\n\n')
         continue
 
     if key[0] == 'b':
-        board = key[1:]
         board = boardMap(board)
         lboard = board if board in BoardInfo else '*'
         listed = BoardInfo[lboard][8]
@@ -125,6 +150,8 @@ for key in newdata:
             cur.execute('INSERT INTO board."'+board+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, \'f\');', (threadnum, row[1], row[1], row[2], boardMap(row[3]), row[4], title, imageAllow))
             cur.execute('INSERT INTO board."'+('listed' if listed else 'unlisted')+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, \'f\');', (threadnum, row[1], row[1], row[2], boardMap(row[3]), row[4], title, imageAllow))
 
+        cur.execute('SELECT setval(\'board."'+board+'_threadnum_seq"\', (SELECT MAX(threadnum) FROM board."'+board+'"));')
+
     elif key[0] == 't':
         try:
             cur.execute('CREATE TABLE thread."'+ThreadShifts[key[1:]]+'" (postnum serial, time_string text, file_path text, file_name text, name text, ip text, image_size text, image_width integer, session text, subs boolean, comment text);')
@@ -154,7 +181,34 @@ for key in newdata:
             if row[6] == 0:
                 continue
             
-            cur.execute('INSERT INTO thread."'+ThreadShifts[key[1:]]+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, false, %s);', (int(row[6]), row[0], filenameMap(row[1]), row[3], nameMap(row[4], boardMap(old_board)), row[5], row[9], row[10], '', commentFilter(row[2], old_board, old_thread, new_board, new_thread)))
+            filetype = ''
+            localname = row[1].split('/')[0]
+            filename = row[3].split('/')[0]
+            filedata = row[9].split('/')[0]
+            if len(filedata)>4 and len(localname)>4 and len(filedata.split(',')) < 3:
+                print('\n\n--------- ADDING FILETYPE TO: '+BasePath+'res/brd/'+new_board+'/'+new_thread+'/'+localname)
+                if os.path.exists(BasePath+'res/brd/'+new_board+'/'+new_thread+'/'+localname):
+                    test = magic.from_file(BasePath+'res/brd/'+new_board+'/'+new_thread+'/'+localname)
+                    stest = test.split(' ')[0]
+                    if stest in ['JPEG','PNG','GIF']:
+                        filetype = stest
+                    elif 'MPEG' in test:
+                        filetype = 'MP3'
+                    elif test == 'WebM':
+                        filetype = 'WebM'
+                    elif test == 'Matroska data':
+                        filetype = 'MKV'
+                    elif 'MP4' in test:
+                        filetype = 'MP4'
+                    elif 'Macromedia Flash' in test:
+                        filetype = 'SWF'
+                    elif 'Zip archive' in test:
+                        filetype = 'HTML5'
+                print(' type: ['+filetype+']\n\n')
+
+            cur.execute('INSERT INTO thread."'+ThreadShifts[key[1:]]+'" VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, false, %s);', (int(row[6]), row[0], filenameMap(localname), filename, nameMap(row[4], new_board), row[5], (filetype+', ' if filetype else '')+filedata, row[10], '', commentFilter(row[2], old_board, old_thread, new_board, new_thread)))
+
+        cur.execute('SELECT setval(\'thread."'+new_board+'/'+new_thread+'_postnum_seq"\', (SELECT MAX(postnum) FROM thread."'+new_board+'/'+new_thread+'"));')
 
 
 cur.close()

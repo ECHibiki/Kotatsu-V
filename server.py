@@ -75,7 +75,7 @@ def application(environ, start_response):
 
     # Process user query (which board or multi-boards they are requesting to view)
     userquery, board, realquery, mixed = processQuery(userquery)
-    if '"' in board or "'" in board or '\n' in board or '\r' in board or board == '' or board[0] == '.' or board in BoardBlacklist:
+    if '"' in board or "'" in board or '\n' in board or '\r' in board or '/' in board or board == '' or board[0] == '.' or board in BoardBlacklist:
         return send_and_finish(page_error('INVALID BOARD NAME'), start_response)
         
     # Send thread-updates if requested
