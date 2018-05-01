@@ -62,6 +62,7 @@ blockquote{
 .post{
     height:auto;
     padding:5px 15px 2px 5px;
+    margin:4px 4px 4px 5px;
 
 
     #width:auto;
@@ -372,6 +373,7 @@ img.cimg{
     background:#edc;
     background:#fc9;
     background:#ada;
+    background:#cdd;
 }
 .mona .title{
     color:#f00;
@@ -386,7 +388,7 @@ img.cimg{
     color:#c4a;
 }
 .mona .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     border-left:1px solid #bbb;
     border-right:1px solid #bbb;
@@ -526,7 +528,7 @@ body.tatami.threadcontainer{
     color:#000;
 }
 .tatami .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
@@ -553,7 +555,8 @@ body.tatami.threadcontainer{
     font-size:13px;
     color:#000;
     background:#789;
-    background:#abc;
+    background:#aaa;
+    background:#789;
 
     height:100%;
     margin:10px 0px 30px 105px;
@@ -616,7 +619,6 @@ body.tatami.threadcontainer{
     font-size:13px;
     background:#edc;
     background:#ddd;
-    background:#dcb;
     border-right:1px solid #888;
 
     position:fixed;
@@ -663,12 +665,12 @@ body.computer.threadcontainer{
     color:#599;
     color:#000;
     color:#885;
-    color:#a00;
+    color:#c00;
 }
 .computer .name{
     color:#c00;
     color:#008000;
-    color:#a00;
+    color:#c00;
     background:#dcb;
 }
 .computer .date{
@@ -678,7 +680,7 @@ body.computer.threadcontainer{
     background:#99b;
 }
 .computer .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
@@ -809,7 +811,7 @@ body.computer.threadcontainer{
     color:#008000;
 }
 .yotsuba .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     background:#f0e0d6;
     border-left:1px solid #d9bfb7;
@@ -946,7 +948,7 @@ body.computer.threadcontainer{
     color:#000;
 }
 .yotsubab .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#d6daf0;
     border-left:1px solid #b7c5d9;
     border-right:1px solid #b7c5d9;
@@ -1004,7 +1006,7 @@ body.computer.threadcontainer{
     display:table;
 }
 .unlisted .msg{
-    background:#ccd;
+    background:#bbd0f0;
     border:1px outset #aab;
 
     display:table;
@@ -1030,14 +1032,14 @@ body.computer.threadcontainer{
     padding:2px;
 }
 .unlisted .label{
-    background:#aab;
+    background:#59a;
     border:1px inset #aab;
 }
 .unlisted .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
     background:#eef2ff;
-    background:#ccd;
+    background:#dde;
     border-right:1px solid #888;
 
     position:fixed;
@@ -1073,24 +1075,24 @@ body.computer.threadcontainer{
     margin:0px;
 }
 .unlisted .tb{
-    background:#ccc;
+    background:#cdd;
 }
 .unlisted .title{
-    color:#65a;
+    color:#489;
 }
 .unlisted .name{
     color:#c00;
     color:#008000;
-    color:#65a;
+    color:#98e;
 }
 .unlisted .date{
     color:#000;
 }
 .unlisted .post{
-    margin:2px 0px 2px 0px;
-    background:#ddd;
-    border-left:1px solid #65a;
-    border-right:1px solid #65a;
+    margin:0px;
+    background:#cdd;
+    border-left:1px solid #bce;
+    border-right:1px solid #bce;
     #border-bottom:1px solid #bce;
     #border-right:1px solid #bce;
 }

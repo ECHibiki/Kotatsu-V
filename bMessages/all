@@ -3,3 +3,10 @@ This board displays threads from all boards including unlisted boards.<br>
 To prevent threads on a particular board from being displayed simply subtract it from /all/ in the URL bar.<br>
 For example, to remove threads from /meta/ visit:<br>
 <a href="/all-meta">&gt;&gt;&gt;/all-meta/</a>
+
+<hr>
+<span style="color:#c00"><b>*** NEW ***</b></span><br>
+Many changes have been made to the site recently (read more about it <a href="">here</a>).<br>
+Please note that these changes include moving to more standardized comment fomatting.<br>
+This means cross thread links and board links now work how you expect (3 &gt; signs) since the previous format seemed to cause confusion.<br>
+Additionally we now have [code] and [spoiler] instead of [cb] and [sp].

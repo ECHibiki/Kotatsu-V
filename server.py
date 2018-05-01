@@ -238,17 +238,6 @@ def processQuery(userquery): # Process the board query sent by the user (e.g. pr
 
     return [userquery, board, realquery, mixed]
 
-def processComment(comment, board, thread): # Process the user comment to add things such as "greentext", post links, URL's, etc.
-    for filt in Filters:
-        if filt[0] == 'cross-thread-link':
-            comment = re.sub(filt[1], filt[2] % (board, board), comment)
-        elif filt[0] == 'post-link':
-            comment = re.sub(filt[1], filt[2] % (board, thread), comment)
-        else:
-            comment = re.sub(filt[1], filt[2], comment)
-
-    return comment
-
 def setOptions(options): # Set options from the "Email" field on the post form
     bump = 1
     email = options if Allow_Email else ''
@@ -860,19 +849,17 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
             return 'Thread not found.'
 
     # TABLE FOOTER WITH DYANMIC CATALOG AND PAGE LINKS
-    tableFoot = ('<hr>' if mode<0 else '')+'<a href="/res/report">Report a post</a>'
-    if displayMode != 'flash':
-        tableFoot = '<br>[<a href="/'+userquery+'/c">Catalog</a>] Page: '
+    tableFoot = '<a href="/res/report">Report a post</a>'
+    tableFoot += '<br>[<a href="/'+userquery+'/c">Catalog</a>] Page: '
 
-
-        tc = len(threads)
-        mx = int(tc/15)+2
-        for i in range(1, mx if mx < 32 else 31):
-            tableFoot += '[<a href="/'+userquery+'/p'+str(i)+'">'+str(i)+'</a>]'
-        if maxThreads == -1:
-            tableFoot += ' ... [∞]'
-        elif mx > 31:
-            tableFoot += ' ... [<a href="/'+userquery+'/p'+str(mx-1)+'">'+str(mx-1)+'</a>]'
+    tc = maxThreads if maxThreads>-1 else 1500
+    mx = int(tc/15)+1
+    for i in range(1, mx if mx < 32 else 31):
+        tableFoot += '[<a href="/'+userquery+'/p'+str(i)+'">'+str(i)+'</a>]'
+    if maxThreads == -1:
+        tableFoot += ' ... [∞]'
+    elif mx > 31:
+        tableFoot += ' ... [<a href="/'+userquery+'/p'+str(mx-1)+'">'+str(mx-1)+'</a>]'
 
 
     response_body = ''
@@ -898,7 +885,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
                     Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC LIMIT 1;')
                     posts = Cur.fetchall()
                     if not catalog:
-                        Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC '+('LIMIT 1 OFFSET '+str(thread[3]) if thread[8] else ('LIMIT 5 OFFSET '+str(thread[3]-4) if thread[3]>5 else 'OFFSET 1'))+';')
+                        Cur.execute('SELECT * FROM thread."'+posted_on+'/'+str(thread[0])+'" ORDER BY postnum ASC '+('LIMIT '+('1' if thread[3]>0 else '0')+' OFFSET '+str(thread[3]) if thread[8] else ('LIMIT 5 OFFSET '+str(thread[3]-4) if thread[3]>5 else 'OFFSET 1'))+';')
                         for i in Cur.fetchall():
                             posts.append(i)
                         DBconnection.rollback()

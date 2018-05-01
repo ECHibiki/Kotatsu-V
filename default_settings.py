@@ -64,7 +64,7 @@ BoardInfo = {
     ### but will require some changes inside the server code, otherwise something might break.
     #KEY        ( NAME                   STYLE       USERNAME THREADS POSTS  DISPLAY   OP-UP  POSTER-UP  LISTED )
     'listed':   ('All Listed Boards',   'main',     '',       -1,     0,    'normal', '',    '',         True   ),
-    'unlisted': ('All Unlisted Boards', 'unlisted', '',       1500,   0,    'normal', '',    '',         True   ), 
+    'unlisted': ('All Unlisted Boards', 'unlisted', '',       7500,   0,    'normal', '',    '',         True   ), 
     'all':      ('All Boards',          'main',     '',       -1,     0,    'normal', '',    '',         True   ),
 }
 
@@ -94,51 +94,57 @@ StyleTransparencies = {
 # The 1st element is a descriptive label, the 2nd element is the actual regex filter, and the 3rd element is what to replace the text with
 # NOTE: Filters are applied one after the other, so order can make a difference
 # NOTE: Posts are already escaped (e.g. ">" characters show up as "&gt;") and newlines are already converted to <br>
-Filters = [
-            # === Post link filters === (Order is important here)
-                ('cross-board-cross-thread-post-link',
-                 re.compile(r'(?<!&gt;)&gt;&gt;&gt;/([^/ ]*)/([0-9]+)/([0-9]+)'),
-                 r'<a href="/\1/\2#\3">&gt;&gt;&gt;/\1/\2/\3</a>'),
+Filters = {
+            'url': (
+                re.compile(r'([^ >]*)://([^ <]*)'),
+                r'<a href="\1://\2">\1://\2</a>',
+            ),
+            'code': (
+                re.compile(r'\[code\](.*?)\[/code\]'),
+                r'<span class="code">\1</span>',
+            ),
+            'japanese': (
+                re.compile(r'\[ja\](.*?)\[/ja\]'),
+                r'<span class="ja">\1</span>',
+            ),
+            'spoiler': (
+                re.compile(r'\[spoiler\](.*?)\[/spoiler\]'),
+                r'<span class="spoiler">\1</span>',
+            ),
+            'cross-board-cross-thread-post-link': (
+                re.compile(r'(?<!">)&gt;&gt;&gt;/([^/ ]*)/([0-9]+)/([0-9]+)'),
+                r'<a href="/\1/\2#\3">&gt;&gt;&gt;/\1/\2/\3</a>',
+            ),
+            'cross-board-cross-thread-link': (
+                re.compile(r'(?<!">)&gt;&gt;&gt;/([^/ ]*)/([0-9]+)'),
+                r'<a href="/\1/\2">&gt;&gt;&gt;/\1/\2</a>',
+            ),
+            'cross-board-link': (
+                re.compile(r'(?<!">)&gt;&gt;&gt;/([^/ ]*)/'),
+                r'<a href="/\1">&gt;&gt;&gt;/\1/</a>',
+            ),
+            'cross-thread-link': (
+                re.compile(r'(?<!">)&gt;&gt;&gt;([0-9]+)/([0-9]+)'),
+                r'<a href="/%s/\1#\2">&gt;&gt;&gt;/%s/\1/\2</a>', #NOTE: Containes %s substitutions
+            ),
+            'post-link': (
+                re.compile(r'(?<!&gt;)&gt;&gt;([0-9]+)'),
+                r'<a href="/%s/%s#\1">&gt;&gt;\1</a>', #NOTE: Containes %s substitutions
+            ),
+            'quote': (
+                re.compile(r'(^|<br>)(&gt;[^<]*)'),
+                r'\1<span class="quote">\2</span>',
+            ),
+}
 
-                ('cross-board-cross-thread-link',
-                 re.compile('[^">]&gt;&gt;&gt;/([^/ ]*)/([0-9]+)'),
-                 r'<a href="/\1/\2">&gt;&gt;&gt;/\1/\2</a>'),
+def processComment(comment, board, thread): # Process the user comment to add things such as "greentext", post links, URL's, etc.
+    for filt in Filters:
+        if filt == 'cross-thread-link':
+            comment = re.sub(Filters[filt][0], Filters[filt][1] % (board, board), comment)
+        elif filt == 'post-link':
+            comment = re.sub(Filters[filt][0], Filters[filt][1] % (board, thread), comment)
+        else:
+            print(filt)
+            comment = re.sub(Filters[filt][0], Filters[filt][1], comment)
 
-                ('cross-board-link',
-                 re.compile('[^">]&gt;&gt;&gt;/([^/ ]*)/'),
-                 r'<a href="/\1">&gt;&gt;&gt;/\1/</a>'),
-
-                ('cross-thread-link',
-                 re.compile(r'[^">]&gt;&gt;&gt;([0-9]+)/([0-9]+)'),
-                 r'<a href="/%s/\1#\2">&gt;&gt;&gt;/%s/\1/\2</a>'),
-                 #NOTE: This is not necessarily the most elegant solution
-                 #      But for now, there is an if-statement in the server code that will look for the label: cross-thread-link
-                 #      and fill in the %s's here with the board name
-
-                ('post-link',
-                 re.compile(r'(?<!&gt;)&gt;&gt;([0-9]+)'),
-                 r'<a href="/%s/%s#\1">&gt;&gt;\1</a>'),
-                 #NOTE: Same here
-            # =========================
-
-            ('quote',
-             #re.compile(r'(^&gt;[^<]*)'),
-             re.compile(r'(^|<br>)(&gt;[^<]*)'),
-             r'\1<span class="quote">\2</span>'),
-
-            ('url',
-             re.compile(r'([^ >]*)://([^ <]*)'),
-             r'<a href="\1://\2">\1://\2</a>'),
-
-#            ('code',
-#             re.compile(r'\[code\](.*)\[/code\]'),
-#             r'<span class="code">\1</span>'),
-
-#            ('japanese',
-#             re.compile(r'\[ja\](.*)\[/ja\]'),
-#             r'<span class="ja">\1</span>'),
-
-#            ('spoiler',
-#             re.compile(r'\[spoiler\](.*)\[/spoiler\]'),
-#             r'<span class="spoiler">\1</span>'),
-]
+    return comment

@@ -526,7 +526,7 @@ body.tatami.threadcontainer{
     color:#000;
 }
 .tatami .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
@@ -678,7 +678,7 @@ body.computer.threadcontainer{
     background:#99b;
 }
 .computer .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
@@ -809,7 +809,7 @@ body.computer.threadcontainer{
     color:#008000;
 }
 .yotsuba .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     background:#f0e0d6;
     border-left:1px solid #d9bfb7;
@@ -946,7 +946,7 @@ body.computer.threadcontainer{
     color:#000;
 }
 .yotsubab .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#d6daf0;
     border-left:1px solid #b7c5d9;
     border-right:1px solid #b7c5d9;
@@ -1087,7 +1087,7 @@ body.computer.threadcontainer{
     color:#000;
 }
 .unlisted .post{
-    margin:2px 0px 2px 0px;
+    margin:0px;
     background:#ddd;
     border-left:1px solid #65a;
     border-right:1px solid #65a;
