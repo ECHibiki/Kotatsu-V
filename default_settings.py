@@ -47,7 +47,7 @@ DBPASS = ''
 BoardInfo = {
     # Listed boards
     #KEY   ( NAME             STYLE       USERNAME     THREADS POSTS  DISPLAY   OP-UP      POSTER-UP  LISTED )
-    'a':  ('Anime & Manga',  'yotsubab', 'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'a':   ('Anime & Manga', 'yotsubab', 'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'ni':  ('日本裏'  ,      'mona',     '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'd':   ('二次元エロ',    'yotsuba',  'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'cc':  ('Computer Club', 'computer', 'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid',  True   ),

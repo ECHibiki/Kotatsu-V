@@ -256,16 +256,16 @@ function imgswap(e){
 }*/
 
 
-/*function srchk(e){
+function srchk(e){
     if(e.keyCode==13){
         e.preventDefault();
         srch();
     }
-}*/
+}
 
-/*function srch(){
+function srch(){
     var text = document.getElementById('srchbr').value.toLowerCase();
-    var threads = document.getElementsByClassName('thread');
+    var threads = document.getElementsByClassName('threadcontainer');
     
     for (var idx=0, thread; thread = threads[idx]; ++idx){
         if(thread.innerHTML.toLowerCase().indexOf(text) == -1){
@@ -274,7 +274,7 @@ function imgswap(e){
             thread.style.display='inline-block';
         }
     }
-}*/
+}
 
 function hidemenu(){
     document.getElementsByClassName('menu')[0].style.display='none';

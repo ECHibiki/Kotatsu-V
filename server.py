@@ -145,8 +145,10 @@ def processPath(path, ip): # Take the URI path (e.g. 4taba.net/all/5 has path: "
     # /B/cN = page N of catalog on board B (only useful on boards such as "all" which technically can show threads beyond the board thread limit)
     # /B/# = thread # of board B
     # /B/update/#!t = update thread # from board B at returning new posts after time t
-    if path[-1] == '/': path = path[:-1]
-    path = path[1:].split('/')
+    if path[-1] == '/':
+        path = path[1:-1].split('/')
+    else:
+        path = path[1:].split('/')
     while len(path) < 5:
         path.append('') # This eliminates the need to perform redundant list length checks
     userquery = '' # userquery is the actual B value (remember it can be combinations of boards like "a+ma")
@@ -157,36 +159,18 @@ def processPath(path, ip): # Take the URI path (e.g. 4taba.net/all/5 has path: "
     updatetimestamp = 0
 
     userquery = path[0]
-    try:
-        if path[1]:
-            if path[1][0] in ['p','c']:
-                mode = int(path[1][1:])-1
-                if mode > -1:
-                    mode = (mode + 1) * -1
-                if path[1][0] == 'c':
-                    catalog = 1
-            elif path[1][0] == 'b':
-                if len(path[1]) > 1:
-                    boardupdate = 2
-                else:
-                    boardupdate = 1
-            elif path[1] == 'update':
-                if path[1] == 'a':
-                    mode = int(path[2])
-                    userquery = path[0]
-                    update = 1
-                    updatetimestamp = int(path[3])
-                if path[1] == 'd':
-                    mode = int(path[2])
-                    userquery = path[0]
-                    update = 2
-            elif path[2] == 'l50':
-                last50 = 1
-                mode = int(path[1])
-            else:
-                mode = int(path[1])
-    except:
-        pass
+    if path[1]:
+        if path[1][0] in ['p']:
+            mode = int(path[1][1:])-1
+            if mode > -1:
+                mode = (mode + 1) * -1
+        elif path[1][0] == 'c':
+            catalog = True
+        elif path[2] == 'l50':
+            last50 = 1
+            mode = int(path[1])
+        else:
+            mode = int(path[1])
 
     userquery = ''.join(ch for ch in userquery if ch not in ' \/"')
     return [userquery, mode, last50, catalog, update, updatetimestamp]
@@ -646,7 +630,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
         name = ''
 
     try:
-        options = escape(post.getfirst('email'))
+        options = escape(post.getfirst('email'), True)
     except:
         options = ''
 
@@ -831,11 +815,11 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
         response_body_header = PageHeader + '<center><div style="margin:0 auto;" class="banner"><img id="banner" style="float:none;padding:0px;margin:5px;border:1px solid #000;" src="/res/banners/%s"></div></center><hr><div class="msg"><div class="msg2"><h1 class="boardTitle">%s</h1>%s</div></div>' + (FtEN if board not in ['listed', 'unlisted', 'all'] else '')
         response_body_header = fill_header(response_body_header, mode, board, lboard, '', userquery, mixed, '', 0, cookieStyle)
         try:
-            if catalog == 0:
+            if not catalog:
                 Cur.execute('('+realquery+') ORDER BY bump_time DESC OFFSET %s LIMIT 15;', (str(-15*(mode+1)),))
             else:
                 #CATALOG VIEW
-                Cur.execute('('+realquery+') ORDER BY bump_time DESC LIMIT %s;', (maxThreads,))
+                Cur.execute('('+realquery+') ORDER BY bump_time DESC LIMIT %s;', (150,))
             threads = Cur.fetchall()
         except(psycopg2.ProgrammingError):
             threads = []
@@ -850,7 +834,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
 
     # TABLE FOOTER WITH DYANMIC CATALOG AND PAGE LINKS
     tableFoot = '<a href="/res/report">Report a post</a>'
-    tableFoot += '<br>[<a href="/'+userquery+'/c">Catalog</a>] Page: '
+    tableFoot += '<br>[<a href="/'+userquery+('/c">Catalog' if not catalog else '">Return')+'</a>] Page: '
 
     tc = maxThreads if maxThreads>-1 else 1500
     mx = int(tc/15)+1
@@ -865,7 +849,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
     response_body = ''
 
     if catalog:
-        response_body += 'Search OP text: <input type="text" id="srchbr" cols="60"><input type="submit" value="Search"><hr>'
+        response_body += 'Search OP text: <input type="text" id="srchbr" cols="60"><input type="submit" value="Search"><script>document.getElementById("srchbr").addEventListener("keyup", srchk);</script><hr>'
 
     if error:
         if not mixed:
@@ -875,6 +859,10 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
     else:
         if displayMode == 'flash' and mode<0:
             response_body += '<center><table><tr style="height:25px;text-align:center"><td class="label">No.</td><td class="label">File</td><td class="label">Title</td><td class="label">Replies</td><td class="label">Name</td><td class="label">Date</td><td class="label">View</td></tr>'
+
+        if catalog:
+            response_body += '<div class="catalog">'
+
         for idc, thread in enumerate(threads):
             posted_on = thread[4]
             title = thread[6]
@@ -908,19 +896,10 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
                 else:
                     OP = False
 
-                if catalog == 0:
-                    response_body += buildPost(OP, last50, admin, mode, board, thread, post, ip)
+                response_body += buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip)
 
-                else: #CATALOG VIEW
-                    response_body += ('<div class="catalog">' if idc==0 else '')+'<div class="style'+getStyle(posted_on)+'"><div class="'+divclass+'"><div class="tb" style="margin:0px;padding:0px;"><a class="title" href="/'+posted_on+'/'+str(thread[0])+'">'+str(thread[0])+'. '+title+'</a> <span class="tag"><a style="font-size:12px;" href="/'+posted_on+'">/'+posted_on+'/</a></span></div>'
-                    if post[2] != '':
-                        imge = post[2].split('/')[0]
-                        response_body += '<a href="/'+posted_on+'/'+str(thread[0])+'"><img class="cimg" src="/res/brd/'+posted_on+'/'+str(thread[0])+'/t'+imge+'"></a>'
-                    response_body += '<span class="foot">'+str(thread[3])+' replies</span><br>'+post[10]+'</div>'
-
-            if catalog == 0:
-                response_body += '<div style="clear:both;"></div></div></div>'
-                #response_body += '<div style="clear:both;"></div></div>'
+            if not catalog:
+                response_body += '<div style="clear:both"></div></div></div>'
             else:
                 response_body += '</div>'
 
@@ -935,7 +914,7 @@ def load_page(mode, board, mixed, catalog, realquery, userquery, last50, ip, adm
 
     return response_body_header + tableFoot + response_body
 
-def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
+def buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip, sub=False):
     threadnum, last_post_time, bump_time, post_count, posted_on, creation_time, title, imageAllow, sticky = thread
     if not sub:
         postnum, time_string, file_path, file_name, name, post_ip, image_size, image_width, session, subs, post_comment = post
@@ -976,36 +955,43 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
 
     else:
         #response_body += ('<div'+(' class="style'+getStyle(posted_on)+'"' if mode<0 else '')+'>' if OP==1 else '')+'<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'&nbsp;<span class="title" style="font-size:initial;"><a href="/'+posted_on+'/'+str(threadnum)+'">View</a>|<a onclick="watchThread(\''+posted_on+'/'+str(threadnum)+'\','+str(post_count)+');" href="javascript:void(0)">Watch</a></span></div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> '+time_string+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
-        response_body += '<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+(getStyle(posted_on)+' ' if mode<0 else '')+divclass+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<div class="threadbody">' if OP else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb">'+('<img src="/res/sticky.png" title="sticky">' if sticky else '')+'<a class="title" href="/'+posted_on+'/'+str(threadnum)+'"><span style="font-size:16px;color:#000">【'+str(threadnum)+'】</span> '+title+'</a>&nbsp;<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a>'+(' <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a>' if mode>-1 or board in ['listed','unlisted','all'] else '')+('<span> | Text Only</span>' if not imageAllow else '')+'</div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">'+time_string+'</span>'+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
+        if not catalog:
+            response_body += '<div id="'+str(postnum)+'" class="'+(getStyle(posted_on)+' ' if mode<0 else '')+divclass+'">'+('<div class="threadbody">' if OP else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb">'+('<img src="/res/sticky.png" title="sticky">' if sticky else '')+'<a class="title" href="/'+posted_on+'/'+str(threadnum)+'"><span style="font-size:16px;color:#000">【'+str(threadnum)+'】</span> '+title+'</a>&nbsp;<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a>'+(' <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a>' if mode>-1 or board in ['listed','unlisted','all'] else '')+('<span> | Text Only</span>' if not imageAllow else '')+'</div>') if OP==1 else '')+('<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">' if not sub else '')+time_string+'</span>'+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br>'
+            if file_name:
+                response_body += '<div class="fname"><a href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'">'+file_name+'</a> ['+image_size+']<br></div>'
 
-        imglst = file_name.split('/')
-        if imglst[0] != '':
-            lcllst = file_path.split('/')
-            fsize = image_size.split('/')
-            for idi in range(len(imglst)):
-                response_body += '<a href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+lcllst[idi]+'">'+imglst[idi]+'</a> ['+fsize[idi]+']<br>'
-        response_body += '</div>'
+        else: #CATALOG VIEW
+            response_body += '<div class="'+getStyle(posted_on)+' '+divclass+'"><div class="threadbody"><div class="tb">'+('<img src="/res/sticky.png" title="sticky">' if sticky else '')+'<a class="title" href="/'+posted_on+'/'+str(threadnum)+'">【 '+str(threadnum)+'】 '+title+'</a>&nbsp;<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a>'+(' <a class="tag" href="/'+posted_on+'" >/'+posted_on+'/</a>' if board in ['listed','unlisted','all'] else '')+('<span> | Text Only</span>' if not imageAllow else '')+'</div>'
+#            if post[2] != '':
+#                imge = post[2].split('/')[0]
+#                response_body += '<a href="/'+posted_on+'/'+str(thread[0])+'"><img class="cimg" src="/res/brd/'+posted_on+'/'+str(thread[0])+'/t'+imge+'"></a>'
+#            response_body += '<span class="foot">'+str(thread[3])+' replies</span><br>'+post[10]+'</div>'
+
         if admin:
             if OP == 1:
                 response_body += '<a href="javascript:void(0)" onclick="mod(\'warn\','+str(postnum)+')">Warn</a> | <a href="javascript:void(0)" onclick="mod(\'delt\','+str(postnum)+')">Delete Thread</a> | <a href="javascript:void(0)" onclick="mod(\'ban\','+str(postnum)+')">Ban</a>'
             else:
                 response_body += '<a href="javascript:void(0)" onclick="mod(\'warn\','+str(postnum)+')">Warn</a> | <a href="javascript:void(0)" onclick="mod(\'del\','+str(postnum)+')">Del</a> | <a href="javascript:void(0)" onclick="mod(\'ban\','+str(postnum)+')">Ban</a>'
 
-        if not OP:
-            #response_body += '<table><tr style="vertical-align:top">'
-            pass
         if file_path != '':
-            imglst = file_path.split('/')
-            response_body += ('<div'+(' style="display:table"' if len(imglst)>1 else '')+'>') if OP else ''
-            for imge in imglst:
-                response_body += '<a '+('onclick="return false;" target="_blank" ' if imge[-3:]!='swf' else '')+'href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+imge+'"><img data-ftype="'+fsize[0].split(',')[0]+'" src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+imge+'" onclick="imgswap(this)"></a>'
+            response_body += '<div>' if OP else ''
+
+            if not catalog:
+                response_body += '<a '+('onclick="return false;" target="_blank" ' if image_size[1:4]!='SWF' else '')+'href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'"><img data-ftype="'+image_size.split(',')[0]+'" src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+file_path+'" onclick="imgswap(this)"></a>'
+            else:
+                response_body += '<a href="/'+posted_on+'/'+str(threadnum)+'"><img src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+file_path+'"></a>'
+
             response_body += '</div>' if OP else ''
+
+        if catalog:
+            response_body += '<span class="foot">'+str(post_count)+' Replies</span>'
+
         comment = post_comment.split('<br>')
         if mode<0 and len(comment)>PostLineCutoff:
             comment = '<br>'.join(comment[:PostLineCutoff])+'<span class="long"><br>...<br>Comment too long. View thread to see entire comment.</span>'
         else:
             comment = '<br>'.join(comment)
-        response_body += '<blockquote style="margin-left:'+str(image_width)+'px">'+comment+'</blockquote>'
+        response_body += '<blockquote'+(' style="margin-left:'+str(image_width)+'px"' if not catalog else '')+'>'+comment+'</blockquote>'
 
         if not OP:
             #response_body += '</tr></table>'
@@ -1014,7 +1000,7 @@ def buildPost(OP, last50, admin, mode, board, thread, post, ip, sub=False):
                 subposts = Cur.fetchall()
                 response_body += '<div class="sub">'
                 for subpost in subposts:
-                    response_body +=  buildPost(False, False, '', 0, posted_on, thread, subpost, ip, True)
+                    response_body +=  buildPost(False, False, False, '', 0, posted_on, thread, subpost, ip, True)
                 response_body += '</div>'
             response_body += '</div>'
         else:
