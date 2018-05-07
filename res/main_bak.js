@@ -1,5 +1,7 @@
 /**
  *
+ * @source: https://4taba.net/res/main.js
+ *
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
@@ -24,6 +26,87 @@
  * for the JavaScript code in this page.
  *
  */
+
+function watchThread(label, timestamp){
+// Three different ways to store watched thread list:
+// 1) No Javascript - this onclick function is ignored and the user makes a call to the server to calculate the new value of their cookie for them
+// 2) Yes Javascript, No localStorage - return false from this function to block server call, use Javascript to update the users threadlist cookie
+// 3) Yes Javascript, Yes localStorage - return false from this function to block server call, use Javascript to update the users threadlist in localStorage
+////
+//// NOTE: Watch button should have property onclick="return watchThread()" which can be used to block the link if it returns false (in this case, if Javascript is enabled)
+
+    if (label == "")
+        alert('Error: Thread label is blank.');
+        return false;
+
+    if (typeof(Storage) !== "undefined"){
+    // USE LOCAL STORAGE
+        var ls = true;
+        var val = localStorage.threads || '';
+    }else{
+    // USE COOKIES
+        var ls = false;
+        var c = document.cookie.split(';');
+        var val = '';
+        for (var i = 0; i < c.length; ++i){
+            var idx = c[i].indexOf('=');
+            if (idx >= 0){
+                var key = c[i].substring(0, idx);
+                var jdx = key.indexOf(' ');
+                if (jdx >= 0)
+                    key = key.substring(0, jdx);
+
+                if (key == 'threads'){
+                    val = c[i].substring(idx+1, c[i].length);
+                    while (val.length>0 && val[0] == " "){
+                        val = val.substring(1, val.length);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    var index = 0;
+    var threads = val.split(' ');
+    for (var tdx = 0; tdx<threads.length; ++tdx){
+        var edx = threads[tdx].indexOf('!');
+        if (label == threads[tdx] || label == threads[tdx].substring(0, edx)){
+        // Already watching thread; just update timestamp
+            threads[tdx] = label+'!'+timestamp;
+        }else{
+        // Not watching thread yet; add it to the list
+            threads.push(label+'!'+timestamp);
+        }
+    }
+
+    if (ls){
+        localStorage.threads = threads.join(' ');
+    }else{
+        document.cookie='threads='+threads.join(' ')+'; expires=Tue, 19 Jan 2038 03:14:07 UTC; domain=.4taba.net; path=/';
+    }
+
+    return false;
+}
+
+function autoUpdate(){
+    var url = window.location.pathname.split('/');
+    var board = url[1];
+    var thread = url[2];
+    var timestamp = document.getElementById('timestamp').innerHTML;
+    var req_url = '/'+board+'/update/'+thread+'!'+timestamp
+
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function(){
+        if(request.readyState==4 && request.status==200){
+            if(request.responseText != '')
+                document.getElementById("1").innerHTML += request.responseText;
+        }
+    }
+
+    request.open("GET", url, true);
+    request.send(null);
+}
 
 function checksize(max){
     maxb = max * 1024**2;
@@ -171,7 +254,7 @@ function hidemenu(){
     document.getElementById('topnav').innerHTML = links;
     document.getElementById('botnav').innerHTML = links;
     localStorage.menu='hide'
-    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> ] [ <a href="/listed">/listed/</a> <a href="/unlisted">/unlisted/</a> <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ni">/ni/</a> <a href="/d">/d/</a> ] [ <a href="/cc">/cc/</a> ] [ <a href="/f">/f/</a> <a href="/ho">/ho/</a> ]</b></span>';
+    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> <a href="/watcher">Watcher</a> <a href="/settings">Settings</a> ] [ <a href="/listed">/listed/</a> <a href="/unlisted">/unlisted/</a> <a href="/all">/all/</a> ] [ <a href="/ni">/ni/</a> <a href="/d">/d/</a> ] [ <a href="/cc">/cc/</a> ] [ <a href="/f">/f/</a> <a href="/ho">/ho/</a> ]</b></span>';
     document.getElementById('toplinks').innerHTML = links;
     document.getElementById('botlinks').innerHTML = links;
 }
@@ -206,9 +289,4 @@ function plink(n){
     var e = document.getElementsByName('comment');
     e[0].value += '>>'+n.toString()+'\n'
     e[1].value += '>>'+n.toString()+'\n'
-}
-
-function changeStyle(style){
-    document.cookie = 'style='+style.value+';path=/';
-    location.reload();
 }

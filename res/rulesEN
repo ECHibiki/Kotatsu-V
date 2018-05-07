@@ -1,11 +1,14 @@
-<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん: Rules</title><link rel="stylesheet" type="text/css" href="/res/stylemain.css"><link rel="stylesheet" type="text/css" href="/res/styleInfo.css"></head>
-<body style="background-image:url('/res/bgb.png')">
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>Rules</title><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><link rel="stylesheet" type="text/css" href="/res/styles/threads.css"></head>
+<body class="main">
+
 <div class="menu">
 <a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/favicon.png" id="favicon">
 [HOME]</a><br>
 <a id="mhide" href="javascript:void(0)" onclick="hidemenu()"></a>
-<br>
+<br><br>
 <ul>
+<li><a href="/listed">Listed</a></li>
+<li><a href="/unlisted">Unlisted</a></li>
 <li><a href="/all">All</a></li>
 </ul><hr>
 <b>Japan</b>
@@ -20,14 +23,13 @@
 </ul><br><hr>
 <b>Miscellaneous</b>
 <ul>
-<li><a href="/f">Flash & HTML5</a></li>
+<li><a href="/f/c">Flash & HTML5</a></li>
 <li><a href="/ho">Other</a></li>
 </ul><br><hr>
 <a href="/res/rulesEN">[Rules]</a><br>
 <a href="/res/faqEN">[F.A.Q.]</a><br>
-<a href="/watcher">[Watcher]</a><br>
-<a href="/settings">[Settings]</a><br>
 </div>
+
 <div class="outer" style="max-width:1200px;"><div class="inner">
 [<a href="/">Home</a>]<br>
 <hr>
@@ -39,5 +41,5 @@
 <hr>
 [<a href="/">Home</a>]</div></div>
 <hr>
-<div style="display:table;margin:0 auto;background:#FFF;padding:7px;border:1px inset #888"><a href="/res/contactEN">Contact</a></div></body></html>
+<div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/gentoo-badge3.png" id="badge"> ･ <a href="/res/weblabels.html" rel="jslicense">WebLabels for LibreJS</a></div>
 </body></html>

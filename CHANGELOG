@@ -1,0 +1,6 @@
+### version 1.0 ###
+- Lots of database improvements (complete rewrite and migration)
+- Completed moderator interface (ability to view thread reports in-site)
+- Single main stylesheet
+- Individual board style changing
+- Added sub-post feature

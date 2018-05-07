@@ -1,38 +1,57 @@
 @charset "UTF-8";
 
 body{
-    color:#C5C8C6;
-    background:#1D1F21;
+    font-family:"Arial","Sans";
     font-size:13px;
-    font-family:"Arial";
+    color:#c5c8c6;
+    background:#1d1f21;
+
     height:100%;
     margin:10px 0px 30px 105px;
 }
-h1{
-    color:#6C879E;
-    text-align:center;
+
+a{
+    color:#6c879e;
 }
-input{
+input[type=text], .computer textarea{                                                                                                                                                        
+    font-family:"Arial","Sans";
     font-size:13px;
-    font-family:"Arial";
-    color:#C5C8C6;
-    background:#1D1F21;
-    border:1px solid #555;
+    border:2px inset #aaa;
+    outline:1px inset #fff;
 }
-textarea{
-    font-size:13px;
-    font-family:"Arial";
-    color:#C5C8C6;
-    background:#1D1F21;
-    border:1px solid #555;
+
+.outer{
+    display:table;
+    margin:0 auto;
+    background:#eee;
+    border:1px outset #888;
+    padding:7px;
 }
+.inner{
+    background:#eee;
+    border:1px inset #888;
+}
+.inner table{
+    background:#BE9;
+}
+.inner td{
+    border:1px solid #CCC;
+    margin:0px;
+    vertical-align:top;
+}
+
+
+
+
+/* BEGIN GENERIC STYLES */ 
 img{
     float:left;
+    max-width:100%;
     margin:5px 10px 5px 5px;
 }
 blockquote{
-    margin-right:0px;
     white-space:pre-wrap;
+    margin:0px 0px 10px 0px;
 }
 ul{
     margin:0px;
@@ -40,131 +59,73 @@ ul{
 }
 li{
     padding-top:2px;
-    padding-bottom:2px;
+    padding-bottom:5px;
 }
-.postForm{
-    background:#282A2E;
-    border:2px solid #555;
-    margin-top:5px;
-    margin-bottom:5px;
-    padding:5px;
-}
-.banner{
+.threadcontainer{
     display:table;
+    min-width:800px;
+    max-width:1600px;
 }
-.msg{
-    background:#34345C;
-    border:2px solid #333;
-    display:table;
-    margin:0 auto;
-    padding:7px;
-    min-width:50%;
-}
-.msg2{
-    background:#282A2E;
-    border:1px solid #555;
-    padding:7px;
-}
-.autotext{
-    color:#222;
-    background:#FFF;
-    margin-top:5px;
-}
-.label{
-    color:#6C879E;
-    font-weight:bold;
-    background:#34345C;
-    border:1px solid #555;
-    padding:0px 3px 0px 1px;
-}
-.menu{
-    background:#34345C;
-    border-right:1px solid #555;
-    font-size:13px;
-    font-family:"Arial", "MS PGothic";
-    position:fixed;
-    left:0px;
-    top:0px;
-    margin:0px;
-    padding:0px;
-    height:100%;
-    width:100px;
-    overflow:hidden;
-}
-hr{
-    border:none;
-    border-top:1px solid #555;
-}
+.threadbody{
+    white-space:pre;
+    word-break:normal;
+    word-wrap:break-word;
+    display:block;
 
-
-
-
-
-
-
-
-a{
-    color:#6C879E;
-}
-.thread{
-    margin:5px 5px 0px 0px;
-    width:auto;
+    margin:7px;
+    padding:2px;
     height:auto;
-    padding:0px;
-    border:1px solid #555;
-    background:#1D1F21;
+}
+.post{
+    background:#282a2e;
+    height:auto;
+    padding:5px 15px 2px 5px;
+    margin:2px 0px 2px 0px;
+
+
+    #width:auto;
+    #width:800px;
+    max-width:95%;
+    min-width:300px;
+    white-space:pre;
+    word-break:normal;
+    word-wrap:break-word;
+    #display:inline-block;
+    display:table;
+    border-left:1px solid #6c879c;
+    border-right:1px solid #6c879c;
 }
 .tb{
+    background:#34345c;
     margin:0px 0px 4px 0px;
     padding:2px 0px 2px 0px;
 }
 .title{
-    color:#6C879E;
-    font-size:24px;
+    font-size:28px;
     font-weight:bold;
+    word-break:all;
+    word-wrap:break-word;
 }
 .name{
     font-weight:bold;
-}
-.hidden{
-    color:#777!important;
-}
-.hidden *{
-    color:#777!important;
-}
-.hidden blockquote,.hidden img{
-    display:none;
 }
 .fname{
     font-size:11px;
 }
 .ja{
-    font-family:"MS PGothic","Mona","Konatu","Textar","Monapo","IPAMonaPGothic","Gothic";
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
     font-size:16px;
 }
-.cb{
-    font-family:"Courier New","Courier","IPAMonaGothic","monospace";
-    background:#34345C;
-    border:1px solid #555;
+.code{
+    font-family:"Courier New","Courier","monospace";
+    background:#000;
+    border:1px solid #aaa;
+
     padding:5px;
     display:table;
 }
 .sp{
-    background:#C5C8C6;
-}
-.post{
-    display:table;
-    height:auto;
-    width:auto;
-    padding:5px 15px 2px 5px;
-    margin:4px 4px 4px 5px;
-    background:#282A2E;
-}
-.pon{
-    float:right;
-}
-.del{
-    border:2px solid red !important;
+    background:#c5c8c6;
 }
 .quote{
     color:#690;
@@ -174,96 +135,155 @@ a{
     font-style:italic;
     background:#cca;
 }
-.old{
-    color:red;
-    font-style:italic;
-}
-.warn{
-    color:red;
-}
-.band{
-    font-weight:bold;
-    color:red;
-}
-.ghost{
-    font-weight:bold;
-    color:#888;
-}
 .long{
     color:#888;
 }
 .sub{
-    background:#EDC;
+    color:#888!important;
+    font-size:11px;
+    background:transparent;
+    border:1px solid #ccc;
+
+    margin-left:25px;
+    width:200px;
+    height:20px;
+    padding-top:10px;
+    overflow-x:hidden;
+    overflow-y:hidden;
+    resize:both;
 }
-.ctitle{
-    color:#F05902;
-    font-weight:bold;
+.sub .name, .sub .date{
+    color:#888!important;
+    background:transparent!important;
 }
-img.cimg{
-    float:none;
+/* END GENERIC STYLES */
+
+/* BEGIN BOARD SPECIFIC STYLES */
+
+
+/******************************************************************************/
+/* MAIN THEME */
+/******************************************************************************/
+.banner{
+    display:table;
+}
+.msg{
+    background:#34345c;
+    border:2px solid #333;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.msg2{
+    background:#282a2e;
+    border:1px solid #555;
+
+    padding:7px;
+}
+.postForm{
+    background:#282a2e;
+}
+.boardTitle{
+    color:#6c879e;
+    text-align:center;
+}
+.label{
+    color:#6c879e;
+    border:1px inset #555;
+    background:#34345c;
+}
+.menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#34345c;
+    border-right:1px solid #555;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.menu hr{
+    border:1px inset #555;
+}
+
+
+
+
+
+
+body.threadcontainer .tb{
+    background:transparent;
+}
+.catalog{
+    word-break:break-all;
+    word-wrap:break-word;
+    display:table;
+    margin:0 auto;
+}
+.catalog img{
+    word-break:break-all;
+    word-wrap:break-word;
     display:block;
 
+    float:none;
     margin-left:auto;
     margin-right:auto;
     padding:0px;
     max-width:128px;
     max-height:128px;
 }
-.catalog{
-    display:table;
-    margin:0 auto;
-}
-#.catalog .styledefault,.catalog .styledis,.catalog .styleeb,.catalog .stylemain,.catalog .styleyotsuba,.catalog .styleyotsubab,.catalog .styleyotsuban{}
-#.catalog (.styledefault,.styledis,.styleeb,.stylemain,.styleyotsuba,.styleyotsubab,.styleyotsuban){}
-.catalog div[class^="style"]{
-    display:inline-block;
-    vertical-align:top;
-    font-size:12px;
-    background:transparent;
-    width:auto; 
-    border:none;
+.catalog .tb{
+    margin:0px;
     padding:0px;
 }
-.catalog .thread{
+.catalog .title{
+    word-break:break-all;
+    word-wrap:break-word;
+    color:#f05902;
+}
+.catalog .threadbody{
+    word-break:break-all;
+    word-wrap:break-word;
+    font-size:12px;
+    /*background:transparent;*/
+    border:none;
+    outline:none;
+
+    display:inline-block;
+    vertical-align:top;
     overflow:hidden;
     width:200px;
+    padding:0px;
+}
+.catalog .threadcontainer{
+    word-break:break-all;
+    word-wrap:break-word;
+    display:inline-block;
+    vertical-align:top;
+    overflow:hidden;
+    width:200px;
+    min-width:200px;
     max-height:250px;
 }
 .catalog .title{
+    word-break:break-all;
+    word-wrap:break-word;
     font-size:14px;
 }
-.styledis{
-    font-size:16px;
-    font-family:"MS PGothic","Konatu","Mona","IPAMonaPGothic","Gothic";
+.catalog .post{
+    word-break:break-all;
+    word-wrap:break-word;
+    min-width:10px;
 }
-.styledis .tb{
-    background:#353;
-}
-.styledefault .tb{
-    background:#553;
-}
-.styleyotsuba .tb{
-    background:#543;
-}
-.styleyotsubab .tb{
-    background:#335;
-}
-.styleeb{
-    font-size:14px;
-    font-family:"Georgia","Liberation Serif","Times New Roman";
-    width:98%;
-    width:auto;
-    margin:7px 7px 0px 0px;
-    padding:7px 7px 7px 7px;
-    border:2px outset #000;
-    border-radius:5px;
-}
-.styleeb .thread{
-    width:auto;
-    height:auto;
-    background:transparent;
-    border:none;
-}
-.styleeb .tb{
-    background:#445;
+.catalog blockquote{
+    word-break:break-all;
+    word-wrap:break-word;
+    max-width:200px;
 }

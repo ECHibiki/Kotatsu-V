@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #!/usr/bin/env nix-shell
 #!nix-shell -i python3 -p python36Packages.psycopg2
 
@@ -39,9 +41,11 @@ cur.execute('CREATE TABLE main.post_cooldown (ip text, time integer);')
 # main.mod is the list of moderators and their info
 cur.execute('CREATE TABLE main.mod (name text, phash text, cookie text);')
 # main.ban is the list of banned IP's
-cur.execute('CREATE TABLE main.ban (ip text, ban_type text);')
+cur.execute('CREATE TABLE main.ban (ip text, boards text);')
 # main.cookies stores session cookies
 cur.execute('CREATE TABLE main.cookie (cookie text, last_checked integer);')
+# main.reports stores reported posts
+cur.execute('CREATE TABLE main.reports (board text, thread text, post text, reason text, date text);')
 # main.event: new feature. Adds "reply events" to ip list to give some "watcher" functionality for browsers without Javascript
 #             such as CLI browsers
 cur.execute('CREATE TABLE main.event (ip text, event_list text[]);')

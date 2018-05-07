@@ -1,35 +1,90 @@
 @charset "UTF-8";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.outer{
+    display:table;
+    margin:0 auto;
+    background:#eee;
+    border:1px outset #888;
+    padding:7px;
+}
+.inner{
+    background:#eee;
+    border:1px inset #888;
+}
+.inner table{
+    background:#BE9;
+}
+.inner td{
+    border:1px solid #CCC;
+    margin:0px;
+    vertical-align:top;
+}
+
+
+
+
 /* BEGIN GENERIC STYLES */ 
+img{
+    max-width:100%;
+}
 blockquote{
     white-space:pre-wrap;
     margin:0px 0px 10px 0px;
 }
-.thread{
+ul{
+    margin:0px;
+    padding-left:15px;
+}
+li{
+    padding-top:2px;
+    padding-bottom:5px;
+}
+.threadcontainer{
+    display:table;
+    min-width:800px;
+    max-width:1600px;
+}
+.threadbody{
     white-space:pre;
     word-break:normal;
     word-wrap:break-word;
     display:block;
 
-    max-width:1600px;
     margin:7px;
     padding:2px;
     height:auto;
 }
 .post{
-    display:table;
     height:auto;
     padding:5px 15px 2px 5px;
-    margin:4px 4px 4px 5px;
 
 
     #width:auto;
     #width:800px;
     max-width:95%;
+    min-width:300px;
     white-space:pre;
     word-break:normal;
     word-wrap:break-word;
-    display:inline-block;
+    #display:inline-block;
+    display:table;
 }
 .tb{
     margin:0px 0px 4px 0px;
@@ -38,18 +93,11 @@ blockquote{
 .title{
     font-size:28px;
     font-weight:bold;
+    word-break:all;
+    word-wrap:break-word;
 }
 .name{
     font-weight:bold;
-}
-.hidden{
-    color:#777!important;
-}
-.hidden *{
-    color:#777!important;
-}
-.hidden blockquote,.hidden img{
-    display:none;
 }
 .fname{
     font-size:11px;
@@ -58,7 +106,7 @@ blockquote{
     font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
     font-size:16px;
 }
-.cb{
+.code{
     font-family:"Courier New","Courier","monospace";
     background:#fff;
     border:1px solid #000;
@@ -97,7 +145,7 @@ blockquote{
 .sub{
     color:#888!important;
     font-size:11px;
-    background:#ddd;
+    background:transparent;
     border:1px solid #ccc;
 
     margin-left:25px;
@@ -105,19 +153,921 @@ blockquote{
     height:20px;
     padding-top:10px;
     overflow-x:hidden;
-    overflow-y:auto;
+    overflow-y:hidden;
     resize:both;
 }
-.sub .name{
+.sub .name, .sub .date{
     color:#888!important;
-    font-weight:bold;
+    background:transparent!important;
+}
+/* END GENERIC STYLES */
+
+/* BEGIN BOARD SPECIFIC STYLES */
+
+
+/******************************************************************************/
+/* MAIN THEME */
+/******************************************************************************/
+.main{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    color:#000;
     background:#ddd;
+    #background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wcFDyo2Ac829AAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABGUlEQVRo3u2ZMQ7CMAxF08hFQmJhQGLi7FyEy7CyMCAhtYiyMKESxTSO7fC9tUPql5/vxE13PF1DRqyoSzy+X/Zd/giszyUiBn6wUpGOWCrj9PQrA1iOPwDIsS8UAICLiimogFYNZQMYFCTWSVeOHFXILID9+sNWwCYSPAAAEQAvDrarwPCYbAHkJwQPtAqQsLXiWXoewFEJggcA0DJA5tYBBUIYxkkRgJxO/PkyWge43Z+zNvh4Sbo2Xb78qGa6Rj2wWcfKR2g2wH5LdbL5HeCw652WI/KbuomdeHkvUaChwWEOAADQbBKggFgvgY4MAHX2PtyRqdZQeAAAzQKYuyOTQ8ISahig4J+YxFCaCnw7irLIsYS0S+oLmchLZHAdv4wAAAAASUVORK5CYII=");
+    #background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABVAgMAAACurPvKAAAACVBMVEW6uZ28vafFxrCNydBLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUHAToRjLQzXAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAC7klEQVQ4y12VvWojMRCAZ4s1cSo3PuJUDpzBuqdYFz6sqxzwQjZVBBFo/DRpckUqB5xw3qe8+ZFmNxHBhM/Kp9GMZgJt1ZaFISSHiOnuCfrzY6/rgnHATV/WB+KAs+BAvxB+YIwx43vC8wHjHjbHInmlbWmF2DHO7MhHspZxWsJrW/RtJB6QObkPUH/DnnZbeNUlFEy7+R5wLdcZ49cS+LwVHLN7r3hfK+YPlchqflye3Dd8Apj0hJMLoYs4creHinfH0AXGrFU5LGk3hSL40RL7snQSYchu0AP+3eGAxX2QjxUXIWJxt20jmNViLwE2FUukYIsoAXLMXIn3gmlzN4qbJAQEo5U4Y0/3FNxAKeZ5jMtdrsXtNePknrMAiptxJLxpAKCST7kMmiS/QpYE+aEAm+uSKjDshwD38AWzNC+HUgLHWJ7CRNwL9JSQ5wXjP1aGE22jUJLgLznxnKwr131zC75xGvfLJPeO4C4pbnItL9h51K/G7ha7LSXF58TqqqBC3NhuKSXzCfUl4TTFtHoCTD+d5y27X7111wnoe8KU552jPrQEKaa1Ww93mDFeCfapsjzI7jvBWMx0u5NUSvFzbTdoGNNpXMSHakgPYMYRc4o/2CM4Sbke+3NlcTNSjBZ1vR/hNJhnI3wU6a3EqHjNoRz7txw4uxeKcXBTw8N6SmX6gmlsNUD59WnNTaaXp3TdkvtmysPJZfypcoCrqdyHe68d5eTKGZ4bBti5Dk1yhjpbpI5sz0f+1ZwI9nJR/ftaaskn4lYmsRa3kiM999GGcDxSzJLZ3+KmLHneba+k/zyxJONkU1Xdhq2/ZirpRpILjS9x52oezzIQJjlu1FkkAd6P3Ioj41lJleGQbCaeoeAFHWzNT4s6lPGUsE1Ectf8QhxuM262xS0Te9OFNIxbTpViP8rJ+6ngrZe4mxK3zFQK2usbLO3jYpAp3JHkA6yW9F9Qn/HgfpO+ZHzPZdanQIvdaUlPYsMNOGqd/2jyxZuEEV+jAAAAAElFTkSuQmCC");
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABVBAMAAAAh7A5qAAAAD1BMVEWwwMerw8izxMq2x828zNN1D5NSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUHAhEN7IMsIwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAADe0lEQVRIx32Wi3HrIBBFV0gFOJpXAAYV4EEuQJHUf02PBfbDR2EmjjM+wVeXu7uAhRd0y2znZrzZjuVMP/hqNrjv++3vZuGnYTOFY/Zj7n6F9HnH7rJc/LEw+X0vrBMWvwesqHxVelv29GDNt5NwubLTsaR3vrA19ZVnI5Xxt8vvUW94gdurFbZQ6KwG6chmvVPrr6tZi6/Q+wXrl5khe8bN9FkM2eKrLGtQr7COn077q/UKa9i1Vu/1hmj4uU3/KnZr2fwVW9ILJWGR9WdxkPLgvFIcNRDrErtuWm8T4gUWSoxhN8D1cbgvu4hKxbJUneNjzCpn36z5swTOeRBW/NWZUHV2thqSSADKsqqdGb0IzFqyNS1fs+bkk4O9X8F/Fk7tLDka56G4a+nshO0qLvo7ZJsmkm0+xuweVtb5mjz5e0r9JhZTDO8X/JQVMzGVd+ocMhtEw1X3NPJslTry6dn6hmYpZUZeo38QGnOd8kyzFvf9qZf46zkHS2HFVBCb8bTONz4RPr+dC+sG7femT7NXHxOf1Y7z4NxnITblByKLPrx/uhWrr2ZN9pD8Bfg284JZT4lP7Cf1mpr1zDpme7Wp/0bCupwI1tLrxXisaV/dI3UmL5X5b9LrCntArtE4h9Jvm/wrO9hjkcmhV67u7HXJa2SvKNt0ZQjUBVgVsr9o8tQ8yIvYIGycgAf4weCFMsecsFFJO8pz+xjsi8lqB15uy4uo5Arz8SC7lMRqVCozG2l7dSeJC6h3eqrHeLIuh2Tu/CXmUDV2dd7G1hHG7DFscqxhuG/8XM0nzeZ3WGEYptphk/XONXsO9AbcH/UaqhPVzZ/0AnVPvN1k/tKnlQos6Z0T6zJLk6q5/pTqhSlpYCcy++v3UR6Ank2zD3pt7ik1e7FU/QUgdeblRPScEc0AdJvBvnh2PkRnaYiExJaalHn9pJeniCV3A+5r2dYknfXmxKh9Rz35m/UW9qw0+L4/PLLPep3qs13OypeoZ1OnERsH6/xwFycN+sbC+wYz1KvZ8KR3wK7I+kHManbOnlz9hOZ96cSOqbCym9d66a6WPCh//aWXb4R2delbxnVha9ZY9GGUB3+DqViX+/BFO/nK35nuuMnZMi0f9Oa7cznlteT+yo/d1ltyDP8jKC397fnmeVEmgacb0yWW0vJ5vh14O09T2pTJMdb7H5ZcWX12qT9XAAAAAElFTkSuQmCC");
+
+    height:100%;
+    margin:10px 0px 30px 105px;
 }
-.ctitle{
-    color:#f05902;
-    font-weight:bold;
+.main .banner{
+    display:table;
 }
-img.cimg{
+.main .msg{
+    background:#be9;
+    border:2px outset #be9;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.main .msg2{
+    background:#eee;
+    border:1px inset #eee;
+
+    padding:7px;
+}
+.main .boardTitle{
+    color:#000;
+    text-align:center;
+}
+.main .label{
+    border:1px inset #000;
+    background:#be9;
+}
+.main .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#ada;
+    background:#edc;
+    border-right:1px solid #888;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.main .menu hr{
+    border:1px inset #ddd;
+}
+
+
+/******************************************************************************/
+/* MONA THEME */
+/******************************************************************************/
+.mona{
+    #font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    #font-size:16px;
+    font-family:"Sans";
+    font-size:13px;
+    #font-family:"Arial","Sans";
+    #font-size:13px;
+    color:#000;
+    #background:#eee;
+    #background-image: url("/res/temp/bgj2.png");
+
+
+
+    background-image: url("/res/Kita-3D.jpg");
+    background:#dcb;
+    background-image: url(data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=);
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.mona.threadcontainer{
+    background:#eee;
+}*/
+.mona input[type=text], .mona textarea{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
+    border:1px inset #000;
+    outline:1px inset #fff;
+}
+.mona img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.mona .banner{
+    display:table;
+}
+.mona .msg{
+    background:#edc;
+    background:#fc9;
+    background:#ada;
+    border:2px outset #000;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.mona .msg2{
+    background:#eee;
+    border:1px inset #eee;
+
+    padding:7px;
+}
+.mona .boardTitle{
+    color:#000;
+    text-align:center;
+}
+.mona .postForm{
+    background:#fc9;
+    background:#edc;
+    background:#ddd;
+    border:2px outset #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.mona .label{
+    background:#fc9;
+    background:#ada;
+    border:1px inset #fc9;
+    border:1px inset #ada;
+}
+.mona .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#ada;
+    background:#edc;
+    border-right:1px solid #888;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.mona .menu hr{
+    border:1px inset #ddd;
+}
+.mona.threadcontainer{
+    border:1px outset #fff;
+    background:#edc;
+    background:#eee;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+}
+.mona .threadbody{
+    background:#eee;
+    border:1px inset #eee;
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.mona .tb{
+    background:#edc;
+    background:#fc9;
+    background:#ada;
+}
+.mona .title{
+    color:#f00;
+    color:#c00;
+}
+.mona .name{
+    color:#c00;
+    color:#008000;
+}
+.mona .date{
+    color:#000;
+    color:#c4a;
+}
+.mona .post{
+    margin:2px 0px 2px 0px;
+    background:#ddd;
+    border-left:1px solid #bbb;
+    border-right:1px solid #bbb;
+}
+.mona .quote{
+    color:#789922;
+}
+.mona blockquote{
+    margin-top:5px;
+}
+/*.catalog .mona .thread{
+    font-size:14px;
+}
+.catalog .mona .title{
+    font-size:16px;
+}*/
+
+
+/******************************************************************************/
+/* NEW2 THEME */
+/******************************************************************************/
+.tatami{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
+    #font-family:"Arial","Sans";
+    #font-size:13px;
+    color:#000;
+    background:#eee;
+    background-image: url("/res/temp/bglines.png");
+    #background-image: url("/res/Kita-3D.jpg");
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.tatami.threadcontainer{
+    background:#eee;
+}*/
+.tatami input[type=text], .tatami textarea{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
+    border:1px inset #000;
+    outline:1px inset #fff;
+}
+.tatami img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.tatami .banner{
+    display:table;
+}
+.tatami .msg{
+    background:#edc;
+    background:#fc9;
+    background:#ada;
+    border:2px outset #000;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.tatami .msg2{
+    background:#eee;
+    border:1px inset #eee;
+
+    padding:7px;
+}
+.tatami .boardTitle{
+    color:#000;
+    text-align:center;
+}
+.tatami .postForm{
+    background:#edc;
+    background:#eee;
+    border:2px outset #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.tatami .label{
+    background:#fc9;
+    background:#ada;
+}
+.tatami .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#edc;
+    border-right:1px solid #888;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.tatami .menu hr{
+    border:1px inset #ddd;
+}
+.tatami.threadcontainer{
+    border:1px solid #000;
+    background:#edc;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+}
+body.tatami.threadcontainer{
+    background:#eee;
+}
+.tatami .threadbody{
+    background:#eee;
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.tatami .tb{
+    background:#edc;
+}
+.tatami .title{
+    color:#c00;
+}
+.tatami .name{
+    color:#c00;
+    color:#008000;
+}
+.tatami .date{
+    color:#000;
+}
+.tatami .post{
+    margin:2px 0px 2px 0px;
+    background:#ddd;
+    border-left:1px solid #ccc;
+    border-right:1px solid #ccc;
+}
+.tatami .quote{
+    color:#789922;
+}
+.tatami blockquote{
+    margin-top:5px;
+}
+/*.catalog .tatami .thread{
+    font-size:14px;
+}
+.catalog .tatami .title{
+    font-size:16px;
+}*/
+
+
+/******************************************************************************/
+/* COMPUTER THEME */
+/******************************************************************************/
+.computer{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    color:#000;
+    background:#789;
+    background:#abc;
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.computer.threadcontainer{
+    background:#eee;
+}*/
+/*.computer.threadcontainer .title{
+    color:#488;
+}*/
+.computer input[type=text], .computer textarea{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    border:2px inset #aaa;
+    outline:1px inset #fff;
+}
+.computer img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.computer .banner{
+    display:table;
+}
+.computer .msg{
+    background:#ddd;
+    background:#dcb;
+    border:4px outset #dcb;
+
+    display:table;
+    margin:0 auto;
+    padding:14px;
+    min-width:50%;
+}
+.computer .msg2{
+    background:#333;
+    border:4px inset #333;
+    color:#995;
+
+    padding:7px;
+}
+.computer .boardTitle{
+    color:#995;
+    text-align:center;
+}
+.computer .postForm{
+    background:#ccc;
+    border:1px outset #fff;
+    outline:2px outset #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.computer .label{
+    background:#dcb;
+    border:1px inset #dcb;
+}
+.computer .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#edc;
+    background:#ddd;
+    background:#dcb;
+    border-right:1px solid #888;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.computer .menu hr{
+    border:1px inset #ddd;
+}
+.computer.threadcontainer{
+    border:1px outset #fff;
+    outline:1px outset #000;
+    background:#dcb;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+}
+body.computer.threadcontainer{
+    background:#eee;
+    outline:none;
+}
+.computer .threadbody{
+    border:1px inset #000;
+    outline:1px inset #fff;
+    background:#eee;
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.computer .tb{
+    background:#dcb;
+}
+.computer .title{
+    color:#599;
+    color:#000;
+    color:#885;
+    color:#a00;
+}
+.computer .name{
+    color:#c00;
+    color:#008000;
+    color:#a00;
+    background:#dcb;
+}
+.computer .date{
+    color:#000;
+    background:#00c;
+    color:#eee;
+    background:#99b;
+}
+.computer .post{
+    margin:2px 0px 2px 0px;
+    background:#ddd;
+    border-left:1px solid #ccc;
+    border-right:1px solid #ccc;
+}
+.computer .quote{
+    color:#789922;
+}
+.computer blockquote{
+    margin-top:5px;
+}
+/*.catalog .computer .thread{
+    font-size:14px;
+}
+.catalog .computer .title{
+    font-size:16px;
+}*/
+
+/******************************************************************************/
+/* YOTSUBA THEME */
+/******************************************************************************/
+.yotsuba{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    color:#800000;
+    background:#ffe;
+    background-image:-moz-linear-gradient(top, #fed6af 0%, #ffe 180px);
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.yotsuba.threadcontainer{
+    background:#ffe;
+    background:#c00;
+}*/
+.yotsuba input[type=text], .yotsuba textarea{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
+    border:1px inset #000;
+    outline:1px inset #fff;
+}
+.yotsuba img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.yotsuba .banner{
+    display:table;
+}
+.yotsuba .msg{
+    background:#edc;
+    background:#fc9;
+    border:2px outset #000;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.yotsuba .msg2{
+    background:#eee;
+    border:1px inset #eee;
+
+    padding:7px;
+}
+.yotsuba .boardTitle{
+    color:#000;
+    text-align:center;
+}
+.yotsuba .postForm{
+    background:#fc9;
+    background:#edc;
+    border:2px outset #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.yotsuba .label{
+    background:#fc9;
+    border:1px inset #fc9;
+    border:1px inset #ada;
+}
+.yotsuba .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#ffe;
+    border-right:1px solid #d9bfb7;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.yotsuba .menu hr{
+    border:1px inset #ddd;
+}
+.yotsuba.threadcontainer{
+    background:#ffe;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+}
+.yotsuba .threadbody{
+    background:#ffe;
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.yotsuba .tb{
+    background:#edc;
+    background:#fc9;
+}
+.yotsuba .title{
+    color:#c00;
+}
+.yotsuba .name{
+    color:#c00;
+    color:#008000;
+}
+.yotsuba .post{
+    margin:2px 0px 2px 0px;
+    background:#ddd;
+    background:#f0e0d6;
+    border-left:1px solid #d9bfb7;
+    border-right:1px solid #d9bfb7;
+    #border-bottom:1px solid #d9bfb7;
+    #border-right:1px solid #d9bfb7;
+}
+.yotsuba .sub{
+    background:#f0e0d6;
+    border:1px solid #d9bfb7;
+}
+.yotsuba .quote{
+    color:#789922;
+}
+.yotsuba blockquote{
+    margin-top:5px;
+}
+/*.catalog .yotsuba .thread{
+    font-size:14px;
+}
+.catalog .yotsuba .title{
+    font-size:16px;
+}*/
+
+/******************************************************************************/
+/* YOTSUBAB THEME */
+/******************************************************************************/
+.yotsubab{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    color:#000;
+    background:#eef2ff;
+    background-image:-moz-linear-gradient(top, #d1d5ee 0%, #eef2ff 180px);
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.yotsubab.threadcontainer{
+    background:#ffe;
+    background:#c00;
+}*/
+.yotsubab input[type=text], .yotsubab textarea{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
+    border:1px inset #000;
+    outline:1px inset #fff;
+}
+.yotsubab img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.yotsubab .banner{
+    display:table;
+}
+.yotsubab .msg{
+    background:#bbd0f0;
+    border:1px outset #aab;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.yotsubab .msg2{
+    background:#eee;
+    border:1px inset #eee;
+
+    padding:7px;
+}
+.yotsubab .boardTitle{
+    color:#000;
+    text-align:center;
+}
+.yotsubab .postForm{
+    border:2px outset #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.yotsubab .label{
+    background:#98e;
+    border:1px inset #aab;
+}
+.yotsubab .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#eef2ff;
+    border-right:1px solid #888;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.yotsubab .menu hr{
+    border:1px inset #ddd;
+}
+.yotsubab.threadcontainer{
+    background:#eef2ff;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+}
+.yotsubab .threadbody{
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.yotsubab .tb{
+    background:#edc;
+    background:#fc9;
+    background:#bbd0f0;
+}
+.yotsubab .title{
+    color:#c00;
+}
+.yotsubab .name{
+    color:#c00;
+    color:#008000;
+}
+.yotsubab .date{
+    color:#000;
+}
+.yotsubab .post{
+    margin:2px 0px 2px 0px;
+    background:#d6daf0;
+    border-left:1px solid #b7c5d9;
+    border-right:1px solid #b7c5d9;
+    #border-bottom:1px solid #b7c5d9;
+    #border-right:1px solid #b7c5d9;
+}
+.yotsubab .sub{
+    background:#f0e0d6;
+    border:1px solid #d9bfb7;
+}
+.yotsubab .quote{
+    color:#789922;
+}
+.yotsubab blockquote{
+    margin-top:5px;
+}
+/*.catalog .yotsubab .thread{
+    font-size:14px;
+}
+.catalog .yotsubab .title{
+    font-size:16px;
+}*/
+
+
+
+/******************************************************************************/
+/* UNLISTED THEME */
+/******************************************************************************/
+.unlisted{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    color:#000;
+    background:#eef2ff;
+    background:#eee;
+    #background-image:-moz-linear-gradient(top, #d1d5ee 0%, #eef2ff 180px);
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.unlisted.threadcontainer{
+    background:#ffe;
+    background:#c00;
+}*/
+.unlisted input[type=text], .unlisted textarea{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
+    border:1px inset #000;
+    outline:1px inset #fff;
+}
+.unlisted img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.unlisted .banner{
+    display:table;
+}
+.unlisted .msg{
+    background:#ccd;
+    border:1px outset #aab;
+
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.unlisted .msg2{
+    background:#eee;
+    border:1px inset #eee;
+
+    padding:7px;
+}
+.unlisted .boardTitle{
+    color:#000;
+    text-align:center;
+}
+.unlisted .postForm{
+    border:2px outset #000;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.unlisted .label{
+    background:#aab;
+    border:1px inset #aab;
+}
+.unlisted .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#eef2ff;
+    background:#ccd;
+    border-right:1px solid #888;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.unlisted .menu hr{
+    border:1px inset #ddd;
+}
+.unlisted.threadcontainer{
+    border:1px outset #eef2ff;
+    background:#eee;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+}
+.unlisted .threadbody{
+    border:1px inset #d6daf0;
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.unlisted .tb{
+    background:#ccc;
+}
+.unlisted .title{
+    color:#65a;
+}
+.unlisted .name{
+    color:#c00;
+    color:#008000;
+    color:#65a;
+}
+.unlisted .date{
+    color:#000;
+}
+.unlisted .post{
+    margin:2px 0px 2px 0px;
+    background:#ddd;
+    border-left:1px solid #65a;
+    border-right:1px solid #65a;
+    #border-bottom:1px solid #bce;
+    #border-right:1px solid #bce;
+}
+.unlisted .sub{
+    background:#f0e0d6;
+    border:1px solid #d9bfb7;
+}
+.unlisted .quote{
+    color:#789922;
+}
+.unlisted blockquote{
+    margin-top:5px;
+}
+/*.catalog .unlisted .thread{
+    font-size:14px;
+}
+.catalog .unlisted .title{
+    font-size:16px;
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+body.threadcontainer .tb{
+    background:transparent;
+}
+.catalog{
+    word-break:break-all;
+    word-wrap:break-word;
+    display:table;
+    margin:0 auto;
+}
+.catalog img{
+    word-break:break-all;
+    word-wrap:break-word;
     display:block;
 
     float:none;
@@ -127,212 +1077,51 @@ img.cimg{
     max-width:128px;
     max-height:128px;
 }
-.catalog{
-    display:table;
-    margin:0 auto;
+.catalog .tb{
+    margin:0px;
+    padding:0px;
 }
-.catalog div[class^="style"]{
+.catalog .title{
+    word-break:break-all;
+    word-wrap:break-word;
+    color:#f05902;
+}
+.catalog .threadbody{
+    word-break:break-all;
+    word-wrap:break-word;
     font-size:12px;
-    background:transparent;
+    /*background:transparent;*/
     border:none;
+    outline:none;
 
     display:inline-block;
     vertical-align:top;
-    width:auto; 
-    padding:0px;
-}
-.catalog .thread{
     overflow:hidden;
     width:200px;
+    padding:0px;
+}
+.catalog .threadcontainer{
+    word-break:break-all;
+    word-wrap:break-word;
+    display:inline-block;
+    vertical-align:top;
+    overflow:hidden;
+    width:200px;
+    min-width:200px;
     max-height:250px;
 }
 .catalog .title{
+    word-break:break-all;
+    word-wrap:break-word;
     font-size:14px;
 }
-/* END GENERIC STYLES */
-
-/* BEGIN BOARD SPECIFIC STYLES */
-.styledefault{
-    background:#eee;
+.catalog .post{
+    word-break:break-all;
+    word-wrap:break-word;
+    min-width:10px;
 }
-.styledefault .tb{
-    background:#feb;
-}
-.styledefault .name{
-    color:#C4A;
-}
-
-.styledis{
-    font-family:"MS PGothic","Mona","Konatu","Textar","Monapo","IPAMonaPGothic","Gothic";
-    font-size:16px;
-    background:#efefef;
-    border:1px solid #BFBFBF;
-    border-right:1px solid #5A5A5A;
-    border-bottom:1px solid #5A5A5A;
-}
-.styledis .threadbody{
-    border:1px solid #474747;
-    border-right:1px solid #D8D8D8;
-    border-bottom:1px solid #D8D8D8;
-}
-.styledis .tb{
-    background:#ada;
-}
-.styledis .title{
-    color:#f00;
-}
-.styledis .name{
-    color:#008000;
-}
-.styledis .quote{
-    color:#789922;
-}
-.styledis blockquote{
-    margin-top:0px;
-}
-.catalog .styledis .thread{
-    font-size:14px;
-}
-.catalog .styledis .title{
-    font-size:16px;
-}
-
-
-
-
-
-.stylenew{
-    font-family:"MS PGothic","Mona","Konatu","Textar","Monapo","IPAMonaPGothic","Gothic";
-    font-size:16px;
-    background:#efefef;
-    border:1px solid #000;
-}
-.stylenew .threadbody{
-}
-.stylenew .tb{
-    background:#fc9;
-}
-.stylenew .title{
-    color:#c00;
-}
-.stylenew .name{
-    color:#008000;
-}
-.stylenew .date{
-    color:#c4a;
-    #font-weight:bold;
-}
-.stylenew .post{
-    margin:0px;
-}
-.stylenew .quote{
-    color:#789922;
-}
-.stylenew blockquote{
-    margin-top:5px;
-}
-.catalog .stylenew .thread{
-    font-size:14px;
-}
-.catalog .stylenew .title{
-    font-size:16px;
-}
-
-
-
-
-
-
-.styleyotsuba{
-    color:#800000;
-    background:#ffffee;
-}
-.styleyotsuba .tb{
-    background:#fc9;
-}
-.styleyotsuba .title{
-    color:#c00;
-}
-.styleyotsuba .name{
-    color:#117743;
-}
-.styleyotsuba .post{
-    background:#f0e0d6;
-    border-bottom:1px solid #d9bfb7;
-    border-right:1px solid #d9bfb7;
-}
-.styleyotsuba .quote{
-    color:#789922;
-}
-.styleyotsuba .sp{
-    background:#800000;
-}
-.catalog .styleyotsuba .thread{
-    width:200px;
-    max-height:250px;
-    padding:0px;
-}
-
-.styleyotsubab{
-    background:#eef2ff;
-}
-.styleyotsubab .tb{
-    background:#bbd0f0;
-}
-.styleyotsubab .title{
-    color:#c00;
-}
-.styleyotsubab .name{
-    color:#117743;
-}
-.styleyotsubab .post{
-    background:#d6daf0;
-    border-bottom:1px solid #B7C5D9;
-    border-right:1px solid #B7C5D9;
-}
-.styleyotsubab .quote{
-    color:#789922;
-}
-.catalog .styleyotsubab .thread{
-    width:200px;
-    max-height:250px;
-    padding:0px;
-    margin:0px;
-}
-.catalog .styleyotsubab .title{
-    font-size:14px;
-}
-
-.styleeb{
-    font-family:"Georgia","Liberation Serif","Times New Roman";
-    background:#eee;
-    border:2px outset #eee;
-    border-radius:5px;
-    box-shadow:0 0 0 1px #222;
-}
-.styleeb .tb{
-    background:#c1dbf3;
-}
-.styleeb .title{
-    color:#222;
-}
-.styleeb .name{
-    color:#117743;
-}
-.styleeb .post{
-    background:#dde;
-    border-bottom:1px solid #B7C5D9;
-    border-right:1px solid #B7C5D9;
-}
-.styleeb .quote{
-    color:#789922;
-}
-.catalog .styleeb .thread{
-    width:200px;
-    max-height:250px;
-    padding:0px;
-    margin:0px;
-}
-.catalog .styleeb .title{
-    font-size:14px;
+.catalog blockquote{
+    word-break:break-all;
+    word-wrap:break-word;
+    max-width:200px;
 }

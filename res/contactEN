@@ -1,5 +1,5 @@
 <!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><link rel="stylesheet" type="text/css" href="/res/styles/main.css"><link rel="stylesheet" type="text/css" href="/res/styles/threads.css"></head>
-<body style="background-image:url('/res/temp/bgj2.png');font-family:'MS PGothic'">
+<body class="main">
 
 <div class="menu">
 <a href="/"><img style="float:none;display:table;margin:0 auto" src="/res/favicon.png" id="favicon">
@@ -23,13 +23,11 @@
 </ul><br><hr>
 <b>Miscellaneous</b>
 <ul>
-<li><a href="/f">Flash & HTML5</a></li>
+<li><a href="/f/c">Flash & HTML5</a></li>
 <li><a href="/ho">Other</a></li>
 </ul><br><hr>
 <a href="/res/rulesEN">[Rules]</a><br>
 <a href="/res/faqEN">[F.A.Q.]</a><br>
-<a href="/watcher">[Watcher]</a><br>
-<a href="/settings">[Settings]</a><br>
 </div>
 
 
@@ -48,5 +46,5 @@ The site owner may be reached at:
 
 
 <hr>
-<div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/gentoo-badge3.png" id="badge"></div>
+<div style="padding:0px 0px 0px 5px;display:table;background:transparent;border:1px inset #888"><a href="/res/contactEN">Contact</a> ･ <img style="float:none;display:inline-block;vertical-align:middle" src="/res/gentoo-badge3.png" id="badge"> ･ <a href="/res/weblabels.html" rel="jslicense">WebLabels for LibreJS</a></div>
 </body></html>

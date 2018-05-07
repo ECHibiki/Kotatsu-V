@@ -48,6 +48,20 @@ blockquote{
     white-space:pre-wrap;
     margin:0px 0px 10px 0px;
 }
+ul{
+    margin:0px;
+    padding-left:15px;
+}
+li{
+    padding-top:2px;
+    padding-bottom:5px;
+}
+.computer input[type=text], .computer textarea{
+    font-family:"Arial","Sans";
+    font-size:13px;
+    border:2px inset #aaa;
+    outline:1px inset #fff;
+}
 .threadcontainer{
     display:table;
     min-width:800px;
@@ -109,9 +123,6 @@ blockquote{
 .sp{
     background:#000;
 }
-.del{
-    border:2px solid red !important;
-}
 .quote{
     color:#690;
 }
@@ -119,17 +130,6 @@ blockquote{
     color:#888;
     font-style:italic;
     background:#cca;
-}
-.old{
-    color:red;
-    font-style:italic;
-}
-.warn{
-    color:red;
-}
-.band{
-    color:red;
-    font-weight:bold;
 }
 .long{
     color:#888;
@@ -165,8 +165,7 @@ blockquote{
     font-size:13px;
     color:#000;
     background:#ddd;
-    #background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wcFDyo2Ac829AAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABGUlEQVRo3u2ZMQ7CMAxF08hFQmJhQGLi7FyEy7CyMCAhtYiyMKESxTSO7fC9tUPql5/vxE13PF1DRqyoSzy+X/Zd/giszyUiBn6wUpGOWCrj9PQrA1iOPwDIsS8UAICLiimogFYNZQMYFCTWSVeOHFXILID9+sNWwCYSPAAAEQAvDrarwPCYbAHkJwQPtAqQsLXiWXoewFEJggcA0DJA5tYBBUIYxkkRgJxO/PkyWge43Z+zNvh4Sbo2Xb78qGa6Rj2wWcfKR2g2wH5LdbL5HeCw652WI/KbuomdeHkvUaChwWEOAADQbBKggFgvgY4MAHX2PtyRqdZQeAAAzQKYuyOTQ8ISahig4J+YxFCaCnw7irLIsYS0S+oLmchLZHAdv4wAAAAASUVORK5CYII=");
-    background-image: url("/res/temp/bgj2.png");
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABVBAMAAAAh7A5qAAAAD1BMVEWwwMerw8izxMq2x828zNN1D5NSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUHAhEN7IMsIwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAADe0lEQVRIx32Wi3HrIBBFV0gFOJpXAAYV4EEuQJHUf02PBfbDR2EmjjM+wVeXu7uAhRd0y2znZrzZjuVMP/hqNrjv++3vZuGnYTOFY/Zj7n6F9HnH7rJc/LEw+X0vrBMWvwesqHxVelv29GDNt5NwubLTsaR3vrA19ZVnI5Xxt8vvUW94gdurFbZQ6KwG6chmvVPrr6tZi6/Q+wXrl5khe8bN9FkM2eKrLGtQr7COn077q/UKa9i1Vu/1hmj4uU3/KnZr2fwVW9ILJWGR9WdxkPLgvFIcNRDrErtuWm8T4gUWSoxhN8D1cbgvu4hKxbJUneNjzCpn36z5swTOeRBW/NWZUHV2thqSSADKsqqdGb0IzFqyNS1fs+bkk4O9X8F/Fk7tLDka56G4a+nshO0qLvo7ZJsmkm0+xuweVtb5mjz5e0r9JhZTDO8X/JQVMzGVd+ocMhtEw1X3NPJslTry6dn6hmYpZUZeo38QGnOd8kyzFvf9qZf46zkHS2HFVBCb8bTONz4RPr+dC+sG7femT7NXHxOf1Y7z4NxnITblByKLPrx/uhWrr2ZN9pD8Bfg284JZT4lP7Cf1mpr1zDpme7Wp/0bCupwI1tLrxXisaV/dI3UmL5X5b9LrCntArtE4h9Jvm/wrO9hjkcmhV67u7HXJa2SvKNt0ZQjUBVgVsr9o8tQ8yIvYIGycgAf4weCFMsecsFFJO8pz+xjsi8lqB15uy4uo5Arz8SC7lMRqVCozG2l7dSeJC6h3eqrHeLIuh2Tu/CXmUDV2dd7G1hHG7DFscqxhuG/8XM0nzeZ3WGEYptphk/XONXsO9AbcH/UaqhPVzZ/0AnVPvN1k/tKnlQos6Z0T6zJLk6q5/pTqhSlpYCcy++v3UR6Ank2zD3pt7ik1e7FU/QUgdeblRPScEc0AdJvBvnh2PkRnaYiExJaalHn9pJeniCV3A+5r2dYknfXmxKh9Rz35m/UW9qw0+L4/PLLPep3qs13OypeoZ1OnERsH6/xwFycN+sbC+wYz1KvZ8KR3wK7I+kHManbOnlz9hOZ96cSOqbCym9d66a6WPCh//aWXb4R2delbxnVha9ZY9GGUB3+DqViX+/BFO/nK35nuuMnZMi0f9Oa7cznlteT+yo/d1ltyDP8jKC397fnmeVEmgacb0yWW0vJ5vh14O09T2pTJMdb7H5ZcWX12qT9XAAAAAElFTkSuQmCC");
 
     height:100%;
     margin:10px 0px 30px 105px;
@@ -193,6 +192,10 @@ blockquote{
     color:#000;
     text-align:center;
 }
+.main .label{
+    border:1px inset #000;
+    background:#be9;
+}
 .main .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
@@ -212,14 +215,6 @@ blockquote{
 .main .menu hr{
     border:1px inset #ddd;
 }
-.main .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.main .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
 
 
 /******************************************************************************/
@@ -238,7 +233,6 @@ blockquote{
 
 
 
-    background-image: url("/res/Kita-3D.jpg");
     background:#dcb;
     background-image: url(data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=);
 
@@ -316,14 +310,6 @@ blockquote{
 }
 .mona .menu hr{
     border:1px inset #ddd;
-}
-.mona .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.mona .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
 }
 .mona.threadcontainer{
     border:1px outset #fff;
@@ -460,14 +446,6 @@ blockquote{
 .tatami .menu hr{
     border:1px inset #ddd;
 }
-.tatami .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.tatami .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
 .tatami.threadcontainer{
     border:1px solid #000;
     background:#edc;
@@ -601,14 +579,6 @@ body.tatami.threadcontainer{
 }
 .computer .menu hr{
     border:1px inset #ddd;
-}
-.computer .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.computer .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
 }
 .computer.threadcontainer{
     border:1px outset #fff;
@@ -751,14 +721,6 @@ body.computer.threadcontainer{
 .yotsuba .menu hr{
     border:1px inset #ddd;
 }
-.yotsuba .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.yotsuba .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
-}
 .yotsuba.threadcontainer{
     background:#ffe;
     margin:5px 10px 10px 5px;
@@ -884,14 +846,6 @@ body.computer.threadcontainer{
 }
 .yotsubab .menu hr{
     border:1px inset #ddd;
-}
-.yotsubab .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.yotsubab .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
 }
 .yotsubab.threadcontainer{
     background:#eef2ff;
@@ -1024,14 +978,6 @@ body.computer.threadcontainer{
 }
 .unlisted .menu hr{
     border:1px inset #ddd;
-}
-.unlisted .menu ul{
-    margin:0px;
-    padding-left:15px;
-}
-.unlisted .menu li{
-    padding-top:2px;
-    padding-bottom:2px;
 }
 .unlisted.threadcontainer{
     border:1px outset #eef2ff;

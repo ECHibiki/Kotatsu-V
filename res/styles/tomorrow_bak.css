@@ -1,0 +1,269 @@
+@charset "UTF-8";
+
+body{
+    color:#C5C8C6;
+    background:#1D1F21;
+    font-size:13px;
+    font-family:"Arial";
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+h1{
+    color:#6C879E;
+    text-align:center;
+}
+input{
+    font-size:13px;
+    font-family:"Arial";
+    color:#C5C8C6;
+    background:#1D1F21;
+    border:1px solid #555;
+}
+textarea{
+    font-size:13px;
+    font-family:"Arial";
+    color:#C5C8C6;
+    background:#1D1F21;
+    border:1px solid #555;
+}
+img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+blockquote{
+    margin-right:0px;
+    white-space:pre-wrap;
+}
+ul{
+    margin:0px;
+    padding-left:15px;
+}
+li{
+    padding-top:2px;
+    padding-bottom:2px;
+}
+.postForm{
+    background:#282A2E;
+    border:2px solid #555;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:5px;
+}
+.banner{
+    display:table;
+}
+.msg{
+    background:#34345C;
+    border:2px solid #333;
+    display:table;
+    margin:0 auto;
+    padding:7px;
+    min-width:50%;
+}
+.msg2{
+    background:#282A2E;
+    border:1px solid #555;
+    padding:7px;
+}
+.autotext{
+    color:#222;
+    background:#FFF;
+    margin-top:5px;
+}
+.label{
+    color:#6C879E;
+    font-weight:bold;
+    background:#34345C;
+    border:1px solid #555;
+    padding:0px 3px 0px 1px;
+}
+.menu{
+    background:#34345C;
+    border-right:1px solid #555;
+    font-size:13px;
+    font-family:"Arial", "MS PGothic";
+    position:fixed;
+    left:0px;
+    top:0px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+    width:100px;
+    overflow:hidden;
+}
+hr{
+    border:none;
+    border-top:1px solid #555;
+}
+
+
+
+
+
+
+
+
+a{
+    color:#6C879E;
+}
+.thread{
+    margin:5px 5px 0px 0px;
+    width:auto;
+    height:auto;
+    padding:0px;
+    border:1px solid #555;
+    background:#1D1F21;
+}
+.tb{
+    margin:0px 0px 4px 0px;
+    padding:2px 0px 2px 0px;
+}
+.title{
+    color:#6C879E;
+    font-size:24px;
+    font-weight:bold;
+}
+.name{
+    font-weight:bold;
+}
+.hidden{
+    color:#777!important;
+}
+.hidden *{
+    color:#777!important;
+}
+.hidden blockquote,.hidden img{
+    display:none;
+}
+.fname{
+    font-size:11px;
+}
+.ja{
+    font-family:"MS PGothic","Mona","Konatu","Textar","Monapo","IPAMonaPGothic","Gothic";
+    font-size:16px;
+}
+.cb{
+    font-family:"Courier New","Courier","IPAMonaGothic","monospace";
+    background:#34345C;
+    border:1px solid #555;
+    padding:5px;
+    display:table;
+}
+.sp{
+    background:#C5C8C6;
+}
+.post{
+    display:table;
+    height:auto;
+    width:auto;
+    padding:5px 15px 2px 5px;
+    margin:4px 4px 4px 5px;
+    background:#282A2E;
+}
+.pon{
+    float:right;
+}
+.del{
+    border:2px solid red !important;
+}
+.quote{
+    color:#690;
+}
+.foot{
+    color:#888;
+    font-style:italic;
+    background:#cca;
+}
+.old{
+    color:red;
+    font-style:italic;
+}
+.warn{
+    color:red;
+}
+.band{
+    font-weight:bold;
+    color:red;
+}
+.ghost{
+    font-weight:bold;
+    color:#888;
+}
+.long{
+    color:#888;
+}
+.sub{
+    background:#EDC;
+}
+.ctitle{
+    color:#F05902;
+    font-weight:bold;
+}
+img.cimg{
+    float:none;
+    display:block;
+
+    margin-left:auto;
+    margin-right:auto;
+    padding:0px;
+    max-width:128px;
+    max-height:128px;
+}
+.catalog{
+    display:table;
+    margin:0 auto;
+}
+#.catalog .styledefault,.catalog .styledis,.catalog .styleeb,.catalog .stylemain,.catalog .styleyotsuba,.catalog .styleyotsubab,.catalog .styleyotsuban{}
+#.catalog (.styledefault,.styledis,.styleeb,.stylemain,.styleyotsuba,.styleyotsubab,.styleyotsuban){}
+.catalog div[class^="style"]{
+    display:inline-block;
+    vertical-align:top;
+    font-size:12px;
+    background:transparent;
+    width:auto; 
+    border:none;
+    padding:0px;
+}
+.catalog .thread{
+    overflow:hidden;
+    width:200px;
+    max-height:250px;
+}
+.catalog .title{
+    font-size:14px;
+}
+.styledis{
+    font-size:16px;
+    font-family:"MS PGothic","Konatu","Mona","IPAMonaPGothic","Gothic";
+}
+.styledis .tb{
+    background:#353;
+}
+.styledefault .tb{
+    background:#553;
+}
+.styleyotsuba .tb{
+    background:#543;
+}
+.styleyotsubab .tb{
+    background:#335;
+}
+.styleeb{
+    font-size:14px;
+    font-family:"Georgia","Liberation Serif","Times New Roman";
+    width:98%;
+    width:auto;
+    margin:7px 7px 0px 0px;
+    padding:7px 7px 7px 7px;
+    border:2px outset #000;
+    border-radius:5px;
+}
+.styleeb .thread{
+    width:auto;
+    height:auto;
+    background:transparent;
+    border:none;
+}
+.styleeb .tb{
+    background:#445;
+}

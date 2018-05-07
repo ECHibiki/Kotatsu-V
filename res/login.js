@@ -1,14 +1,7 @@
-function mainf(){
-    var b = Math.floor((Math.random()*2)+1).toString();
-    var e = document.getElementById('banner');
-    e.src = '/res/banner'+b.toString()+'.jpg';
-
-}
-
 function send(){
     var request = new XMLHttpRequest();
     var params = 'id='+document.getElementById('id').value+'&pass='+document.getElementById('pass').value;
-    request.open("POST", '/mod/login', true);
+    request.open("POST", '/bin/login', true);
     request.setRequestHeader("Content-type", "text/plain");
     request.setRequestHeader("Content-length", params.length);
     request.setRequestHeader("Connection", "close");          

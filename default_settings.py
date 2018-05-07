@@ -12,6 +12,7 @@ FFpath = 'ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel
 Allow_Email = False # Allow users to post any text (including email addresses) in the Email form field
 TimeoutThread = 120 # Amount of seconds users must wait between creating threads
 TimeoutPost = 15 # Amount of seconds users must wait between posts
+UserPostDeletionTime = 3600 # The time window (in seconds) where a user can delete their own post or thread
 MaxPostLength = 8000 # Maximum character count per post
 MaxPostLines = 200 # Maximum line count per post
 PostLineCutoff = 30 # Lines to display on board views (where the post is cut giving a message "view entire thread to see full comment")
@@ -25,8 +26,12 @@ Banners = ( 'banner1.jpg', 'banner2.jpg', 'banner3.jpg' ) # List of images insid
 #      configured for that board
 #   2) The time since it last received a bump is greater than
 #      the PruneTime set below
-PruneTime = 9676800 # 4 months
 AutoPrune = False # Enable this option to turn on auto thread pruning
+PruneTime = 9676800 # 4 months (only used if AutoPrune is True)
+# NOTE: There is currently a bug in the AutoPrune code where it will cause the page redirect to fail for newly created threads
+#       This bug seems to be due to the database not finishing its connection when threads are deleted
+#       Otherwise it seems to work fine, all it requires is that the OP just go back and refresh the page to find his new thread instead of being redirected to it
+#       For now it will remain disabled by default until a fix is found
 
 # The credentials for connecting to the PostgreSQL database
 DBNAME = '4taba'

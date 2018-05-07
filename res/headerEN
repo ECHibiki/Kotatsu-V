@@ -58,17 +58,15 @@
 </ul><br><hr>
 <b>Miscellaneous</b>
 <ul>
-<li><a href="/f">Flash & HTML5</a></li>
+<li><a href="/f/c">Flash & HTML5</a></li>
 <li><a href="/ho">Other</a></li>
 </ul><br><hr>
 <a href="/res/rulesEN">[Rules]</a><br>
 <a href="/res/faqEN">[F.A.Q.]</a><br>
-<a href="/watcher">[Watcher]</a><br>
-<a href="/settings">[Settings]</a><br>
 </div>
-<div style="position:absolute;top:4px;right:4px">Page Style: <select onchange="changeStyle(this)"><option value="default">Default</option><option value="tomorrow"%s>Tomorrow</option></select></div>
+<div style="position:absolute;top:4px;right:4px">Page Style: <select autocomplete="off" onchange="changeStyle(this)"><option value="default">Default</option><option value="tomorrow"%s>Tomorrow</option></select></div>
 <div id="navlnks" style="position:fixed;top:0;right:0;background:#FFF;"></div>
 
 <div>
-<a href="javascript:void(0)" onclick="window.scrollTo(0,document.body.scrollHeight);">▼</a> <span id="topnav"></span> <span id="toplinks"></span>
+<a href="javascript:void(0)" onclick="window.scrollTo(0,document.body.scrollHeight);">▼</a> <span id="toplinks"></span> <span id="topnav"></span>
 </div>
