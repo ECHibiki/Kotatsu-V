@@ -120,7 +120,7 @@ li{
     padding:5px;
     display:table;
 }
-.sp{
+.spoiler{
     background:#000;
 }
 .quote{
@@ -347,6 +347,9 @@ li{
     background:#ddd;
     border-left:1px solid #bbb;
     border-right:1px solid #bbb;
+}
+.mona .post:target{
+    background:#cdc;
 }
 .mona .quote{
     color:#789922;
@@ -626,6 +629,9 @@ body.computer.threadcontainer{
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
 }
+.computer .post:target{
+    background:#dcb;
+}
 .computer .quote{
     color:#789922;
 }
@@ -657,8 +663,8 @@ body.computer.threadcontainer{
     background:#c00;
 }*/
 .yotsuba input[type=text], .yotsuba textarea{
-    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
-    font-size:16px;
+    font-family:"Arial","Sans";
+    font-size:13px;
     border:1px inset #000;
     outline:1px inset #fff;
 }
@@ -752,12 +758,18 @@ body.computer.threadcontainer{
     #border-bottom:1px solid #d9bfb7;
     #border-right:1px solid #d9bfb7;
 }
+.yotsuba .post:target{
+    background:#f0c0b0;
+}
 .yotsuba .sub{
     background:#f0e0d6;
     border:1px solid #d9bfb7;
 }
 .yotsuba .quote{
     color:#789922;
+}
+.yotsuba .spoiler{
+    background:#800000;
 }
 .yotsuba blockquote{
     margin-top:5px;
@@ -787,8 +799,8 @@ body.computer.threadcontainer{
     background:#c00;
 }*/
 .yotsubab input[type=text], .yotsubab textarea{
-    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
-    font-size:16px;
+    font-family:"Arial","Sans";
+    font-size:13px;
     border:1px inset #000;
     outline:1px inset #fff;
 }
@@ -880,6 +892,9 @@ body.computer.threadcontainer{
     #border-bottom:1px solid #b7c5d9;
     #border-right:1px solid #b7c5d9;
 }
+.yotsubab .post:target{
+    background:#ccf;
+}
 .yotsubab .sub{
     background:#f0e0d6;
     border:1px solid #d9bfb7;
@@ -897,6 +912,141 @@ body.computer.threadcontainer{
     font-size:16px;
 }*/
 
+
+/******************************************************************************/
+/* EARTHBOUND THEME */
+/******************************************************************************/
+.earthbound{
+    font-family:"Georgia","Liberation Serif","Times New Roman","serif";
+    font-size:13px;
+    color:#000;
+    background:#dde;
+    background-image: url(data:image/gif;base64,R0lGODlhKAAoAKIAAAAAAP///2uq3oTblP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAoACgAAANeKLrcPTDKOZ21NOfLl/5R14GgyJGfeaGairGU68CxzNCV7eGhrvA9HxDi+w2LguEAqWQei03oUzjVKaNUoFMr5WZ5W3BX/MWFzWN0mXZmp91rWFv+psdZc3xdf0chEwA7);
+
+    height:100%;
+    margin:10px 0px 30px 105px;
+}
+/*.earthbound.threadcontainer{
+    background:#ffe;
+    background:#c00;
+}*/
+.earthbound input[type=text], .earthbound textarea{
+    font-family:"Georgia","Liberation Serif","Times New Roman","serif";
+    font-size:13px;
+    border:1px inset #000;
+    outline:1px inset #fff;
+}
+.earthbound img{
+    float:left;
+    margin:5px 10px 5px 5px;
+}
+.earthbound .banner{
+    display:table;
+}
+.earthbound .msg{
+    color:#eee;
+    background:#222;
+    border:5px outset #eee;
+    border-radius:5px;
+    box-shadow:0 0 0 1px #222;
+
+    display:table;
+    margin:0 auto;
+    padding:10px;
+    min-width:50%;
+}
+.earthbound .msg2{ }
+.earthbound .boardTitle{
+    color:#eee;
+    text-align:center;
+}
+.earthbound .postForm{
+    background:#dde;
+    border:2px outset #eee;
+    border-radius:5px;
+    box-shadow:0 0 0 1px #222;
+
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:2px;
+}
+.earthbound .label{
+    color:#eee;
+    background:#222;
+
+    padding:0px 3px 0px 1px;
+}
+.earthbound .menu{
+    font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
+    font-size:13px;
+    background:#dde;
+    border-right:1px solid #b7c5d9;
+
+    position:fixed;
+    top:0px;
+    left:0px;
+    overflow:hidden;
+    width:100px;
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+.earthbound .menu hr{
+    border:1px inset #ddd;
+}
+.earthbound.threadcontainer{
+    background:#eee;
+    margin:5px 10px 10px 5px;
+    padding:5px;
+    border:2px outset #eee;
+    border-radius:5px;
+    box-shadow:0 0 0 1px #222;
+
+}
+.earthbound .threadbody{
+    padding:2px;
+    padding:0px;
+    margin:0px;
+}
+.earthbound .tb{
+    background:#c1dbf3;
+}
+.earthbound .title{
+    color:#222;
+}
+.earthbound .name{
+    color:#117743;
+}
+.earthbound .date{
+    color:#000;
+}
+.earthbound .post{
+    margin:2px 0px 2px 0px;
+    background:#d6daf0;
+    border-left:1px solid #b7c5d9;
+    border-right:1px solid #b7c5d9;
+    #border-bottom:1px solid #b7c5d9;
+    #border-right:1px solid #b7c5d9;
+}
+.earthbound .post:target{
+    background:#ccf;
+}
+.earthbound .sub{
+    background:#f0e0d6;
+    border:1px solid #d9bfb7;
+}
+.earthbound .quote{
+    color:#789922;
+}
+.earthbound blockquote{
+    margin-top:5px;
+}
+/*.catalog .earthbound .thread{
+    font-size:14px;
+}
+.catalog .earthbound .title{
+    font-size:16px;
+}*/
 
 
 /******************************************************************************/
@@ -918,8 +1068,8 @@ body.computer.threadcontainer{
     background:#c00;
 }*/
 .unlisted input[type=text], .unlisted textarea{
-    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
-    font-size:16px;
+    font-family:"Arial","Sans";
+    font-size:13px;
     border:1px inset #000;
     outline:1px inset #fff;
 }
@@ -1012,6 +1162,9 @@ body.computer.threadcontainer{
     border-right:1px solid #65a;
     #border-bottom:1px solid #bce;
     #border-right:1px solid #bce;
+}
+.unlisted .post:target{
+    background:#ccd;
 }
 .unlisted .sub{
     background:#f0e0d6;

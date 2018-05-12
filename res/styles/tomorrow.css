@@ -124,7 +124,7 @@ li{
     padding:5px;
     display:table;
 }
-.sp{
+.spoiler{
     background:#c5c8c6;
 }
 .quote{
@@ -142,7 +142,7 @@ li{
     color:#888!important;
     font-size:11px;
     background:transparent;
-    border:1px solid #ccc;
+    border:1px solid #555;
 
     margin-left:25px;
     width:200px;

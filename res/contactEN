@@ -1,4 +1,4 @@
-<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><link rel="stylesheet" type="text/css" href="/res/styles/main.css"><link rel="stylesheet" type="text/css" href="/res/styles/threads.css"></head>
+<!DOCTYPE HTML><html><head><meta charset="utf-8"><title>４たばちゃん</title><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><link rel="stylesheet" type="text/css" href="/res/styles/threads.css"></head>
 <body class="main">
 
 <div class="menu">
@@ -23,7 +23,8 @@
 </ul><br><hr>
 <b>Miscellaneous</b>
 <ul>
-<li><a href="/f/c">Flash & HTML5</a></li>
+<li><a href="/f">Flash & HTML5</a></li>
+<li><a href="/v">Video Games</a></li>
 <li><a href="/ho">Other</a></li>
 </ul><br><hr>
 <a href="/res/rulesEN">[Rules]</a><br>

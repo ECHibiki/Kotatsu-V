@@ -1,7 +1,7 @@
-#!/usr/bin/python3
-
 #!/usr/bin/env nix-shell
 #!nix-shell -i python3 -p python36Packages.psycopg2
+
+#!/usr/bin/python3
 
 import psycopg2
 import default_settings

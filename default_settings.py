@@ -26,12 +26,8 @@ Banners = ( 'banner1.jpg', 'banner2.jpg', 'banner3.jpg' ) # List of images insid
 #      configured for that board
 #   2) The time since it last received a bump is greater than
 #      the PruneTime set below
+PruneTime = 9676800 # 4 months
 AutoPrune = False # Enable this option to turn on auto thread pruning
-PruneTime = 9676800 # 4 months (only used if AutoPrune is True)
-# NOTE: There is currently a bug in the AutoPrune code where it will cause the page redirect to fail for newly created threads
-#       This bug seems to be due to the database not finishing its connection when threads are deleted
-#       Otherwise it seems to work fine, all it requires is that the OP just go back and refresh the page to find his new thread instead of being redirected to it
-#       For now it will remain disabled by default until a fix is found
 
 # The credentials for connecting to the PostgreSQL database
 DBNAME = '4taba'
@@ -51,13 +47,14 @@ DBPASS = ''
 # POSTER-UP - set upload filetypes allowed by normal (non opening) posts
 BoardInfo = {
     # Listed boards
-    #KEY   ( NAME             STYLE       USERNAME     THREADS POSTS  DISPLAY   OP-UP      POSTER-UP  LISTED )
-    'a':   ('Anime & Manga', 'yotsubab', 'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'ni':  ('日本裏'  ,      'mona',     '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'd':   ('二次元エロ',    'yotsuba',  'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'cc':  ('Computer Club', 'computer', 'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'f':   ('Flash/HTML5',   'yotsuba',  'Anonymous',  30,     200,  'flash',  'flash',   ''       ,  True   ),
-    'ho':  ('Other',         'yotsuba',  'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    #KEY   ( NAME             STYLE         USERNAME     THREADS POSTS  DISPLAY   OP-UP      POSTER-UP  LISTED )
+    'a':   ('Anime & Manga', 'yotsubab',   'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'ni':  ('日本裏'  ,      'mona',       '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'd':   ('二次元エロ',    'yotsuba',    'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'cc':  ('Computer Club', 'computer',   'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'f':   ('Flash/HTML5',   'yotsuba',    'Anonymous',  30,     200,  'flash',  'flash',   ''       ,  True   ),
+    'v':   ('Video Games',   'earthbound', 'Player',     150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'ho':  ('Other',         'yotsuba',    'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
 
     # Unlisted boards
     #KEY    ( NAME               STYLE      USERNAME    THREADS POSTS  DISPLAY   OP-UP            POSTER-UP       LISTED )
@@ -74,7 +71,7 @@ BoardInfo = {
 }
 
 BoardBlacklist = ['', 'res', 'bin']
-BoardDisallowedChars = ['"', "'", '\n', '\r', '/',
+BoardDisallowedChars = ['"', "'", '\n', '\r', '\t', '/',
                         '	', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '　', # big list of whitespace
                         '᠎', '​', '‌', '‍', '﻿', # more whitespace
                         
@@ -96,7 +93,7 @@ StyleTransparencies = {
 
 # List of post filters (this includes quotes, post links, URL highlighting, etc)
 # Now using regex formatting
-# The 1st element is a descriptive label, the 2nd element is the actual regex filter, and the 3rd element is what to replace the text with
+# The keys are descriptive labels, and the value is a 2-tuple which contains the actual regex filter first, and the replacement string second
 # NOTE: Filters are applied one after the other, so order can make a difference
 # NOTE: Posts are already escaped (e.g. ">" characters show up as "&gt;") and newlines are already converted to <br>
 Filters = {
@@ -130,11 +127,11 @@ Filters = {
             ),
             'cross-thread-link': (
                 re.compile(r'(?<!">)&gt;&gt;&gt;([0-9]+)/([0-9]+)'),
-                r'<a href="/%s/\1#\2">&gt;&gt;&gt;/%s/\1/\2</a>', #NOTE: Containes %s substitutions
+                r'<a href="/%s/\1#\2">&gt;&gt;&gt;/%s/\1/\2</a>', #NOTE: Contains %s substitutions
             ),
             'post-link': (
                 re.compile(r'(?<!&gt;)&gt;&gt;([0-9]+)'),
-                r'<a href="/%s/%s#\1">&gt;&gt;\1</a>', #NOTE: Containes %s substitutions
+                r'<a href="/%s/%s#\1">&gt;&gt;\1</a>', #NOTE: Contains %s substitutions
             ),
             'quote': (
                 re.compile(r'(^|<br>)(&gt;[^<]*)'),
@@ -142,6 +139,10 @@ Filters = {
             ),
 }
 
+# This function is placed here for completeness. Some filters can have 
+# additional operations applied to them, as you can see below for
+# "cross-thread-link" and "post-link", which require additional information to
+# be inserted (namely the particular board and thread the post was made on)
 def processComment(comment, board, thread): # Process the user comment to add things such as "greentext", post links, URL's, etc.
     for filt in Filters:
         if filt == 'cross-thread-link':

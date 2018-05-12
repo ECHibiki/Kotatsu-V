@@ -23,7 +23,8 @@
 </ul><br><hr>
 <b>Miscellaneous</b>
 <ul>
-<li><a href="/f/c">Flash & HTML5</a></li>
+<li><a href="/f">Flash & HTML5</a></li>
+<li><a href="/v">Video Games</a></li>
 <li><a href="/ho">Other</a></li>
 </ul><br><hr>
 <a href="/res/rulesEN">[Rules]</a><br>
@@ -78,7 +79,8 @@
 </td><td style="border:none;border-right:1px solid #8B6;">
 <a href="/cc">Computer Club</a><br>
 </td><td style="border:none">
-<a href="/f/c">Flash & HTML5</a><br>
+<a href="/f">Flash & HTML5</a><br>
+<a href="/v">Video Games</a><br>
 <a href="/ho">Other</a>
 </td></tr></table>
 </td> </tr>
@@ -91,7 +93,7 @@
 <div style="float:right">
 <a href="/res/announcements.html">Announcements</a><br>
 <br>
-- (2018-05-07) <b>Site updated to <a href="https://github.com/4taba/4taba">Github version</a>.</b><br>
+- (2018-05-11) <b>Site updated to <a href="https://github.com/4taba/4taba">Github version</a>.</b><br>
 - <br>
 - <br>
 <br><hr>

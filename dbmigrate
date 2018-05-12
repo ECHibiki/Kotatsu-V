@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
-
 #!/usr/bin/env nix-shell
 #!nix-shell -i python3 -p python36Packages.psycopg2 python36Packages.python_magic
+
+#!/usr/bin/env python3
 
 import os
 import magic
@@ -55,7 +55,7 @@ BoardMap = {
     'sw': 'cc',
     'pr': 'cc',
 
-    'v' : 'ho',
+    #'v' : 'ho',
 }
 def boardMap(board):
     return BoardMap[board] if board in BoardMap else board
@@ -165,19 +165,23 @@ for key in newdata:
         old_board, old_thread = key[1:].split('/')
         new_board, new_thread = ThreadShifts[key[1:]].split('/')
 
-        if key[1:] != ThreadShifts[key[1:]]:
-            source = BasePath+'res/brd/'+old_board+'/'+old_thread
-            dest = BasePath+'res/brd/'+new_board+'/'+new_thread
-            ddir = BasePath+'res/brd/'+new_board
-            if os.path.exists(source):
-                if not os.path.exists(dest):
-                    if not os.path.exists(ddir):
-                        os.makedirs(ddir)
-                    print('################### moving '+old_board+'/'+old_thread+' -> '+new_board+'/'+new_thread)
-                    os.rename(BasePath+'res/brd/'+old_board+'/'+old_thread, BasePath+'res/brd/'+new_board+'/'+new_thread)
-                else:
-                    print('\n\n\nERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Moving to backup dir\n\n\n')
-                    os.rename(BasePath+'res/brd/'+old_board+'/'+old_thread, BasePath+'res/brd/'+new_board+'/'+new_thread+'_bak')
+#        if key[1:] != ThreadShifts[key[1:]]:
+        source = BasePath+'res/brd/'+old_board+'/'+old_thread
+        dest = BasePath+'res/brd2/'+new_board+'/'+new_thread
+        ddir = BasePath+'res/brd2/'+new_board
+        if os.path.exists(source):
+            if not os.path.exists(dest):
+                if not os.path.exists(ddir):
+                    os.makedirs(ddir)
+                print('################### moving '+old_board+'/'+old_thread+' -> '+new_board+'/'+new_thread)
+                os.rename(BasePath+'res/brd/'+old_board+'/'+old_thread, BasePath+'res/brd2/'+new_board+'/'+new_thread)
+
+                if old_board != new_board or old_thread != new_thread:
+                    with open(BasePath+'thread_remap', 'a') as f:
+                        f.write(old_board+'/'+old_thread+' -> '+new_board+'/'+new_thread+'\n')
+            else:
+                print('\n\n\nERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Moving to backup dir\n\n\n')
+                os.rename(BasePath+'res/brd/'+old_board+'/'+old_thread, BasePath+'res/brd2/'+new_board+'/'+new_thread+'_bak')
 
         for row in newdata[key]:
             if row[6] == 0:
@@ -188,9 +192,9 @@ for key in newdata:
             filename = row[3].split('/')[0]
             filedata = row[9].split('/')[0]
             if len(filedata)>4 and len(localname)>4 and len(filedata.split(',')) < 3:
-                print('\n\n--------- ADDING FILETYPE TO: '+BasePath+'res/brd/'+new_board+'/'+new_thread+'/'+localname)
-                if os.path.exists(BasePath+'res/brd/'+new_board+'/'+new_thread+'/'+localname):
-                    test = magic.from_file(BasePath+'res/brd/'+new_board+'/'+new_thread+'/'+localname)
+                print('\n\n--------- ADDING FILETYPE TO: '+BasePath+'res/brd2/'+new_board+'/'+new_thread+'/'+localname)
+                if os.path.exists(BasePath+'res/brd2/'+new_board+'/'+new_thread+'/'+localname):
+                    test = magic.from_file(BasePath+'res/brd2/'+new_board+'/'+new_thread+'/'+localname)
                     stest = test.split(' ')[0]
                     if stest in ['JPEG','PNG','GIF']:
                         filetype = stest

@@ -13,6 +13,7 @@ import math
 import binascii
 import psycopg2
 import magic
+import zipfile
 from cgi import parse_qs, escape, FieldStorage
 from urllib.parse import unquote_plus, parse_qs
 from time import strftime, time, gmtime
@@ -48,6 +49,8 @@ with open(BasePath+'res/formtopEN','r') as f:
     FtEN = f.read()
 with open(BasePath+'res/formbotEN','r') as f:
     FbEN = f.read()
+with open(BasePath+'res/sandbox.html','r') as f:
+    sandbox = f.read()
 
 BoardGreetings = {}
 for i in os.listdir(BasePath+'/bMessages'):
@@ -274,7 +277,7 @@ def getStyle(board):
 
 def getBan(ip):
     try:
-        Cur.execute('SELECT ban_type FROM main.ban WHERE ip=%s;', (ip,))
+        Cur.execute('SELECT boards FROM main.ban WHERE ip=%s;', (ip,))
         ban = Cur.fetchone()[0]
     except(TypeError):
         ban = ''
@@ -554,7 +557,7 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
     elif 'Zip archive' in test:
         filetype = 'HTML5'
 
-    if board == 'f' and filetype != 'SWF':
+    if board == 'f' and filetype not in ['SWF','HTML5']:
         return ['', '', 0, page_error('Error: Only flash files allowed on /f/')]
 
     if spoiler:
@@ -589,16 +592,16 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
                 zdx += 1
             except(IndexError):
                 break
-        if zsize <= 1228800:
+        if zsize <= 12288000:
             zip_ref.extractall(fullname)
             zip_ref.close()
-            copyfile(BasePath+'res/html5.png', thumbpath)
+            copyfile(BasePath+'res/html5.png', thumbname)
             width = 153
             with open(fullname+'/index.html','w') as f:
                 temp = sandbox % (board+'/'+str(threadnum)+'/'+localname+'.html', board+'/'+str(threadnum)+'/'+localname)
                 f.write(temp)
         else:
-            os.remove(fullname)
+            rmtree(fullname)
             return ['', '', 0, page_error('Error: File decompresses to larger than the maximum filesize. Please fix your zip file and try again.')]
     elif filetype in ['MP3','M4A','OGG','FLAC','WAV']:
         os.system(FFpath+' -i '+fullname+' -f singlejpeg '+fullpath+'f'+localname+' 2>/dev/null')
