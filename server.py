@@ -541,7 +541,11 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
 
     #test = magic.from_file(fullname).decode('utf-8')
     test = magic.from_file(fullname)
-    stest = test.split(' ')[0]
+    try:
+        stest = test.split(' ')[0]
+    except(TypeError):
+        test = test.decode('utf8')
+        stest = test.split(' ')[0]
     if stest in ['JPEG','PNG','GIF']:
         filetype = stest
     elif 'MPEG' in test:
@@ -748,11 +752,14 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
     if email: name = '<a href="mailto:'+email+'">'+name+'</a>'
 
     if images or board == 'f':
-        fileitem = post['file']
-        filename = escape(fileitem.filename)
-        filename.replace('/','')
-        if len(filename)>33:
-            filename = filename[:33]+'..'
+        try:
+            fileitem = post['file']
+            filename = escape(fileitem.filename)
+            filename.replace('/','')
+            if len(filename)>33:
+                filename = filename[:33]+'..'
+        except(KeyError):
+            filename = ''
     else:
         filename = ''
 
@@ -901,10 +908,13 @@ def load_page(mode, board, mixed, catalog, bumpOrder, realquery, userquery, last
             DBconnection.rollback()
     else:
         #VIEWING A THREAD
-        Cur.execute('SELECT * FROM board."'+board+'" WHERE threadnum=%s;', (str(mode),))
+        try:
+            Cur.execute('SELECT * FROM board."'+board+'" WHERE threadnum=%s;', (str(mode),))
+        except(psycopg2.ProgrammingError):
+            return page_error('Thread not found.')
         threads = Cur.fetchall()
         if len(threads)==0:
-            return 'Thread not found.'
+            return page_error('Thread not found.')
 
     # TABLE FOOTER WITH DYANMIC CATALOG AND PAGE LINKS
     tableFoot = '<a href="/res/report">Report a post</a>'
@@ -1026,7 +1036,7 @@ def buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip, sub=Fal
     else:
         #response_body += ('<div'+(' class="style'+getStyle(posted_on)+'"' if mode<0 else '')+'>' if OP==1 else '')+'<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'&nbsp;<span class="title" style="font-size:initial;"><a href="/'+posted_on+'/'+str(threadnum)+'">View</a>|<a onclick="watchThread(\''+posted_on+'/'+str(threadnum)+'\','+str(post_count)+');" href="javascript:void(0)">Watch</a></span></div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> '+time_string+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
         if not catalog:
-            response_body += '<div id="'+str(postnum)+'" class="'+(getStyle(posted_on)+' ' if mode<0 else '')+divclass+'">'+('<div class="threadbody">' if OP else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb">'+('<img src="/res/sticky.png" title="sticky">' if sticky else '')+'<a class="title" href="/'+posted_on+'/'+str(threadnum)+'"><span style="font-size:16px;color:#000">【'+str(threadnum)+'】</span> '+title+'</a>&nbsp; <span style="font-weight:bold;color:#c0c">[<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a>'+(' <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a>' if mode>-1 or board in ['listed','unlisted','all'] else '')+'] </span>'+('<span> | Text Only</span>' if not imageAllow else '')+'</div>') if OP==1 else '')+('<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">' if not sub else '')+time_string+'</span>'+(' <a href="/'+posted_on+'/'+str(threadnum)+'/udel/'+str(postnum)+'">Del</a>' if mode>-1 and ip==post_ip and int(timestamp)+UserPostDeletionTime > int(time()) else '')+'<br>'
+            response_body += '<div id="'+str(postnum)+'" class="'+(getStyle(posted_on)+' ' if mode<0 else '')+divclass+'">'+('<div class="threadbody">' if OP else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb">'+('<img src="/res/sticky.png" title="sticky">' if sticky else '')+'<a class="title" href="/'+posted_on+'/'+str(threadnum)+'"><span style="font-size:16px;color:#000">【'+str(threadnum)+'】</span> '+title+'</a>&nbsp; <span style="font-weight:bold">[<a href="/'+posted_on+'/'+str(threadnum)+'/l50">last50</a>'+(' <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a>' if mode>-1 or board in ['listed','unlisted','all'] else '')+'] </span>'+('<span> | Text Only</span>' if not imageAllow else '')+'</div>') if OP==1 else '')+('<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> <span class="date">' if not sub else '')+time_string+'</span>'+(' <a href="/'+posted_on+'/'+str(threadnum)+'/udel/'+str(postnum)+'">Del</a>' if mode>-1 and ip==post_ip and int(timestamp)+UserPostDeletionTime > int(time()) else '')+'<br>'
             if file_name:
                 response_body += '<div class="fname"><a href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'">'+file_name+'</a> ['+image_size+']<br></div>'
 

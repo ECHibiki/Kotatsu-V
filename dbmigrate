@@ -195,7 +195,11 @@ for key in newdata:
                 print('\n\n--------- ADDING FILETYPE TO: '+BasePath+'res/brd2/'+new_board+'/'+new_thread+'/'+localname)
                 if os.path.exists(BasePath+'res/brd2/'+new_board+'/'+new_thread+'/'+localname):
                     test = magic.from_file(BasePath+'res/brd2/'+new_board+'/'+new_thread+'/'+localname)
-                    stest = test.split(' ')[0]
+                    try:
+                        stest = test.split(' ')[0]
+                    except(TypeError):
+                        test = test.decode('utf8')
+                        stest = test.split(' ')[0]
                     if stest in ['JPEG','PNG','GIF']:
                         filetype = stest
                     elif 'MPEG' in test:

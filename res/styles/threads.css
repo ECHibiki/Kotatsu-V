@@ -1,22 +1,5 @@
 @charset "UTF-8";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .outer{
     display:table;
     margin:0 auto;
@@ -37,10 +20,13 @@
     vertical-align:top;
 }
 
-
-
-
 /* BEGIN GENERIC STYLES */ 
+body{
+    font-family:"Arial","Liberation Sans","Sans";
+    font-size:13px;
+    margin-left:105px;
+    width:auto;
+}
 img{
     max-width:100%;
 }
@@ -56,16 +42,19 @@ li{
     padding-top:2px;
     padding-bottom:5px;
 }
-.computer input[type=text], .computer textarea{
-    font-family:"Arial","Sans";
+input[type=text], textarea{
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     border:2px inset #aaa;
     outline:1px inset #fff;
 }
+.label{
+    font-size:13px;
+}
 .threadcontainer{
     display:table;
     min-width:800px;
-    max-width:1600px;
+    max-width:1800px;
 }
 .threadbody{
     white-space:pre;
@@ -78,18 +67,14 @@ li{
     height:auto;
 }
 .post{
-    height:auto;
     padding:5px 15px 2px 5px;
 
 
-    #width:auto;
-    #width:800px;
     max-width:95%;
     min-width:300px;
     white-space:pre;
     word-break:normal;
     word-wrap:break-word;
-    #display:inline-block;
     display:table;
 }
 .tb{
@@ -158,22 +143,21 @@ li{
 
 
 /******************************************************************************/
-/* MAIN THEME */
+/* TATAMI-B THEME */
 /******************************************************************************/
-.main{
-    font-family:"Arial","Sans";
+.tatamib{
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     color:#000;
     background:#ddd;
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABVBAMAAAAh7A5qAAAAD1BMVEWwwMerw8izxMq2x828zNN1D5NSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUHAhEN7IMsIwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAADe0lEQVRIx32Wi3HrIBBFV0gFOJpXAAYV4EEuQJHUf02PBfbDR2EmjjM+wVeXu7uAhRd0y2znZrzZjuVMP/hqNrjv++3vZuGnYTOFY/Zj7n6F9HnH7rJc/LEw+X0vrBMWvwesqHxVelv29GDNt5NwubLTsaR3vrA19ZVnI5Xxt8vvUW94gdurFbZQ6KwG6chmvVPrr6tZi6/Q+wXrl5khe8bN9FkM2eKrLGtQr7COn077q/UKa9i1Vu/1hmj4uU3/KnZr2fwVW9ILJWGR9WdxkPLgvFIcNRDrErtuWm8T4gUWSoxhN8D1cbgvu4hKxbJUneNjzCpn36z5swTOeRBW/NWZUHV2thqSSADKsqqdGb0IzFqyNS1fs+bkk4O9X8F/Fk7tLDka56G4a+nshO0qLvo7ZJsmkm0+xuweVtb5mjz5e0r9JhZTDO8X/JQVMzGVd+ocMhtEw1X3NPJslTry6dn6hmYpZUZeo38QGnOd8kyzFvf9qZf46zkHS2HFVBCb8bTONz4RPr+dC+sG7femT7NXHxOf1Y7z4NxnITblByKLPrx/uhWrr2ZN9pD8Bfg284JZT4lP7Cf1mpr1zDpme7Wp/0bCupwI1tLrxXisaV/dI3UmL5X5b9LrCntArtE4h9Jvm/wrO9hjkcmhV67u7HXJa2SvKNt0ZQjUBVgVsr9o8tQ8yIvYIGycgAf4weCFMsecsFFJO8pz+xjsi8lqB15uy4uo5Arz8SC7lMRqVCozG2l7dSeJC6h3eqrHeLIuh2Tu/CXmUDV2dd7G1hHG7DFscqxhuG/8XM0nzeZ3WGEYptphk/XONXsO9AbcH/UaqhPVzZ/0AnVPvN1k/tKnlQos6Z0T6zJLk6q5/pTqhSlpYCcy++v3UR6Ank2zD3pt7ik1e7FU/QUgdeblRPScEc0AdJvBvnh2PkRnaYiExJaalHn9pJeniCV3A+5r2dYknfXmxKh9Rz35m/UW9qw0+L4/PLLPep3qs13OypeoZ1OnERsH6/xwFycN+sbC+wYz1KvZ8KR3wK7I+kHManbOnlz9hOZ96cSOqbCym9d66a6WPCh//aWXb4R2delbxnVha9ZY9GGUB3+DqViX+/BFO/nK35nuuMnZMi0f9Oa7cznlteT+yo/d1ltyDP8jKC397fnmeVEmgacb0yWW0vJ5vh14O09T2pTJMdb7H5ZcWX12qT9XAAAAAElFTkSuQmCC");
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
-.main .banner{
+.tatamib .banner{
     display:table;
 }
-.main .msg{
+.tatamib .msg{
     background:#be9;
     border:2px outset #be9;
 
@@ -182,24 +166,23 @@ li{
     padding:7px;
     min-width:50%;
 }
-.main .msg2{
+.tatamib .msg2{
     background:#eee;
     border:1px inset #eee;
 
     padding:7px;
 }
-.main .boardTitle{
+.tatamib .boardTitle{
     color:#000;
     text-align:center;
 }
-.main .label{
+.tatamib .label{
     border:1px inset #000;
     background:#be9;
 }
-.main .menu{
+.tatamib .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    background:#ada;
     background:#edc;
     border-right:1px solid #888;
 
@@ -212,7 +195,7 @@ li{
     padding:0px;
     height:100%;
 }
-.main .menu hr{
+.tatamib .menu hr{
     border:1px inset #ddd;
 }
 
@@ -220,44 +203,33 @@ li{
 /******************************************************************************/
 /* MONA THEME */
 /******************************************************************************/
-.mona{
-    #font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
-    #font-size:16px;
-    font-family:"Sans";
-    font-size:13px;
-    #font-family:"Arial","Sans";
-    #font-size:13px;
+.pseud0ch{
+    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-size:16px;
     color:#000;
-    #background:#eee;
-    #background-image: url("/res/temp/bgj2.png");
-
-
 
     background:#dcb;
     background-image: url(data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=);
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
-/*.mona.threadcontainer{
+/*.pseud0ch.threadcontainer{
     background:#eee;
 }*/
-.mona input[type=text], .mona textarea{
+.pseud0ch input[type=text], .mona textarea{
     font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
     font-size:16px;
     border:1px inset #000;
     outline:1px inset #fff;
 }
-.mona img{
+.pseud0ch img{
     float:left;
     margin:5px 10px 5px 5px;
 }
-.mona .banner{
+.pseud0ch .banner{
     display:table;
 }
-.mona .msg{
-    background:#edc;
-    background:#fc9;
+.pseud0ch .msg{
     background:#ada;
     border:2px outset #000;
 
@@ -266,19 +238,17 @@ li{
     padding:7px;
     min-width:50%;
 }
-.mona .msg2{
+.pseud0ch .msg2{
     background:#eee;
     border:1px inset #eee;
 
     padding:7px;
 }
-.mona .boardTitle{
+.pseud0ch .boardTitle{
     color:#000;
     text-align:center;
 }
-.mona .postForm{
-    background:#fc9;
-    background:#edc;
+.pseud0ch .postForm{
     background:#ddd;
     border:2px outset #000;
 
@@ -286,16 +256,13 @@ li{
     margin-bottom:5px;
     padding:2px;
 }
-.mona .label{
-    background:#fc9;
+.pseud0ch .label{
     background:#ada;
-    border:1px inset #fc9;
     border:1px inset #ada;
 }
-.mona .menu{
+.pseud0ch .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    background:#ada;
     background:#edc;
     border-right:1px solid #888;
 
@@ -308,84 +275,73 @@ li{
     padding:0px;
     height:100%;
 }
-.mona .menu hr{
+.pseud0ch .menu hr{
     border:1px inset #ddd;
 }
-.mona.threadcontainer{
+.pseud0ch.threadcontainer{
     border:1px outset #fff;
-    background:#edc;
     background:#eee;
     margin:5px 10px 10px 5px;
     padding:5px;
 }
-.mona .threadbody{
+.pseud0ch .threadbody{
     background:#eee;
     border:1px inset #eee;
-    padding:2px;
     padding:0px;
     margin:0px;
 }
-.mona .tb{
-    background:#edc;
-    background:#fc9;
+.pseud0ch .tb{
     background:#ada;
 }
-.mona .title{
-    color:#f00;
+.pseud0ch .title{
     color:#c00;
 }
-.mona .name{
-    color:#c00;
+.pseud0ch .name{
     color:#008000;
 }
-.mona .date{
-    color:#000;
+.pseud0ch .date{
     color:#c4a;
 }
-.mona .post{
+.pseud0ch .post{
     margin:2px 0px 2px 0px;
     background:#ddd;
     border-left:1px solid #bbb;
     border-right:1px solid #bbb;
 }
-.mona .post:target{
+.pseud0ch .post:target{
     background:#cdc;
 }
-.mona .quote{
+.pseud0ch .quote{
     color:#789922;
 }
-.mona blockquote{
+.pseud0ch blockquote{
     margin-top:5px;
 }
-/*.catalog .mona .thread{
+/*.catalog .pseud0ch .thread{
     font-size:14px;
 }
-.catalog .mona .title{
+.catalog .pseud0ch .title{
     font-size:16px;
 }*/
 
 
 /******************************************************************************/
-/* NEW2 THEME */
+/* tatami THEME */
 /******************************************************************************/
 .tatami{
-    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
-    font-size:16px;
-    #font-family:"Arial","Sans";
-    #font-size:13px;
+    font-family:"Arial","Liberation Sans","Sans";
+    font-size:13px;
     color:#000;
     background:#eee;
-    background-image: url("/res/temp/bglines.png");
-    #background-image: url("/res/Kita-3D.jpg");
+    background-image: url("/res/temp/bgj2.png");
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
 /*.tatami.threadcontainer{
     background:#eee;
 }*/
 .tatami input[type=text], .tatami textarea{
-    font-family:"MS PGothic","Konatu","Mona","Textar","Monapo","IPAMonaPGothic";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:16px;
     border:1px inset #000;
     outline:1px inset #fff;
@@ -399,8 +355,6 @@ li{
 }
 .tatami .msg{
     background:#edc;
-    background:#fc9;
-    background:#ada;
     border:2px outset #000;
 
     display:table;
@@ -419,7 +373,6 @@ li{
     text-align:center;
 }
 .tatami .postForm{
-    background:#edc;
     background:#eee;
     border:2px outset #000;
 
@@ -428,8 +381,7 @@ li{
     padding:2px;
 }
 .tatami .label{
-    background:#fc9;
-    background:#ada;
+    background:#edc;
 }
 .tatami .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
@@ -450,8 +402,8 @@ li{
     border:1px inset #ddd;
 }
 .tatami.threadcontainer{
-    border:1px solid #000;
-    background:#edc;
+    border:1px outset #eee;
+    background:#eee;
     margin:5px 10px 10px 5px;
     padding:5px;
 }
@@ -460,9 +412,9 @@ body.tatami.threadcontainer{
 }
 .tatami .threadbody{
     background:#eee;
-    padding:2px;
     padding:0px;
     margin:0px;
+    border:1px inset #eee;
 }
 .tatami .tb{
     background:#edc;
@@ -471,7 +423,6 @@ body.tatami.threadcontainer{
     color:#c00;
 }
 .tatami .name{
-    color:#c00;
     color:#008000;
 }
 .tatami .date{
@@ -479,7 +430,7 @@ body.tatami.threadcontainer{
 }
 .tatami .post{
     margin:2px 0px 2px 0px;
-    background:#ddd;
+    background:#edc;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
 }
@@ -501,13 +452,11 @@ body.tatami.threadcontainer{
 /* COMPUTER THEME */
 /******************************************************************************/
 .computer{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     color:#000;
-    background:#789;
     background:#abc;
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
 /*.computer.threadcontainer{
@@ -517,7 +466,7 @@ body.tatami.threadcontainer{
     color:#488;
 }*/
 .computer input[type=text], .computer textarea{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     border:2px inset #aaa;
     outline:1px inset #fff;
@@ -530,28 +479,28 @@ body.tatami.threadcontainer{
     display:table;
 }
 .computer .msg{
-    background:#ddd;
-    background:#dcb;
-    border:4px outset #dcb;
+    background:#abc;
+    border:2px groove #000;
+    border:none;
 
     display:table;
     margin:0 auto;
-    padding:14px;
+    padding:5px;
     min-width:50%;
 }
 .computer .msg2{
-    background:#333;
-    border:4px inset #333;
-    color:#995;
+    background:#ffe;
+    border:2px groove #79e;
+    color:#06c;
 
     padding:7px;
 }
 .computer .boardTitle{
-    color:#995;
+    color:#06c;
     text-align:center;
 }
 .computer .postForm{
-    background:#ccc;
+    background:#abc;
     border:1px outset #fff;
     outline:2px outset #000;
 
@@ -560,15 +509,13 @@ body.tatami.threadcontainer{
     padding:2px;
 }
 .computer .label{
-    background:#dcb;
+    background:#79e;
     border:1px inset #dcb;
 }
 .computer .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    background:#edc;
-    background:#ddd;
-    background:#dcb;
+    background:#efe;
     border-right:1px solid #888;
 
     position:fixed;
@@ -586,7 +533,7 @@ body.tatami.threadcontainer{
 .computer.threadcontainer{
     border:1px outset #fff;
     outline:1px outset #000;
-    background:#dcb;
+    background:#abc;
     margin:5px 10px 10px 5px;
     padding:5px;
 }
@@ -595,37 +542,27 @@ body.computer.threadcontainer{
     outline:none;
 }
 .computer .threadbody{
-    border:1px inset #000;
-    outline:1px inset #fff;
     background:#eee;
-    padding:2px;
     padding:0px;
     margin:0px;
 }
 .computer .tb{
-    background:#dcb;
+    background:#79e;
+    border-bottom:2px solid #000;
 }
 .computer .title{
-    color:#599;
     color:#000;
-    color:#885;
-    color:#a00;
 }
 .computer .name{
-    color:#c00;
-    color:#008000;
-    color:#a00;
-    background:#dcb;
+    color:#c06;
+    background:#ccb;
 }
 .computer .date{
-    color:#000;
-    background:#00c;
-    color:#eee;
-    background:#99b;
+    color:#35a;
 }
 .computer .post{
     margin:2px 0px 2px 0px;
-    background:#ddd;
+    background:#eed;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
 }
@@ -649,13 +586,12 @@ body.computer.threadcontainer{
 /* YOTSUBA THEME */
 /******************************************************************************/
 .yotsuba{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     color:#800000;
     background:#ffe;
     background-image:-moz-linear-gradient(top, #fed6af 0%, #ffe 180px);
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
 /*.yotsuba.threadcontainer{
@@ -663,7 +599,7 @@ body.computer.threadcontainer{
     background:#c00;
 }*/
 .yotsuba input[type=text], .yotsuba textarea{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     border:1px inset #000;
     outline:1px inset #fff;
@@ -676,7 +612,6 @@ body.computer.threadcontainer{
     display:table;
 }
 .yotsuba .msg{
-    background:#edc;
     background:#fc9;
     border:2px outset #000;
 
@@ -696,7 +631,6 @@ body.computer.threadcontainer{
     text-align:center;
 }
 .yotsuba .postForm{
-    background:#fc9;
     background:#edc;
     border:2px outset #000;
 
@@ -707,7 +641,6 @@ body.computer.threadcontainer{
 .yotsuba .label{
     background:#fc9;
     border:1px inset #fc9;
-    border:1px inset #ada;
 }
 .yotsuba .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
@@ -731,32 +664,28 @@ body.computer.threadcontainer{
     background:#ffe;
     margin:5px 10px 10px 5px;
     padding:5px;
+    border:none;
 }
 .yotsuba .threadbody{
     background:#ffe;
-    padding:2px;
     padding:0px;
     margin:0px;
+    border:none;
 }
 .yotsuba .tb{
-    background:#edc;
     background:#fc9;
 }
 .yotsuba .title{
     color:#c00;
 }
 .yotsuba .name{
-    color:#c00;
     color:#008000;
 }
 .yotsuba .post{
     margin:2px 0px 2px 0px;
-    background:#ddd;
     background:#f0e0d6;
     border-left:1px solid #d9bfb7;
     border-right:1px solid #d9bfb7;
-    #border-bottom:1px solid #d9bfb7;
-    #border-right:1px solid #d9bfb7;
 }
 .yotsuba .post:target{
     background:#f0c0b0;
@@ -785,13 +714,12 @@ body.computer.threadcontainer{
 /* YOTSUBAB THEME */
 /******************************************************************************/
 .yotsubab{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     color:#000;
     background:#eef2ff;
     background-image:-moz-linear-gradient(top, #d1d5ee 0%, #eef2ff 180px);
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
 /*.yotsubab.threadcontainer{
@@ -799,7 +727,7 @@ body.computer.threadcontainer{
     background:#c00;
 }*/
 .yotsubab input[type=text], .yotsubab textarea{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     border:1px inset #000;
     outline:1px inset #fff;
@@ -865,20 +793,16 @@ body.computer.threadcontainer{
     padding:5px;
 }
 .yotsubab .threadbody{
-    padding:2px;
     padding:0px;
     margin:0px;
 }
 .yotsubab .tb{
-    background:#edc;
-    background:#fc9;
     background:#bbd0f0;
 }
 .yotsubab .title{
     color:#c00;
 }
 .yotsubab .name{
-    color:#c00;
     color:#008000;
 }
 .yotsubab .date{
@@ -889,8 +813,6 @@ body.computer.threadcontainer{
     background:#d6daf0;
     border-left:1px solid #b7c5d9;
     border-right:1px solid #b7c5d9;
-    #border-bottom:1px solid #b7c5d9;
-    #border-right:1px solid #b7c5d9;
 }
 .yotsubab .post:target{
     background:#ccf;
@@ -923,7 +845,6 @@ body.computer.threadcontainer{
     background:#dde;
     background-image: url(data:image/gif;base64,R0lGODlhKAAoAKIAAAAAAP///2uq3oTblP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAoACgAAANeKLrcPTDKOZ21NOfLl/5R14GgyJGfeaGairGU68CxzNCV7eGhrvA9HxDi+w2LguEAqWQei03oUzjVKaNUoFMr5WZ5W3BX/MWFzWN0mXZmp91rWFv+psdZc3xdf0chEwA7);
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
 /*.earthbound.threadcontainer{
@@ -1004,9 +925,9 @@ body.computer.threadcontainer{
 
 }
 .earthbound .threadbody{
-    padding:2px;
     padding:0px;
     margin:0px;
+    border:1px inset #eee;
 }
 .earthbound .tb{
     background:#c1dbf3;
@@ -1025,8 +946,6 @@ body.computer.threadcontainer{
     background:#d6daf0;
     border-left:1px solid #b7c5d9;
     border-right:1px solid #b7c5d9;
-    #border-bottom:1px solid #b7c5d9;
-    #border-right:1px solid #b7c5d9;
 }
 .earthbound .post:target{
     background:#ccf;
@@ -1053,14 +972,11 @@ body.computer.threadcontainer{
 /* UNLISTED THEME */
 /******************************************************************************/
 .unlisted{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     color:#000;
-    background:#eef2ff;
     background:#eee;
-    #background-image:-moz-linear-gradient(top, #d1d5ee 0%, #eef2ff 180px);
 
-    height:100%;
     margin:10px 0px 30px 105px;
 }
 /*.unlisted.threadcontainer{
@@ -1068,7 +984,7 @@ body.computer.threadcontainer{
     background:#c00;
 }*/
 .unlisted input[type=text], .unlisted textarea{
-    font-family:"Arial","Sans";
+    font-family:"Arial","Liberation Sans","Sans";
     font-size:13px;
     border:1px inset #000;
     outline:1px inset #fff;
@@ -1137,19 +1053,16 @@ body.computer.threadcontainer{
 }
 .unlisted .threadbody{
     border:1px inset #d6daf0;
-    padding:2px;
     padding:0px;
     margin:0px;
 }
 .unlisted .tb{
-    background:#ccc;
+    background:#ccd;
 }
 .unlisted .title{
     color:#65a;
 }
 .unlisted .name{
-    color:#c00;
-    color:#008000;
     color:#65a;
 }
 .unlisted .date{
@@ -1157,11 +1070,9 @@ body.computer.threadcontainer{
 }
 .unlisted .post{
     margin:2px 0px 2px 0px;
-    background:#ddd;
+    background:#dde;
     border-left:1px solid #65a;
     border-right:1px solid #65a;
-    #border-bottom:1px solid #bce;
-    #border-right:1px solid #bce;
 }
 .unlisted .post:target{
     background:#ccd;

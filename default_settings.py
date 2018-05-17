@@ -49,8 +49,8 @@ BoardInfo = {
     # Listed boards
     #KEY   ( NAME             STYLE         USERNAME     THREADS POSTS  DISPLAY   OP-UP      POSTER-UP  LISTED )
     'a':   ('Anime & Manga', 'yotsubab',   'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'ni':  ('日本裏'  ,      'mona',       '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'd':   ('二次元エロ',    'yotsuba',    'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'ni':  ('日本裏'  ,      'pseud0ch',   '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
+    'd':   ('二次元エロ',    'yotsuba',    '変態',       150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'cc':  ('Computer Club', 'computer',   'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'f':   ('Flash/HTML5',   'yotsuba',    'Anonymous',  30,     200,  'flash',  'flash',   ''       ,  True   ),
     'v':   ('Video Games',   'earthbound', 'Player',     150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
@@ -58,16 +58,16 @@ BoardInfo = {
 
     # Unlisted boards
     #KEY    ( NAME               STYLE      USERNAME    THREADS POSTS  DISPLAY   OP-UP            POSTER-UP       LISTED )
-    '*':    ('Unlisted',        'unlisted', 'Anonymous', 150,    200, 'normal', 'img+vid',       'img+vid',       False  ),
-    'meta': ('Meta Discussion', 'unlisted', 'Anonymous', 150,    200, 'normal', 'img+vid+flash', 'img+vid+flash', False  ),
+    '*':    ('Unlisted',        'tatami',  'Anonymous', 150,    200, 'normal', 'img+vid',       'img+vid',       False  ),
+    'meta': ('Meta Discussion', 'tatami',  'Anonymous', 150,    200, 'normal', 'img+vid+flash', 'img+vid+flash', False  ),
 
     ### Avoid modifying these for now
     ### These are special boards. Modifying them should be fairly easy still,
     ### but will require some changes inside the server code, otherwise something might break.
     #KEY        ( NAME                   STYLE       USERNAME THREADS POSTS  DISPLAY   OP-UP  POSTER-UP  LISTED )
-    'listed':   ('All Listed Boards',   'main',     '',       -1,     0,    'normal', '',    '',         True   ),
-    'unlisted': ('All Unlisted Boards', 'unlisted', '',       7500,   0,    'normal', '',    '',         True   ), 
-    'all':      ('All Boards',          'main',     '',       -1,     0,    'normal', '',    '',         True   ),
+    'listed':   ('All Listed Boards',   'tatamib',  '',       -1,     0,    'normal', '',    '',         True   ),
+    'unlisted': ('All Unlisted Boards', 'tatamib',   '',       7500,   0,    'normal', '',    '',         True   ), 
+    'all':      ('All Boards',          'tatamib',  '',       -1,     0,    'normal', '',    '',         True   ),
 }
 
 BoardBlacklist = ['', 'res', 'bin']
@@ -84,10 +84,10 @@ BoardDisallowedChars = ['"', "'", '\n', '\r', '\t', '/',
 
 # These are the simulated transparency colors for thumbnails. Add an entry for each CSS stylesheet and give the background color in (R,G,B) format one for the OP background color and one for the regular post background color
 StyleTransparencies = {
-                    'main':     ( (238,238,238), (238,221,204) ),
-                    'unlisted': ( (238,238,238), (238,221,204) ),
+                    'tatamib':  ( (238,238,238), (238,221,204) ),
+                    'tatami':   ( (238,238,238), (238,221,204) ),
                     'yotsuba':  ( (255,255,238), (240,224,214) ),
-                    'mona':     ( (221,221,221), (238,238,238) ),
+                    'pseud0ch': ( (221,221,221), (238,238,238) ),
                     'computer': ( (239,239,239), (239,239,239) ),
 }
 
