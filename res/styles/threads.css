@@ -326,7 +326,7 @@ input[type=text], textarea{
 
 
 /******************************************************************************/
-/* tatami THEME */
+/* TATAMI THEME */
 /******************************************************************************/
 .tatami{
     font-family:"Arial","Liberation Sans","Sans";
@@ -382,6 +382,7 @@ input[type=text], textarea{
 }
 .tatami .label{
     background:#edc;
+    border:1px inset #edc;
 }
 .tatami .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
@@ -489,7 +490,7 @@ body.tatami.threadcontainer{
     min-width:50%;
 }
 .computer .msg2{
-    background:#ffe;
+    background:#e5e5d5;
     border:2px groove #79e;
     color:#06c;
 
@@ -515,7 +516,7 @@ body.tatami.threadcontainer{
 .computer .menu{
     font-family:"Arial","Liberation Sans","MS PGothic","Konatu","Mona","IPAMonaPGothic";
     font-size:13px;
-    background:#efe;
+    background:#ded;
     border-right:1px solid #888;
 
     position:fixed;
@@ -557,12 +558,15 @@ body.computer.threadcontainer{
     color:#c06;
     background:#ccb;
 }
+.computer a{
+    color:#06c;
+}
 .computer .date{
     color:#35a;
 }
 .computer .post{
     margin:2px 0px 2px 0px;
-    background:#eed;
+    background:#e5e2d5;
     border-left:1px solid #ccc;
     border-right:1px solid #ccc;
 }

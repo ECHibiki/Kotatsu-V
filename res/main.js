@@ -26,7 +26,7 @@
  */
 
 function checksize(max){
-    maxb = max * 1024**2;
+    var maxb = max * Math.pow(1024, 2);
     var f = document.getElementsByName('file')[0];
     if(f.files && f.files[0].size > maxb){
         alert('Maximum upload size is '+(max)+'MB.');
@@ -171,7 +171,7 @@ function hidemenu(){
     document.getElementById('topnav').innerHTML = links;
     document.getElementById('botnav').innerHTML = links;
     localStorage.menu='hide'
-    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> ] [ <a href="/listed">/listed/</a> <a href="/unlisted">/unlisted/</a> <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ni">/ni/</a> <a href="/d">/d/</a> ] [ <a href="/cc">/cc/</a> ] [ <a href="/f">/f/</a> <a href="/ho">/ho/</a> ]</b></span>';
+    links = '<span style="font-size:13px"><b>[ <a href="/">HOME</a> <a href="/res/rulesEN">Rules</a> <a href="/res/faqEN">F.A.Q.</a> ] [ <a href="/listed">/listed/</a> <a href="/unlisted">/unlisted/</a> <a href="/all">/all/</a> ] [ <a href="/a">/a/</a> <a href="/ni">/ni/</a> <a href="/d">/d/</a> ] [ <a href="/cc">/cc/</a> ] [ <a href="/f">/f/</a> <a href="/v">/v/</a> <a href="/ho">/ho/</a> ]</b></span>';
     document.getElementById('toplinks').innerHTML = links;
     document.getElementById('botlinks').innerHTML = links;
 }
