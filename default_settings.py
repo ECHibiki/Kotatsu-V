@@ -9,7 +9,7 @@ UsingCloudflare = False
 
 FFpath = 'ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel free to set an absolute path or add additional command line arguments
 
-Allow_Email = False # Allow users to post any text (including email addresses) in the Email form field
+Allow_Email = True # Allow users to post any text (including email addresses) in the Email form field
 TimeoutThread = 120 # Amount of seconds users must wait between creating threads
 TimeoutPost = 15 # Amount of seconds users must wait between posts
 UserPostDeletionTime = 3600 # The time window (in seconds) where a user can delete their own post or thread
@@ -52,7 +52,7 @@ BoardInfo = {
     'ni':  ('日本裏'  ,      'pseud0ch',   '名無しさん', 150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'd':   ('二次元エロ',    'yotsuba',    '変態',       150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'cc':  ('Computer Club', 'computer',   'guest@cc',   150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
-    'f':   ('Flash/HTML5',   'yotsuba',    'Anonymous',  30,     200,  'flash',  'flash',   ''       ,  True   ),
+    'f':   ('Flash/HTML5',   'yotsuba',    'Anonymous',  30,     200,  'flash',  'flash',   'flash',    True   ),
     'v':   ('Video Games',   'earthbound', 'Player',     150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
     'ho':  ('Other',         'yotsuba',    'Anonymous',  150,    200,  'normal', 'img+vid', 'img+vid',  True   ),
 
@@ -65,9 +65,9 @@ BoardInfo = {
     ### These are special boards. Modifying them should be fairly easy still,
     ### but will require some changes inside the server code, otherwise something might break.
     #KEY        ( NAME                   STYLE       USERNAME THREADS POSTS  DISPLAY   OP-UP  POSTER-UP  LISTED )
-    'listed':   ('All Listed Boards',   'tatamib',  '',       -1,     0,    'normal', '',    '',         True   ),
+    'listed':   ('All Listed Boards',   'tatamib',   '',       -1,     0,    'normal', '',    '',         True   ),
     'unlisted': ('All Unlisted Boards', 'tatamib',   '',       7500,   0,    'normal', '',    '',         True   ), 
-    'all':      ('All Boards',          'tatamib',  '',       -1,     0,    'normal', '',    '',         True   ),
+    'all':      ('All Boards',          'tatamib',   '',       -1,     0,    'normal', '',    '',         True   ),
 }
 
 BoardBlacklist = ['', 'res', 'bin']
@@ -84,11 +84,16 @@ BoardDisallowedChars = ['"', "'", '\n', '\r', '\t', '/',
 
 # These are the simulated transparency colors for thumbnails. Add an entry for each CSS stylesheet and give the background color in (R,G,B) format one for the OP background color and one for the regular post background color
 StyleTransparencies = {
-                    'tatamib':  ( (238,238,238), (238,221,204) ),
-                    'tatami':   ( (238,238,238), (238,221,204) ),
-                    'yotsuba':  ( (255,255,238), (240,224,214) ),
-                    'pseud0ch': ( (221,221,221), (238,238,238) ),
-                    'computer': ( (239,239,239), (239,239,239) ),
+                    'tatamib':    ( (238,238,238), (238,221,204) ),
+                    'tatami':     ( (238,238,238), (238,221,204) ),
+                    'yotsuba':    ( (255,255,238), (240,224,214) ),
+                    'yotsubab':   ( (255,255,238), (240,224,214) ),
+                    'pseud0ch':   ( (221,221,221), (238,238,238) ),
+                    'mona':       ( (221,221,221), (238,238,238) ), #This shouldn't be needed, pseud0ch only
+                    'computer':   ( (239,239,239), (239,239,239) ),
+                    'unlisted':   ( (239,239,239), (239,239,239) ),
+                    'earthbound': ( (239,239,239), (239,239,239) ),
+                    '*':          ( (239,239,239), (239,239,239) ),
 }
 
 # List of post filters (this includes quotes, post links, URL highlighting, etc)

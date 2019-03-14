@@ -39,6 +39,7 @@
 ･ <a href="#mixed">What is a mixed board view?</a><br>
 ･ <a href="#boards">What are unlisted boards?</a><br>
 ･ <a href="#bb">How do I format my post?</a><br>
+･ <a href="#html5">How do I create HTML5 files?</a><br>
 <hr>
 
 <h2 id="what">What is 4taba?</h2>
@@ -74,6 +75,25 @@ You can use the following BBCodes:<br>
 <li>[ja] - Set text size and font for Shift_JIS art.</li>
 <li>[spoiler] - Spoiler text.</li>
 </ul><br>
+<h2 id="html5">How do I create HTML5 files?</h2>
+HTML5 is a standard that has been replacing Flash. Flash is losing popularity and it's already possible to browse the web without flash installed and never even know it.<br>
+Adobe will also not be supporting Flash in the future or releasing new updates.<br>
+Therefore to continue the tradition of users uploading Flash(like) files to imageboards 4taba is attempting to allow users to also upload the HTML5 standard instead.<br>
+Since there is currently no standard format for html5 applications to be stored in a single container we are attempting to fill the gap by using simple ZIP files.<br>
+<br>
+<b>How to create a ZIP file that 4taba will interpret as HTML5</b>
+<ol>
+<li>Create a new directory to store all of the files and media you wish to include in the HTML5 project.</li>
+<li>Add all the media and html files you want to include into the same directory (or child directories)</li>
+<li>Name the main HTML file of your HTML5 application "main.html" (this is the first page users will be sent to when they open your file)</li>
+<li>Make sure all links referenced in your html files are relative paths and not absolute paths (e.g. "image.jpg" and "folder1/image.jpg" are relative paths since they do not begin with a leading "/", while "/home/my_user/my_project/image.jpg" is an absolute path and should not be used anywhere in your project).</li>
+<li>Make sure your project directory does not contain a file named "index.html" as it will be overwritten.</li>
+<li>ZIP up the entire contents of the project directory (NOTE: Don't zip the project directory itself)
+<ul><li>From the command line: cd my_project; zip -r my_zipfile.zip *</li>
+    <li>From a file browser: Enter project directory, highlight all files, right-click, send-to, zip</li></ul></li>
+<li>Upload to 4taba.</li>
+</ol>
+<br>
 <hr><br>
 <a href="/">Home</a></div></div>
 <hr>

@@ -6,7 +6,7 @@
 #     * Start postgresql, set the database information inside the "dbinit_4taba" script and then run it to initialize the database
 #     * create a <server_root>/res/brd directory to hold user uploaded files
 
-BasePath = '/home/wwwrun/4taba/' # Set this to the server root directory
+BasePath = '/usr/local/apache2/4taba/' # Set this to the server root directory
 
 import os
 import math
@@ -546,6 +546,10 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
     except(TypeError):
         test = test.decode('utf8')
         stest = test.split(' ')[0]
+
+
+
+
     if stest in ['JPEG','PNG','GIF']:
         filetype = stest
     elif 'MPEG' in test:
@@ -602,7 +606,7 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
             copyfile(BasePath+'res/html5.png', thumbname)
             width = 153
             with open(fullname+'/index.html','w') as f:
-                temp = sandbox % (board+'/'+str(threadnum)+'/'+localname+'.html', board+'/'+str(threadnum)+'/'+localname)
+                temp = sandbox % (board+'/'+str(threadnum)+'/'+localname+'/'+localname+'.zip', board+'/'+str(threadnum)+'/'+localname)
                 f.write(temp)
         else:
             rmtree(fullname)
@@ -759,7 +763,7 @@ def new_post_or_thread(environ, path, mode, board, last50, ip, admin):
             if len(filename)>33:
                 filename = filename[:33]+'..'
         except(KeyError):
-            filename = ''
+            filename=''
     else:
         filename = ''
 

@@ -1,6 +1,3 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i python3 -p python36Packages.psycopg2
-
 #!/usr/bin/python3
 
 import psycopg2
@@ -15,6 +12,7 @@ temp += ["user='"+DBUSER+"'"] if DBUSER else []
 temp += ["host='"+DBHOST+"'"] if DBHOST else []
 temp += ["password='"+DBPASS+"'"] if DBPASS else []
 DBconnection = psycopg2.connect(' '.join(temp))
+DBconnection.set_client_encoding('UTF8')
 DBconnection.autocommit = True
 cur = DBconnection.cursor()
 
