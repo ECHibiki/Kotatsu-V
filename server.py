@@ -14,6 +14,7 @@ import binascii
 import psycopg2
 import magic
 import zipfile
+import subprocess # only used for ffprobe, to get SWF resolution
 from cgi import parse_qs, escape, FieldStorage
 from urllib.parse import unquote_plus, parse_qs
 from time import strftime, time, gmtime
@@ -606,7 +607,7 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
             copyfile(BasePath+'res/html5.png', thumbname)
             width = 153
             with open(fullname+'/index.html','w') as f:
-                temp = sandbox % (board+'/'+str(threadnum)+'/'+localname+'/'+localname+'.zip', board+'/'+str(threadnum)+'/'+localname)
+                temp = sandbox % (board+'/'+str(threadnum)+'/'+localname+'.html5', board+'/'+str(threadnum)+'/'+localname)
                 f.write(temp)
         else:
             rmtree(fullname)
@@ -625,6 +626,15 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
             width = 153
     elif filetype == 'SWF':
         copyfile(BasePath+'res/flash.png', thumbname)
+        try:
+            isize = subprocess.check_output([FFprobe, '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=s=x:p=0', fullname]).decode('utf-8')[:-1]
+            isplit = isize.split('x')
+            if len(isplit) == 2 and isplit[0].isdigit() and isplit[1].isdigit():
+                isize = ', ' + isize
+            else:
+                isize = ''
+        except(subprocess.CalledProcessError):
+            pass
         width = 153
     else:
         copyfile(BasePath+'res/genericThumb.jpg', thumbname)
@@ -947,8 +957,21 @@ def load_page(mode, board, mixed, catalog, bumpOrder, realquery, userquery, last
         else:
             response_body += '<h1>ONE OF THE BOARDS: '+userquery+'<br> IS EMPTY. PLEASE REPEAT YOUR SEARCH WITHOUT IT.</h1>'
     else:
+        response_body += '''
+<div id="shadediv" style="position: fixed; top: 0px; left: 0px; background: rgba(0, 0, 0, 0.6) none repeat scroll 0% 0%; z-index: 5; width: 100%; height: 100%; display: none;" onclick="removeflash()">
+  
+  <table style="border-collapse:collapse;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0;z-index:10"><tbody><tr>
+    <th class="label">Test <span align="right"><a href="javascript:void(0)" onclick="removeflash()">X</a></span></th></tr>
+    <tr>
+      <td id="flashcont" style="background:#fff;min-width:100px;min-height:100px">
+        <p>Flash content</p>
+      </td>
+  </tr></tbody></table>
+
+</div>
+'''
         if displayMode == 'flash' and mode<0:
-            response_body += '<center><table><tr style="height:25px;text-align:center"><td class="label">No.</td><td class="label">File</td><td class="label">Title</td><td class="label">Replies</td><td class="label">Name</td><td class="label">Date</td><td class="label">View</td></tr>'
+            response_body += '<center><table><tr style="height:25px;text-align:center"><td class="label">No.</td><td class="label">File</td><td class="label">Title</td><td class="label"></td><td class="label">Replies</td><td class="label">Name</td><td class="label">Date</td><td class="label">View</td></tr>'
 
         if catalog:
             response_body += '<div class="catalog">'
@@ -1019,6 +1042,26 @@ def buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip, sub=Fal
         image_size = ''
         image_width = 25
         subs = False
+
+
+
+
+    image_size_list = image_size.split(', ')
+    if image_size_list[0] == 'SWF':
+        if len(image_size_list) == 3:
+            image_size_list = image_size_list[-1].split('x')
+            if int(image_size_list[0]) < 640:
+                image_size_list[0] = '640'
+            if int(image_size_list[1]) < 480:
+                image_size_list[1] = '480'
+        else:
+            image_size_list = ['640', '480']
+    else:
+        image_size_list = ['640', '480']
+
+
+
+
     response_body = ''
     if OP:
         divclass = 'threadcontainer'
@@ -1035,7 +1078,9 @@ def buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip, sub=Fal
             response_body += '<tr class="style'+getStyle(posted_on)+'"><td '+fcolor+' id="OP'+posted_on+'/'+str(threadnum)+'"><span style="color:#C00;font-weight:bold">'+str(threadnum)+'</span></td><td '+fcolor+'><center>'
             if file_name:
                 response_body += '<a style="font-weight:bold" href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'">'+file_name[:-4]+'</a> ['+image_size+']'
-            response_body += '</center></td><td '+fcolor+'><a style="color:#C00;font-weight:bold" href="/'+posted_on+'/'+str(threadnum)+'">'+title+'</a></td><td '+fcolor+'>'+str(post_count)+' Replies</td><td '+fcolor+'><span class="name">'+name+'</span></td><td '+fcolor+'>'+time_string+'</td><td '+fcolor+'><a href="/'+posted_on+'/'+str(threadnum)+'">View</a></td></td>'
+            response_body += '</center></td><td '+fcolor+'>'+('<img src="/res/sticky.png" title="sticky" style="background:#aaa;width:20px;margin:0px;padding:0px 4px 0px 0px">' if sticky else '')+'<a style="color:#C00;font-weight:bold" href="/'+posted_on+'/'+str(threadnum)+'">'+title+'</a></td>'
+            response_body += '<td '+fcolor+'>[<a href="javascript:void(0)" onclick="embedflash(\'/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'\', \''+image_size_list[0]+'\', \''+image_size_list[1]+'\')">Embed</a>]</td>'
+            response_body += '<td '+fcolor+'>'+str(post_count)+' Replies</td><td '+fcolor+'><span class="name">'+name+'</span></td><td '+fcolor+'>'+time_string+'</td><td '+fcolor+'><a href="/'+posted_on+'/'+str(threadnum)+'">View</a></td></td>'
 
     else:
         #response_body += ('<div'+(' class="style'+getStyle(posted_on)+'"' if mode<0 else '')+'>' if OP==1 else '')+'<div id="'+str(postnum)+'" id2="'+str(postnum)+'" class="'+divclass+(' hidden' if hidden else '')+'" b="'+posted_on+'" t="'+str(threadnum)+'">'+('<a id="h'+posted_on+'/'+str(threadnum)+'/'+str(postnum)+'" href="javascript:void(0)" onclick="unhide(this)">[ + ] </a>' if hidden else '')+('<div id="OP'+posted_on+'/'+str(threadnum)+'">' if OP==1 else '')+(('<div class="tb"><a class="title" href="/'+posted_on+'/'+str(threadnum)+'/l50">['+str(threadnum)+']. '+title+'</a><span class="pon">Posted on: <a class="tag" href="/'+posted_on+'">/'+posted_on+'/</a></span>'+('<span style="float:right">Text Only | </span>' if not imageAllow else '')+'&nbsp;<span class="title" style="font-size:initial;"><a href="/'+posted_on+'/'+str(threadnum)+'">View</a>|<a onclick="watchThread(\''+posted_on+'/'+str(threadnum)+'\','+str(post_count)+');" href="javascript:void(0)">Watch</a></span></div>') if OP==1 else '')+'<a style="color:inherit;text-decoration:none;" onclick="plink(\''+str(postnum)+'\')" href="'+('/'+posted_on+'/'+str(threadnum)+'#'+str(postnum )if mode<0 else 'javascript:void(0)')+'">'+str(postnum)+'</a>. <span class="name">'+name+'</span> '+time_string+(' <a href="javascript:void(0)" onclick="mod(\'udel\','+str(postnum)+')">Del</a>' if mode>-1 and ip==post_ip else '')+'<br><div class="fname">'
@@ -1064,6 +1109,8 @@ def buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip, sub=Fal
                 ftype = image_size.split(',')[0]
                 if ftype not in ['SWF','HTML5']:
                     response_body += '<a onclick="return false;" target="_blank" href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'"><img data-ftype="'+ftype+'" src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+file_path+'" onclick="imgswap(this)"></a>'
+                elif ftype == 'SWF':
+                    response_body += '<a href="javascript:void(0)" onclick="embedflash(\'/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'\', \''+image_size_list[0]+'\', \''+image_size_list[1]+'\')"><img data-ftype="'+ftype+'" src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+file_path+'"></a>'
                 else:
                     response_body += '<a href="/res/brd/'+posted_on+'/'+str(threadnum)+'/'+file_path+'"><img data-ftype="'+ftype+'" src="/res/brd/'+posted_on+'/'+str(threadnum)+'/t'+file_path+'"></a>'
             else:

@@ -1,1 +1,8 @@
-<center>img<img src="">img</center>
+<center>
+
+  <object width="325" height="125">
+    <param name="movie" value="/res/flashbanner.swf">
+    <embed src="/res/flashbanner.swf" width="325" height="125"></embed>
+  </object>
+
+</center>

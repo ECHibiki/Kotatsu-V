@@ -212,3 +212,19 @@ function changeStyle(style){
     document.cookie = 'style='+style.value+';path=/';
     location.reload();
 }
+
+function removeflash(){
+    document.getElementById("shadediv").style.display="none";
+    var flashcont = document.getElementById("flashcont");
+    flashcont.innerHTML = "";
+}
+
+function embedflash(file, width, height){
+    var flashcont = document.getElementById("flashcont");
+    document.getElementById("shadediv").style.display = "initial";
+    flashcont.innerHTML = "\
+<object type='application/x-shockwave-flash' data='"+file+"' width='"+width+"' height='"+height+"'>\
+<param name='jello' value='"+file+"'>\
+<param name='quality' value='high'>\
+</object>";
+}

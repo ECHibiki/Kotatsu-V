@@ -8,6 +8,7 @@ import re
 UsingCloudflare = False
 
 FFpath = 'ffmpeg' # Set this to the ffmpeg command for creating thumbnails. Feel free to set an absolute path or add additional command line arguments
+FFprobe = 'ffprobe' # Set this to the ffprobe command for detecting SWF resolution. Feel free to set an absolute path or add additional command line arguments
 
 Allow_Email = True # Allow users to post any text (including email addresses) in the Email form field
 TimeoutThread = 120 # Amount of seconds users must wait between creating threads
