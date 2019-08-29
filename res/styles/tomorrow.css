@@ -203,7 +203,7 @@ li{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;

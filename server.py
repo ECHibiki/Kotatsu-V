@@ -566,7 +566,7 @@ def getFileUpload(fileitem, board, threadnum, spoiler, OP, dim):
     elif 'Zip archive' in test:
         filetype = 'HTML5'
 
-    if board == 'f' and filetype not in ['SWF','HTML5']:
+    if OP == 1 and board == 'f' and filetype not in ['SWF','HTML5']:
         return ['', '', 0, page_error('Error: Only flash files allowed on /f/')]
 
     if spoiler:
@@ -958,9 +958,9 @@ def load_page(mode, board, mixed, catalog, bumpOrder, realquery, userquery, last
             response_body += '<h1>ONE OF THE BOARDS: '+userquery+'<br> IS EMPTY. PLEASE REPEAT YOUR SEARCH WITHOUT IT.</h1>'
     else:
         response_body += '''
-<div id="shadediv" style="position: fixed; top: 0px; left: 0px; background: rgba(0, 0, 0, 0.6) none repeat scroll 0% 0%; z-index: 5; width: 100%; height: 100%; display: none;" onclick="removeflash()">
+<div id="shadediv" style="position: fixed; top: 0px; left: 0px; background: rgba(0, 0, 0, 0.6) none repeat scroll 0% 0%; z-index: 5; width: 100%; height: 100%; display: none;">
   
-  <table style="border-collapse:collapse;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0;z-index:10"><tbody><tr>
+  <table style="border-collapse:collapse;margin:auto;z-index:10"><tbody><tr>
     <th class="label">Test <span align="right"><a href="javascript:void(0)" onclick="removeflash()">X</a></span></th></tr>
     <tr>
       <td id="flashcont" style="background:#fff;min-width:100px;min-height:100px">
@@ -1150,7 +1150,8 @@ def buildPost(OP, catalog, last50, admin, mode, board, thread, post, ip, sub=Fal
     return response_body
 
 def page_redirect(dest, msg):
-    return '<!DOCTYPE HTML><html><head><meta charset="utf-8"><script>function redirect(){window.location.replace("'+dest+'");}</script></head><body onload="redirect()"><h1>'+msg+'</h1></body></html>'
+    #return '<!DOCTYPE HTML><html><head><meta charset="utf-8"><script>function redirect(){window.location.replace("'+dest+'");}</script></head><body onload="redirect()"><h1>'+msg+'</h1></body></html>'
+    return '<!DOCTYPE HTML><html><head><meta charset="utf-8" http-equiv=refresh content="2;URL='+dest+'"/></head><body><h1>'+msg+'</h1></body></html>'
 
 def page_error(msg):
     return '<!DOCTYPE HTML><html><head><meta charset="utf-8"><link rel="shortcut icon" type="image/png" href="/res/favicon.png"/><title>Error</title></head><body><h2>'+msg+'</h2></body></html>'

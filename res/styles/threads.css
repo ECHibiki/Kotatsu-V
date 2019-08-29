@@ -189,7 +189,7 @@ input[type=text], textarea{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -269,7 +269,7 @@ input[type=text], textarea{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -393,7 +393,7 @@ input[type=text], textarea{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -522,7 +522,7 @@ body.tatami.threadcontainer{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -655,7 +655,7 @@ body.computer.threadcontainer{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -782,7 +782,7 @@ body.computer.threadcontainer{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -910,7 +910,7 @@ body.computer.threadcontainer{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
@@ -1040,7 +1040,7 @@ body.computer.threadcontainer{
     position:fixed;
     top:0px;
     left:0px;
-    overflow:hidden;
+    overflow:auto;
     width:100px;
     margin:0px;
     padding:0px;
