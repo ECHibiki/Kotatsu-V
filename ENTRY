@@ -1,0 +1,103 @@
+#! /run/current-system/profile/bin/guile
+;;;-*-guile-scheme-*-;;; !#
+
+
+;;; * Check cooldowns after field lengths
+
+;;; This is the main entry point for the server
+;;; It uses Artanis as the server framework
+
+;;; Configure Artanis in conf/artanis.conf
+;;; Configure guile-forum in prv/guile-forum/settings.scm
+
+
+(add-to-load-path "prv")
+;(add-to-load-path "artanis")
+(use-modules (artanis artanis)
+             (modules settings)
+             (modules utils)
+             (modules imageboard))
+
+(when javascript-enabled
+  (build-javascript))
+
+;(database-connection-init)
+(init-server #:statics '(jpg jpeg png ico html js css md txt woff))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Setup page rules ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+(let ((board-regex (if allow-unlisted-boards
+                     ".+"
+                     (string-append "(" (string-join (map (lambda (b) (car b)) boards) "|") ")"))))
+
+  ;; Serve all uploaded statics
+  (get "/pub/img/.*/.*\\..*"
+       ;static-page-emitter)
+       (lambda (rc)
+         (let ((path (map (lambda (str)
+                            (escape-brd (uri-decode str)))
+                          (cdr (string-split (rc-path rc) #\/)))))
+           (emit-response-with-file (string-join path "/")
+                                    (request-port (rc-req rc))))))
+
+  (get "/refilter-comments" #:conn #t
+       refilter-comments)
+
+  ;; GETS
+  (if javascript-enabled
+      (get "/" #:conn #t
+           root-page)
+      (get "/"
+           root-page))
+
+  (get "/(index|frames|frame-nav|about|rules|news|contact|login|logoff)" #:conn #t
+       normal-pages)
+
+  (get "/(panel|noticeboard|notes-view)" #:conn #t
+       admin-pages)
+
+  (get (string-append "/board/" board-regex) #:conn #t
+       serve-board)
+
+  (get (string-append "/catalog/" board-regex) #:conn #t
+       serve-catalog)
+
+  (get (string-append "/thread/" board-regex "/[0-9]+") #:conn #t
+       serve-thread)
+
+  (get (string-append "/posts/" board-regex "/[0-9]+/.+") #:conn #t
+       serve-posts)
+
+  (get "/note-editor/.+" #:conn #t
+       note-editor)
+
+  ;; POSTS
+  (post "/set-style"
+        set-style)
+
+  (post "/login" #:conn #t
+        mod-login)
+
+  (post (string-append "/board/" board-regex) #:conn #t
+        make-thread)
+
+  (post (string-append "/thread/" board-regex "/[0-9]+") #:conn #t
+        make-post)
+
+  (post "/note-editor/.+" #:conn #t
+        post-note)
+
+  (post "/mod-posts" #:conn #t
+        mod-posts)
+
+  (post "/panel" #:conn #t
+        change-password))
+
+(define db-initialized? #f)
+(run-when-DB-init!
+ (lambda (conn)
+   (when (not db-initialized?)
+     (set! db-initialized? #t)
+     (init-database conn))))
+(run)

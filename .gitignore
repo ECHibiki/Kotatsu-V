@@ -1,3 +1,6 @@
-__pycache__/
-local_settings.py
-res/brd/*
+*.bak*
+*.sqlt
+*.db
+/tmp/
+/pub/img/*/*
+!/pub/img/upload/.gitkeep

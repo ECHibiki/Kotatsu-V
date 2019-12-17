@@ -1,0 +1,2314 @@
+@font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+body, header, section, footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #005;
+    padding: 0px;
+    margin: 0px;
+    background: #ddd;
+    background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABVBAMAAAAh7A5qAAAAD1BMVEWwwMerw8izxMq2x828zNN1D5NSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUHAhEN7IMsIwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAADe0lEQVRIx32Wi3HrIBBFV0gFOJpXAAYV4EEuQJHUf02PBfbDR2EmjjM+wVeXu7uAhRd0y2znZrzZjuVMP/hqNrjv++3vZuGnYTOFY/Zj7n6F9HnH7rJc/LEw+X0vrBMWvwesqHxVelv29GDNt5NwubLTsaR3vrA19ZVnI5Xxt8vvUW94gdurFbZQ6KwG6chmvVPrr6tZi6/Q+wXrl5khe8bN9FkM2eKrLGtQr7COn077q/UKa9i1Vu/1hmj4uU3/KnZr2fwVW9ILJWGR9WdxkPLgvFIcNRDrErtuWm8T4gUWSoxhN8D1cbgvu4hKxbJUneNjzCpn36z5swTOeRBW/NWZUHV2thqSSADKsqqdGb0IzFqyNS1fs+bkk4O9X8F/Fk7tLDka56G4a+nshO0qLvo7ZJsmkm0+xuweVtb5mjz5e0r9JhZTDO8X/JQVMzGVd+ocMhtEw1X3NPJslTry6dn6hmYpZUZeo38QGnOd8kyzFvf9qZf46zkHS2HFVBCb8bTONz4RPr+dC+sG7femT7NXHxOf1Y7z4NxnITblByKLPrx/uhWrr2ZN9pD8Bfg284JZT4lP7Cf1mpr1zDpme7Wp/0bCupwI1tLrxXisaV/dI3UmL5X5b9LrCntArtE4h9Jvm/wrO9hjkcmhV67u7HXJa2SvKNt0ZQjUBVgVsr9o8tQ8yIvYIGycgAf4weCFMsecsFFJO8pz+xjsi8lqB15uy4uo5Arz8SC7lMRqVCozG2l7dSeJC6h3eqrHeLIuh2Tu/CXmUDV2dd7G1hHG7DFscqxhuG/8XM0nzeZ3WGEYptphk/XONXsO9AbcH/UaqhPVzZ/0AnVPvN1k/tKnlQos6Z0T6zJLk6q5/pTqhSlpYCcy++v3UR6Ank2zD3pt7ik1e7FU/QUgdeblRPScEc0AdJvBvnh2PkRnaYiExJaalHn9pJeniCV3A+5r2dYknfXmxKh9Rz35m/UW9qw0+L4/PLLPep3qs13OypeoZ1OnERsH6/xwFycN+sbC+wYz1KvZ8KR3wK7I+kHManbOnlz9hOZ96cSOqbCym9d66a6WPCh//aWXb4R2delbxnVha9ZY9GGUB3+DqViX+/BFO/nK35nuuMnZMi0f9Oa7cznlteT+yo/d1ltyDP8jKC397fnmeVEmgacb0yWW0vJ5vh14O09T2pTJMdb7H5ZcWX12qT9XAAAAAElFTkSuQmCC');
+}
+footer {
+    padding: 5px;
+}
+a:link {
+    color: #55c;
+}
+a:visited {
+    color: #55a;
+}
+i {
+    color: #484;
+    font-style: normal;
+}
+td {
+    border: none;
+}
+th {
+    background: #79a;
+}
+ul {
+    margin: 0px;
+}
+hr {
+    margin: 0px;
+    border: 1px dotted #ff4646;
+}
+input, textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+input[type='checkbox'] {
+    background: #c00;
+}
+.site-name {
+    color: #ff4646;
+    font-size: 32px;
+    font-weight: bold;
+}
+.nav {
+    background: #edc;
+    padding: 2px 10px 2px 2px;
+}
+.sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.mid {
+    background: transparent;
+    border-left: 5px solid transparent;
+}
+.mid.threadbg {
+    background: #e2e2e2;
+}
+.mid.preview, .mid.infopage {
+    border-left: 10px double #ff4646;
+}
+.mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #ff4646;
+}
+.news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.note, .notice, .public, .news {
+    background: #ddd;
+    border-bottom: 2px groove #ff4646;
+}
+.note h3, .notice h3, .public h3, .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.news .link {
+    margin: 0px;
+    color: #b33;
+}
+.warning {
+    color: #c00;
+    font-weight: bold;
+}
+.preview .thread {
+    border-top: 2px groove #ff4646;
+}
+.threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #005;
+    background: #e2e2e2;
+    border: 0px inset #e2e2e2;
+}
+.flash tbody:nth-child(even) {
+    background: #fffaee;
+}
+.flash tbody:nth-child(odd) {
+    background: #eee4dd;
+}
+.flash td {
+    padding: 1px 4px;
+}
+.title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #caa;
+}
+.title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.post-frame {
+    border-collapse: collapse;
+}
+blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.post {
+    padding: 2px 10px 2px 2px;
+    background: #ddd;
+    border: 3px double #caa;
+    margin: 1px;
+}
+.postform {
+    background: #ddd;
+    border: #dcb;
+}
+.field {
+    color: #005;
+    text-align: right;
+    font-weight: bold;
+    background: #bbb;
+}
+.name {
+    color: #174;
+}
+.capcode {
+    color: #c00;
+}
+.date {
+    color: #558;
+}
+.shade {
+    color: #888;
+    font-size: 11px;
+}
+.warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.spoiler {
+    color: #005;
+    background: #005;
+}
+.code {
+    font-family: monospace;
+    background: #e2e2e2;
+    border: 1px solid #caa;
+}
+.OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.subthread {
+    background: #e2e2e2;
+    border: 1px solid #caa;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.subpost blockquote, .subpost .name, .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.header {
+    background: transparent;
+    margin: 0px;
+    padding: 5px;
+}
+.board-message {
+    border: 1px inset #ff4646;
+    background: #ff4646;
+    margin-bottom: 5px;
+}
+.catalog {
+    justify-content: center;
+    text-align: center;
+}
+.catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.catalog .thread .title {
+    font-size: 14px;
+}
+.stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #ddd;
+    border: 4px solid #ff4646;
+}
+.odd {
+    background: #eee4dd;
+}
+.even {
+    background: #fffaee;
+    border: 1px solid #79a;
+}
+.odd td, .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+*:target, .highlight {
+    background: #caa !important;
+}
+.kotatsu @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.kotatsu body, .kotatsu header, .kotatsu section, .kotatsu footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #335;
+    padding: 0px;
+    margin: 0px;
+    background: #e2e2e2;
+}
+.kotatsu footer {
+    padding: 5px;
+}
+.kotatsu a:link {
+    color: #55c;
+}
+.kotatsu a:visited {
+    color: #55a;
+}
+.kotatsu i {
+    color: #484;
+    font-style: normal;
+}
+.kotatsu td {
+    border: none;
+}
+.kotatsu th {
+    background: #dcb;
+}
+.kotatsu ul {
+    margin: 0px;
+}
+.kotatsu hr {
+    margin: 0px;
+    border: 1px dotted #bbc2cc;
+}
+.kotatsu input, .kotatsu textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+.kotatsu input[type='checkbox'] {
+    background: #c00;
+}
+.kotatsu .site-name {
+    color: #005;
+    font-size: 32px;
+    font-weight: bold;
+}
+.kotatsu .nav {
+    background: #fffaee;
+    padding: 2px 10px 2px 2px;
+}
+.kotatsu .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.kotatsu .mid {
+    background: #fffaee;
+    border-left: 5px solid transparent;
+}
+.kotatsu .mid.threadbg {
+    background: #fffaee;
+}
+.kotatsu .mid.preview, .kotatsu .mid.infopage {
+    border-left: 10px double #bbc2cc;
+}
+.kotatsu .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #bbc2cc;
+}
+.kotatsu .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.kotatsu .note, .kotatsu .notice, .kotatsu .public, .kotatsu .news {
+    background: #eee4dd;
+    border-bottom: 2px groove #bbc2cc;
+}
+.kotatsu .note h3, .kotatsu .notice h3, .kotatsu .public h3, .kotatsu .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.kotatsu .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.kotatsu .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.kotatsu .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.kotatsu .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.kotatsu .warning {
+    color: #c00;
+    font-weight: bold;
+}
+.kotatsu .preview .thread {
+    border-top: 2px groove #bbc2cc;
+}
+.kotatsu .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.kotatsu .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #335;
+    background: #fffaee;
+    border: 0px inset #fffaee;
+}
+.kotatsu .flash tbody:nth-child(even) {
+    background: #fffaee;
+}
+.kotatsu .flash tbody:nth-child(odd) {
+    background: #eee4dd;
+}
+.kotatsu .flash td {
+    padding: 1px 4px;
+}
+.kotatsu .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #dcb;
+}
+.kotatsu .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.kotatsu .post-frame {
+    border-collapse: collapse;
+}
+.kotatsu blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.kotatsu .post {
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 3px double #ddd3cc;
+    margin: 1px;
+}
+.kotatsu .postform {
+    background: #eee4dd;
+    border: #dcb;
+}
+.kotatsu .field {
+    color: #005;
+    text-align: right;
+    font-weight: bold;
+    background: #dcb;
+}
+.kotatsu .name {
+    color: #174;
+}
+.kotatsu .capcode {
+    color: #c00;
+}
+.kotatsu .date {
+    color: #447;
+}
+.kotatsu .shade {
+    color: #888;
+    font-size: 11px;
+}
+.kotatsu .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.kotatsu .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.kotatsu .spoiler {
+    color: #335;
+    background: #335;
+}
+.kotatsu .code {
+    font-family: monospace;
+    background: #fffaee;
+    border: 1px solid #ddd3cc;
+}
+.kotatsu .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.kotatsu .subthread {
+    background: #fffaee;
+    border: 1px solid #ddd3cc;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.kotatsu .subpost blockquote, .kotatsu .subpost .name, .kotatsu .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.kotatsu .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.kotatsu .header {
+    background: #ccd3dd;
+    margin: 0px;
+    padding: 5px;
+}
+.kotatsu .board-message {
+    border: 1px inset #bbc2cc;
+    background: #bbc2cc;
+    margin-bottom: 5px;
+}
+.kotatsu .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.kotatsu .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.kotatsu .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.kotatsu .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.kotatsu .catalog .thread .title {
+    font-size: 14px;
+}
+.kotatsu .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 4px solid #ccc2bb;
+}
+.kotatsu .odd {
+    background: #eee4dd;
+}
+.kotatsu .even {
+    background: #fffaee;
+    border: 1px solid #dcb;
+}
+.kotatsu .odd td, .kotatsu .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.kotatsu *:target, .kotatsu .highlight {
+    background: #ccd3dd !important;
+}
+.kotatsu-red @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.kotatsu-red body, .kotatsu-red header, .kotatsu-red section, .kotatsu-red footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #335;
+    padding: 0px;
+    margin: 0px;
+    background: #e2e2e2;
+}
+.kotatsu-red footer {
+    padding: 5px;
+}
+.kotatsu-red a:link {
+    color: #55c;
+}
+.kotatsu-red a:visited {
+    color: #55a;
+}
+.kotatsu-red i {
+    color: #484;
+    font-style: normal;
+}
+.kotatsu-red td {
+    border: none;
+}
+.kotatsu-red th {
+    background: #dcb;
+}
+.kotatsu-red ul {
+    margin: 0px;
+}
+.kotatsu-red hr {
+    margin: 0px;
+    border: 1px dotted #ff4646;
+}
+.kotatsu-red input, .kotatsu-red textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+.kotatsu-red input[type='checkbox'] {
+    background: #c00;
+}
+.kotatsu-red .site-name {
+    color: #eee;
+    font-size: 32px;
+    font-weight: bold;
+}
+.kotatsu-red .nav {
+    background: #fffaee;
+    padding: 2px 10px 2px 2px;
+}
+.kotatsu-red .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.kotatsu-red .mid {
+    background: #fffaee;
+    border-left: 5px solid transparent;
+}
+.kotatsu-red .mid.threadbg {
+    background: #fffaee;
+}
+.kotatsu-red .mid.preview, .kotatsu-red .mid.infopage {
+    border-left: 10px double #ff4646;
+}
+.kotatsu-red .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #ff4646;
+}
+.kotatsu-red .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.kotatsu-red .note, .kotatsu-red .notice, .kotatsu-red .public, .kotatsu-red .news {
+    background: #eee4dd;
+    border-bottom: 2px groove #ff4646;
+}
+.kotatsu-red .note h3, .kotatsu-red .notice h3, .kotatsu-red .public h3, .kotatsu-red .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.kotatsu-red .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.kotatsu-red .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.kotatsu-red .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.kotatsu-red .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.kotatsu-red .warning {
+    color: #c00;
+    font-weight: bold;
+}
+.kotatsu-red .preview .thread {
+    border-top: 2px groove #ff4646;
+}
+.kotatsu-red .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.kotatsu-red .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #335;
+    background: #fffaee;
+    border: 0px inset #fffaee;
+}
+.kotatsu-red .flash tbody:nth-child(even) {
+    background: #fffaee;
+}
+.kotatsu-red .flash tbody:nth-child(odd) {
+    background: #eee4dd;
+}
+.kotatsu-red .flash td {
+    padding: 1px 4px;
+}
+.kotatsu-red .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #caa;
+}
+.kotatsu-red .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.kotatsu-red .post-frame {
+    border-collapse: collapse;
+}
+.kotatsu-red blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.kotatsu-red .post {
+    padding: 2px 10px 2px 2px;
+    background: #edc;
+    border: 3px double #caa;
+    margin: 1px;
+}
+.kotatsu-red .postform {
+    background: #eee4dd;
+    border: #dcb;
+}
+.kotatsu-red .field {
+    color: #005;
+    text-align: right;
+    font-weight: bold;
+    background: #dcb;
+}
+.kotatsu-red .name {
+    color: #174;
+}
+.kotatsu-red .capcode {
+    color: #c00;
+}
+.kotatsu-red .date {
+    color: #447;
+}
+.kotatsu-red .shade {
+    color: #888;
+    font-size: 11px;
+}
+.kotatsu-red .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.kotatsu-red .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.kotatsu-red .spoiler {
+    color: #335;
+    background: #335;
+}
+.kotatsu-red .code {
+    font-family: monospace;
+    background: #fffaee;
+    border: 1px solid #caa;
+}
+.kotatsu-red .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.kotatsu-red .subthread {
+    background: #fffaee;
+    border: 1px solid #caa;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.kotatsu-red .subpost blockquote, .kotatsu-red .subpost .name, .kotatsu-red .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.kotatsu-red .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.kotatsu-red .header {
+    background: #caa;
+    margin: 0px;
+    padding: 5px;
+}
+.kotatsu-red .board-message {
+    border: 1px inset #ff4646;
+    background: #ff4646;
+    margin-bottom: 5px;
+}
+.kotatsu-red .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.kotatsu-red .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.kotatsu-red .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.kotatsu-red .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.kotatsu-red .catalog .thread .title {
+    font-size: 14px;
+}
+.kotatsu-red .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 4px solid #ccc2bb;
+}
+.kotatsu-red .odd {
+    background: #eee4dd;
+}
+.kotatsu-red .even {
+    background: #fffaee;
+    border: 1px solid #dcb;
+}
+.kotatsu-red .odd td, .kotatsu-red .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.kotatsu-red *:target, .kotatsu-red .highlight {
+    background: #ccd3dd !important;
+}
+.pseud0ch @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.pseud0ch body, .pseud0ch header, .pseud0ch section, .pseud0ch footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    padding: 0px;
+    margin: 0px;
+    background: #eee;
+}
+.pseud0ch footer {
+    padding: 5px;
+}
+.pseud0ch a:link {
+    color: #b00;
+}
+.pseud0ch a:visited {
+    color: #d00;
+}
+.pseud0ch i {
+    color: #484;
+    font-style: normal;
+}
+.pseud0ch td {
+    border: none;
+}
+.pseud0ch th {
+    background: #ecc;
+}
+.pseud0ch ul {
+    margin: 0px;
+}
+.pseud0ch hr {
+    margin: 0px;
+    border: 1px dotted #ecc;
+}
+.pseud0ch input, .pseud0ch textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+.pseud0ch input[type='checkbox'] {
+    background: #c00;
+}
+.pseud0ch .site-name {
+    color: #34345c;
+    font-size: 32px;
+    font-weight: bold;
+}
+.pseud0ch .nav {
+    background: #edc;
+    padding: 2px 10px 2px 2px;
+}
+.pseud0ch .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.pseud0ch .mid {
+    background: #eee;
+    background-image:url('data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=');
+    border-left: 5px solid transparent;
+}
+.pseud0ch .mid.threadbg {
+    background: #eee;
+}
+.pseud0ch .mid.preview, .pseud0ch .mid.infopage {
+    border-left: 10px double #ecc;
+}
+.pseud0ch .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #ecc;
+}
+.pseud0ch .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.pseud0ch .note, .pseud0ch .notice, .pseud0ch .public, .pseud0ch .news {
+    background: #eee;
+    border-bottom: 2px groove #ecc;
+}
+.pseud0ch .note h3, .pseud0ch .notice h3, .pseud0ch .public h3, .pseud0ch .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.pseud0ch .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.pseud0ch .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.pseud0ch .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.pseud0ch .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.pseud0ch .warning {
+    color: #c00;
+    font-weight: bold;
+}
+.pseud0ch .preview .thread {
+    border-top: 2px groove #ecc;
+}
+.pseud0ch .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.pseud0ch .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #000;
+    background: #eee;
+    border: 2px ridge #eee;
+}
+.pseud0ch .flash tbody:nth-child(even) {
+    background: #eee;
+}
+.pseud0ch .flash tbody:nth-child(odd) {
+    background: #dcc;
+}
+.pseud0ch .flash td {
+    padding: 1px 4px;
+}
+.pseud0ch .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #ada;
+}
+.pseud0ch .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.pseud0ch .post-frame {
+    border-collapse: collapse;
+}
+.pseud0ch blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.pseud0ch .post {
+    padding: 2px 10px 2px 2px;
+    background: #ddd;
+    border: 3px double #bbb;
+    margin: 1px;
+}
+.pseud0ch .postform {
+    background: #eee;
+    border: #eee;
+}
+.pseud0ch .field {
+    color: #000;
+    text-align: right;
+    font-weight: bold;
+    background: #ecc;
+}
+.pseud0ch .name {
+    color: #174;
+}
+.pseud0ch .capcode {
+    color: #c00;
+}
+.pseud0ch .date {
+    color: #000;
+}
+.pseud0ch .shade {
+    color: #888;
+    font-size: 11px;
+}
+.pseud0ch .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.pseud0ch .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.pseud0ch .spoiler {
+    color: #000;
+    background: #000;
+}
+.pseud0ch .code {
+    font-family: monospace;
+    background: #eee;
+    border: 1px solid #bbb;
+}
+.pseud0ch .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.pseud0ch .subthread {
+    background: #eee;
+    border: 1px solid #bbb;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.pseud0ch .subpost blockquote, .pseud0ch .subpost .name, .pseud0ch .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.pseud0ch .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.pseud0ch .header {
+    background: #cec;
+    margin: 0px;
+    padding: 5px;
+}
+.pseud0ch .board-message {
+    border: 1px inset #ecc;
+    background: #ecc;
+    margin-bottom: 5px;
+}
+.pseud0ch .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.pseud0ch .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.pseud0ch .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.pseud0ch .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.pseud0ch .catalog .thread .title {
+    font-size: 14px;
+}
+.pseud0ch .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #eee;
+    border: 4px solid #b7c5d9;
+}
+.pseud0ch .odd {
+    background: #dcc;
+}
+.pseud0ch .even {
+    background: #eee;
+    border: 1px solid #ecc;
+}
+.pseud0ch .odd td, .pseud0ch .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.pseud0ch *:target, .pseud0ch .highlight {
+    background: #bbb !important;
+}
+.yotsuba @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.yotsuba body, .yotsuba header, .yotsuba section, .yotsuba footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #800;
+    padding: 0px;
+    margin: 0px;
+    background: #e2e2e2;
+}
+.yotsuba footer {
+    padding: 5px;
+}
+.yotsuba a:link {
+    color: #00e;
+}
+.yotsuba a:visited {
+    color: #008;
+}
+.yotsuba i {
+    color: #484;
+    font-style: normal;
+}
+.yotsuba td {
+    border: none;
+}
+.yotsuba th {
+    background: #ea8;
+}
+.yotsuba ul {
+    margin: 0px;
+}
+.yotsuba hr {
+    margin: 0px;
+    border: 1px dotted #ea8;
+}
+.yotsuba input, .yotsuba textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+.yotsuba input[type='checkbox'] {
+    background: #c00;
+}
+.yotsuba .site-name {
+    color: #900;
+    font-size: 32px;
+    font-weight: bold;
+}
+.yotsuba .nav {
+    background: #ffe;
+    padding: 2px 10px 2px 2px;
+}
+.yotsuba .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.yotsuba .mid {
+    background: #ffe;
+    border-left: 5px solid transparent;
+}
+.yotsuba .mid.threadbg {
+    background: #ffe;
+}
+.yotsuba .mid.preview, .yotsuba .mid.infopage {
+    border-left: 10px double #ea8;
+}
+.yotsuba .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #ea8;
+}
+.yotsuba .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.yotsuba .note, .yotsuba .notice, .yotsuba .public, .yotsuba .news {
+    background: #ffe;
+    border-bottom: 2px groove #ea8;
+}
+.yotsuba .note h3, .yotsuba .notice h3, .yotsuba .public h3, .yotsuba .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.yotsuba .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.yotsuba .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.yotsuba .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.yotsuba .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.yotsuba .warning {
+    color: #00c;
+    font-weight: bold;
+}
+.yotsuba .preview .thread {
+    border-top: 2px groove #ea8;
+}
+.yotsuba .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.yotsuba .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #800;
+    background: #ffe;
+    border: 0px inset #ffe;
+}
+.yotsuba .flash tbody:nth-child(even) {
+    background: #ffffee;
+}
+.yotsuba .flash tbody:nth-child(odd) {
+    background: #ede2d4;
+}
+.yotsuba .flash td {
+    padding: 1px 4px;
+}
+.yotsuba .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #fc9;
+}
+.yotsuba .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.yotsuba .post-frame {
+    border-collapse: collapse;
+}
+.yotsuba blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.yotsuba .post {
+    padding: 2px 10px 2px 2px;
+    background: #f0e0d6;
+    border: 3px double #d9bfb7;
+    margin: 1px;
+}
+.yotsuba .postform {
+    background: #ffe;
+    border: #ffe;
+}
+.yotsuba .field {
+    color: #800;
+    text-align: right;
+    font-weight: bold;
+    background: #ea8;
+}
+.yotsuba .name {
+    color: #174;
+}
+.yotsuba .capcode {
+    color: #c00;
+}
+.yotsuba .date {
+    color: #800;
+}
+.yotsuba .shade {
+    color: #888;
+    font-size: 11px;
+}
+.yotsuba .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.yotsuba .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.yotsuba .spoiler {
+    color: #800;
+    background: #800;
+}
+.yotsuba .code {
+    font-family: monospace;
+    background: #ffe;
+    border: 1px solid #d9bfb7;
+}
+.yotsuba .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.yotsuba .subthread {
+    background: #ffe;
+    border: 1px solid #d9bfb7;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.yotsuba .subpost blockquote, .yotsuba .subpost .name, .yotsuba .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.yotsuba .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.yotsuba .header {
+    background: #fed6af;
+    margin: 0px;
+    padding: 5px;
+}
+.yotsuba .board-message {
+    border: 1px inset #ea8;
+    background: #ea8;
+    margin-bottom: 5px;
+}
+.yotsuba .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.yotsuba .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.yotsuba .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.yotsuba .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.yotsuba .catalog .thread .title {
+    font-size: 14px;
+}
+.yotsuba .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #ffe;
+    border: 4px solid #d9bfb7;
+}
+.yotsuba .odd {
+    background: #ede2d4;
+}
+.yotsuba .even {
+    background: #ffffee;
+    border: 1px solid #ea8;
+}
+.yotsuba .odd td, .yotsuba .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.yotsuba *:target, .yotsuba .highlight {
+    background: #f0c0b0 !important;
+}
+.yotsubab @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.yotsubab body, .yotsubab header, .yotsubab section, .yotsubab footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    padding: 0px;
+    margin: 0px;
+    background: #e2e2e2;
+}
+.yotsubab footer {
+    padding: 5px;
+}
+.yotsubab a:link {
+    color: #cc1105;
+}
+.yotsubab a:visited {
+    color: #34345c;
+}
+.yotsubab i {
+    color: #484;
+    font-style: normal;
+}
+.yotsubab td {
+    border: none;
+}
+.yotsubab th {
+    background: #9988ee;
+}
+.yotsubab ul {
+    margin: 0px;
+}
+.yotsubab hr {
+    margin: 0px;
+    border: 1px dotted #b7c5d9;
+}
+.yotsubab input, .yotsubab textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+.yotsubab input[type='checkbox'] {
+    background: #c00;
+}
+.yotsubab .site-name {
+    color: #34345c;
+    font-size: 32px;
+    font-weight: bold;
+}
+.yotsubab .nav {
+    background: #eef2ff;
+    padding: 2px 10px 2px 2px;
+}
+.yotsubab .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.yotsubab .mid {
+    background: #eef2ff;
+    border-left: 5px solid transparent;
+}
+.yotsubab .mid.threadbg {
+    background: #eef2ff;
+}
+.yotsubab .mid.preview, .yotsubab .mid.infopage {
+    border-left: 10px double #b7c5d9;
+}
+.yotsubab .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #b7c5d9;
+}
+.yotsubab .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.yotsubab .note, .yotsubab .notice, .yotsubab .public, .yotsubab .news {
+    background: #eef2ff;
+    border-bottom: 2px groove #b7c5d9;
+}
+.yotsubab .note h3, .yotsubab .notice h3, .yotsubab .public h3, .yotsubab .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.yotsubab .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.yotsubab .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.yotsubab .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.yotsubab .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.yotsubab .warning {
+    color: #c00;
+    font-weight: bold;
+}
+.yotsubab .preview .thread {
+    border-top: 2px groove #b7c5d9;
+}
+.yotsubab .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.yotsubab .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #000;
+    background: #eef2ff;
+    border: 0px inset #eef2ff;
+}
+.yotsubab .flash tbody:nth-child(even) {
+    background: #eef2ff;
+}
+.yotsubab .flash tbody:nth-child(odd) {
+    background: #e0e5f6;
+}
+.yotsubab .flash td {
+    padding: 1px 4px;
+}
+.yotsubab .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #bbd0f0;
+}
+.yotsubab .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.yotsubab .post-frame {
+    border-collapse: collapse;
+}
+.yotsubab blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.yotsubab .post {
+    padding: 2px 10px 2px 2px;
+    background: #d6daf0;
+    border: 3px double #b7c5d9;
+    margin: 1px;
+}
+.yotsubab .postform {
+    background: #eef2ff;
+    border: #eef2ff;
+}
+.yotsubab .field {
+    color: #000;
+    text-align: right;
+    font-weight: bold;
+    background: #9988ee;
+}
+.yotsubab .name {
+    color: #174;
+}
+.yotsubab .capcode {
+    color: #c00;
+}
+.yotsubab .date {
+    color: #000;
+}
+.yotsubab .shade {
+    color: #888;
+    font-size: 11px;
+}
+.yotsubab .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.yotsubab .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.yotsubab .spoiler {
+    color: #000;
+    background: #000;
+}
+.yotsubab .code {
+    font-family: monospace;
+    background: #eef2ff;
+    border: 1px solid #b7c5d9;
+}
+.yotsubab .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.yotsubab .subthread {
+    background: #eef2ff;
+    border: 1px solid #b7c5d9;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.yotsubab .subpost blockquote, .yotsubab .subpost .name, .yotsubab .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.yotsubab .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.yotsubab .header {
+    background: #d1d5ee;
+    margin: 0px;
+    padding: 5px;
+}
+.yotsubab .board-message {
+    border: 1px inset #b7c5d9;
+    background: #b7c5d9;
+    margin-bottom: 5px;
+}
+.yotsubab .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.yotsubab .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.yotsubab .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.yotsubab .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.yotsubab .catalog .thread .title {
+    font-size: 14px;
+}
+.yotsubab .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #eef2ff;
+    border: 4px solid #b7c5d9;
+}
+.yotsubab .odd {
+    background: #e0e5f6;
+}
+.yotsubab .even {
+    background: #eef2ff;
+    border: 1px solid #9988ee;
+}
+.yotsubab .odd td, .yotsubab .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.yotsubab *:target, .yotsubab .highlight {
+    background: #d6bad0 !important;
+}
+.ergonomic @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.ergonomic body, .ergonomic header, .ergonomic section, .ergonomic footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    padding: 0px;
+    margin: 0px;
+    background: #aba;
+}
+.ergonomic footer {
+    padding: 5px;
+}
+.ergonomic a:link {
+    color: #080;
+}
+.ergonomic a:visited {
+    color: #050;
+}
+.ergonomic i {
+    color: #262;
+    font-style: normal;
+}
+.ergonomic td {
+    border: none;
+}
+.ergonomic th {
+    background: #898;
+}
+.ergonomic ul {
+    margin: 0px;
+}
+.ergonomic hr {
+    margin: 0px;
+    border: 1px dotted #898;
+}
+.ergonomic input, .ergonomic textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #ddd;
+}
+.ergonomic input[type='checkbox'] {
+    background: #c00;
+}
+.ergonomic .site-name {
+    color: #050;
+    font-size: 32px;
+    font-weight: bold;
+}
+.ergonomic .nav {
+    background: #bcb;
+    padding: 2px 10px 2px 2px;
+}
+.ergonomic .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.ergonomic .mid {
+    background: #bcb;
+    border-left: 5px solid transparent;
+}
+.ergonomic .mid.threadbg {
+    background: #bcb;
+}
+.ergonomic .mid.preview, .ergonomic .mid.infopage {
+    border-left: 10px double #898;
+}
+.ergonomic .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #898;
+}
+.ergonomic .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.ergonomic .note, .ergonomic .notice, .ergonomic .public, .ergonomic .news {
+    background: #bcb;
+    border-bottom: 2px groove #898;
+}
+.ergonomic .note h3, .ergonomic .notice h3, .ergonomic .public h3, .ergonomic .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.ergonomic .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.ergonomic .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.ergonomic .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.ergonomic .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.ergonomic .warning {
+    color: #050;
+    font-weight: bold;
+}
+.ergonomic .preview .thread {
+    border-top: 2px groove #898;
+}
+.ergonomic .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.ergonomic .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #000;
+    background: #bcb;
+    border: 0px inset #bcb;
+}
+.ergonomic .flash tbody:nth-child(even) {
+    background: #bcb;
+}
+.ergonomic .flash tbody:nth-child(odd) {
+    background: #aba;
+}
+.ergonomic .flash td {
+    padding: 1px 4px;
+}
+.ergonomic .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #898;
+}
+.ergonomic .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.ergonomic .post-frame {
+    border-collapse: collapse;
+}
+.ergonomic blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.ergonomic .post {
+    padding: 2px 10px 2px 2px;
+    background: #aba;
+    border: 3px double #898;
+    margin: 1px;
+}
+.ergonomic .postform {
+    background: #bcb;
+    border: #898;
+}
+.ergonomic .field {
+    color: #000;
+    text-align: right;
+    font-weight: bold;
+    background: #9a9;
+}
+.ergonomic .name {
+    color: #174;
+}
+.ergonomic .capcode {
+    color: #c00;
+}
+.ergonomic .date {
+    color: #030;
+}
+.ergonomic .shade {
+    color: #888;
+    font-size: 11px;
+}
+.ergonomic .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.ergonomic .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.ergonomic .spoiler {
+    color: #000;
+    background: #000;
+}
+.ergonomic .code {
+    font-family: monospace;
+    background: #bcb;
+    border: 1px solid #898;
+}
+.ergonomic .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.ergonomic .subthread {
+    background: #bcb;
+    border: 1px solid #898;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.ergonomic .subpost blockquote, .ergonomic .subpost .name, .ergonomic .subpost .date {
+    color: #777;
+    font-size: 11px;
+}
+.ergonomic .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.ergonomic .header {
+    background: #aba;
+    margin: 0px;
+    padding: 5px;
+}
+.ergonomic .board-message {
+    border: 1px inset #898;
+    background: #898;
+    margin-bottom: 5px;
+}
+.ergonomic .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.ergonomic .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.ergonomic .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.ergonomic .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.ergonomic .catalog .thread .title {
+    font-size: 14px;
+}
+.ergonomic .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #bcb;
+    border: 4px solid #898;
+}
+.ergonomic .odd {
+    background: #aba;
+}
+.ergonomic .even {
+    background: #bcb;
+    border: 1px solid #898;
+}
+.ergonomic .odd td, .ergonomic .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.ergonomic *:target, .ergonomic .highlight {
+    background: #9a9 !important;
+}
+.computer @font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+.computer body, .computer header, .computer section, .computer footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #005;
+    padding: 0px;
+    margin: 0px;
+    background: #e2e2e2;
+}
+.computer footer {
+    padding: 5px;
+}
+.computer a:link {
+    color: #55c;
+}
+.computer a:visited {
+    color: #55a;
+}
+.computer i {
+    color: #484;
+    font-style: normal;
+}
+.computer td {
+    border: none;
+}
+.computer th {
+    background: #79a;
+}
+.computer ul {
+    margin: 0px;
+}
+.computer hr {
+    margin: 0px;
+    border: 1px dotted #79a;
+}
+.computer input, .computer textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+.computer input[type='checkbox'] {
+    background: #c00;
+}
+.computer .site-name {
+    color: #005;
+    font-size: 32px;
+    font-weight: bold;
+}
+.computer .nav {
+    background: #edc;
+    padding: 2px 10px 2px 2px;
+}
+.computer .sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.computer .mid {
+    background: #e2e2e2;
+    border-left: 5px solid transparent;
+}
+.computer .mid.threadbg {
+    background: #e2e2e2;
+}
+.computer .mid.preview, .computer .mid.infopage {
+    border-left: 10px double #79a;
+}
+.computer .mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #79a;
+}
+.computer .news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.computer .note, .computer .notice, .computer .public, .computer .news {
+    background: #eee4dd;
+    border-bottom: 2px groove #79a;
+}
+.computer .note h3, .computer .notice h3, .computer .public h3, .computer .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.computer .note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.computer .notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.computer .public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.computer .news .link {
+    margin: 0px;
+    color: #b33;
+}
+.computer .warning {
+    color: #c00;
+    font-weight: bold;
+}
+.computer .preview .thread {
+    border-top: 2px groove #79a;
+}
+.computer .threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.computer .thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #005;
+    background: #e2e2e2;
+    border: 0px inset #e2e2e2;
+}
+.computer .flash tbody:nth-child(even) {
+    background: #fffaee;
+}
+.computer .flash tbody:nth-child(odd) {
+    background: #eee4dd;
+}
+.computer .flash td {
+    padding: 1px 4px;
+}
+.computer .title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #8ab;
+}
+.computer .title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.computer .post-frame {
+    border-collapse: collapse;
+}
+.computer blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.computer .post {
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 3px double #ccc2bb;
+    margin: 1px;
+}
+.computer .postform {
+    background: #eee4dd;
+    border: #dcb;
+}
+.computer .field {
+    color: #005;
+    text-align: right;
+    font-weight: bold;
+    background: #aec0ca;
+}
+.computer .name {
+    color: #174;
+}
+.computer .capcode {
+    color: #c00;
+}
+.computer .date {
+    color: #558;
+}
+.computer .shade {
+    color: #888;
+    font-size: 11px;
+}
+.computer .warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.computer .aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.computer .spoiler {
+    color: #005;
+    background: #005;
+}
+.computer .code {
+    font-family: monospace;
+    background: #e2e2e2;
+    border: 1px solid #ccc2bb;
+}
+.computer .OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.computer .subthread {
+    background: #e2e2e2;
+    border: 1px solid #ccc2bb;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.computer .subpost blockquote, .computer .subpost .name, .computer .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.computer .top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.computer .header {
+    background: #8ab;
+    margin: 0px;
+    padding: 5px;
+}
+.computer .board-message {
+    border: 1px inset #79a;
+    background: #79a;
+    margin-bottom: 5px;
+}
+.computer .catalog {
+    justify-content: center;
+    text-align: center;
+}
+.computer .catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.computer .catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.computer .catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.computer .catalog .thread .title {
+    font-size: 14px;
+}
+.computer .stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 4px solid #ccc2bb;
+}
+.computer .odd {
+    background: #eee4dd;
+}
+.computer .even {
+    background: #fffaee;
+    border: 1px solid #79a;
+}
+.computer .odd td, .computer .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+.computer *:target, .computer .highlight {
+    background: #aec0ca !important;
+}

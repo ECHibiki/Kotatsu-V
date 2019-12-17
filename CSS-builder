@@ -1,0 +1,86 @@
+#! /run/current-system/profile/bin/guile
+;;;-*-guile-scheme-*-;;; !#
+
+
+;;; Example usage: ./CSS-builder pub/css/DEFINITIONS/*
+
+(define prfx (make-parameter ""))
+
+(define (read-file filename)
+  (with-input-from-file filename
+    (lambda ()
+      (let loop ((ls1 '()) (c (read-char)))
+        (if (eof-object? c)
+          (list->string (reverse ls1))
+          (loop (cons c ls1) (read-char)))))))
+(define (write-file filename str)
+  (with-output-to-file filename
+    (lambda ()
+      (let loop ((ls1 (string->list str)))
+        (if (not (null? ls1))
+          (begin
+            (write-char (car ls1))
+            (loop (cdr ls1))))))))
+
+(define-syntax CSS
+  (syntax-rules ()
+    ((_ css ...)
+     (string-join
+      (map (lambda (style)
+             (let ((item (car style))
+                   (props (cdr style)))
+               (string-append
+                (prfx)
+                (if (list? item)
+                    (string-join (map (lambda (sub)
+                                        (if (list? sub)
+                                            (string-join (map symbol->string sub) " ")
+                                            (symbol->string sub)))
+                                      item) (string-append ", " (prfx)))
+                    (symbol->string item))
+                " {\n"
+                (string-join
+                 (map (lambda (prop)
+                        (let ((key (car prop))
+                              (vals (cdr prop)))
+                          (string-append "    " (symbol->string key)
+                            ": " (string-join vals " ") ";")))
+                      props)
+                 "\n")
+                "\n}")))
+           `(css ...))
+      "\n"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define %current-path (make-parameter "."))
+(define %output-path #f)
+
+(define* (include-css path filename #:optional pre)
+  (parameterize ((prfx (or pre "")))
+    (eval-string (read-file (string-append path "/" filename)))))
+
+(define (set-output-file path filename)
+  (set! %output-path (string-append path "/" filename)))
+
+(let ((files (cdr (command-line))))
+  (for-each (lambda (css)
+              (let ((path (dirname css))
+                    (filename (basename css ".scm"))
+                    (extension (substring css (- (string-length css) 4))))
+                (when (equal? extension ".scm")
+                  (format #t "\n* Building CSS File: ~a\n\n" (string-append filename ".css"))
+                  (set! %output-path #f)
+                  (parameterize ((%current-path path))
+                    (let ((output
+                           (format #f "~a\n"
+                             ;(write-file (string-append path "/" filename ".css")
+                             ;            (include-css path (string-append filename ".scm")))))))
+                             (include-css path (string-append filename ".scm")))))
+                    (when %output-path
+                      (write-file %output-path output))))
+                  )))
+            files))
+
+;(define file (read-file "pub/css/default2.scm"))
+;(format #t "~a\n" (eval-string file))

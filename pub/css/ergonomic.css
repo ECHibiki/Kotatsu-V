@@ -1,0 +1,289 @@
+@font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+body, header, section, footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    padding: 0px;
+    margin: 0px;
+    background: #aba;
+}
+footer {
+    padding: 5px;
+}
+a:link {
+    color: #080;
+}
+a:visited {
+    color: #050;
+}
+i {
+    color: #262;
+    font-style: normal;
+}
+td {
+    border: none;
+}
+th {
+    background: #898;
+}
+ul {
+    margin: 0px;
+}
+hr {
+    margin: 0px;
+    border: 1px dotted #898;
+}
+input, textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #ddd;
+}
+input[type='checkbox'] {
+    background: #c00;
+}
+.site-name {
+    color: #050;
+    font-size: 32px;
+    font-weight: bold;
+}
+.nav {
+    background: #bcb;
+    padding: 2px 10px 2px 2px;
+}
+.sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.mid {
+    background: #bcb;
+    border-left: 5px solid transparent;
+}
+.mid.threadbg {
+    background: #bcb;
+}
+.mid.preview, .mid.infopage {
+    border-left: 10px double #898;
+}
+.mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #898;
+}
+.news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.note, .notice, .public, .news {
+    background: #bcb;
+    border-bottom: 2px groove #898;
+}
+.note h3, .notice h3, .public h3, .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.news .link {
+    margin: 0px;
+    color: #b33;
+}
+.warning {
+    color: #050;
+    font-weight: bold;
+}
+.preview .thread {
+    border-top: 2px groove #898;
+}
+.threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #000;
+    background: #bcb;
+    border: 0px inset #bcb;
+}
+.flash tbody:nth-child(even) {
+    background: #bcb;
+}
+.flash tbody:nth-child(odd) {
+    background: #aba;
+}
+.flash td {
+    padding: 1px 4px;
+}
+.title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #898;
+}
+.title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.post-frame {
+    border-collapse: collapse;
+}
+blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.post {
+    padding: 2px 10px 2px 2px;
+    background: #aba;
+    border: 3px double #898;
+    margin: 1px;
+}
+.postform {
+    background: #bcb;
+    border: #898;
+}
+.field {
+    color: #000;
+    text-align: right;
+    font-weight: bold;
+    background: #9a9;
+}
+.name {
+    color: #174;
+}
+.capcode {
+    color: #c00;
+}
+.date {
+    color: #030;
+}
+.shade {
+    color: #888;
+    font-size: 11px;
+}
+.warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.spoiler {
+    color: #000;
+    background: #000;
+}
+.code {
+    font-family: monospace;
+    background: #bcb;
+    border: 1px solid #898;
+}
+.OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.subthread {
+    background: #bcb;
+    border: 1px solid #898;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.subpost blockquote, .subpost .name, .subpost .date {
+    color: #777;
+    font-size: 11px;
+}
+.top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.header {
+    background: #aba;
+    margin: 0px;
+    padding: 5px;
+}
+.board-message {
+    border: 1px inset #898;
+    background: #898;
+    margin-bottom: 5px;
+}
+.catalog {
+    justify-content: center;
+    text-align: center;
+}
+.catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.catalog .thread .title {
+    font-size: 14px;
+}
+.stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #bcb;
+    border: 4px solid #898;
+}
+.odd {
+    background: #aba;
+}
+.even {
+    background: #bcb;
+    border: 1px solid #898;
+}
+.odd td, .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+*:target, .highlight {
+    background: #9a9 !important;
+}

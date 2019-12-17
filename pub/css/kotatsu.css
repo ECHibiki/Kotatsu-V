@@ -1,0 +1,289 @@
+@font-face {
+    font-family: 'submona-web-font';
+    src: url('/pub/fonts/submona-web-font/submona.woff') format('woff');
+}
+body, header, section, footer {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #335;
+    padding: 0px;
+    margin: 0px;
+    background: #e2e2e2;
+}
+footer {
+    padding: 5px;
+}
+a:link {
+    color: #55c;
+}
+a:visited {
+    color: #55a;
+}
+i {
+    color: #484;
+    font-style: normal;
+}
+td {
+    border: none;
+}
+th {
+    background: #dcb;
+}
+ul {
+    margin: 0px;
+}
+hr {
+    margin: 0px;
+    border: 1px dotted #bbc2cc;
+}
+input, textarea {
+    font-size: 13px;
+    font-family: 'Liberation Sans', 'Arial';
+    color: #000;
+    background: #fff;
+}
+input[type='checkbox'] {
+    background: #c00;
+}
+.site-name {
+    color: #005;
+    font-size: 32px;
+    font-weight: bold;
+}
+.nav {
+    background: #fffaee;
+    padding: 2px 10px 2px 2px;
+}
+.sidebar {
+    display: none;
+    border-right: 1px solid #000;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 110px;
+    padding: 0px;
+}
+.mid {
+    background: #fffaee;
+    border-left: 5px solid transparent;
+}
+.mid.threadbg {
+    background: #fffaee;
+}
+.mid.preview, .mid.infopage {
+    border-left: 10px double #bbc2cc;
+}
+.mid.links {
+    padding-left: 5px;
+    border-left: 10px dashed #bbc2cc;
+}
+.news-box {
+    display: table;
+    margin: 5px auto;
+    overflow: contain;
+}
+.note, .notice, .public, .news {
+    background: #eee4dd;
+    border-bottom: 2px groove #bbc2cc;
+}
+.note h3, .notice h3, .public h3, .news h3 {
+    margin: 0px;
+    font-weight: normal;
+}
+.note .link {
+    margin: 0px;
+    color: #3b3;
+}
+.notice .link {
+    margin: 0px;
+    color: #3bb;
+}
+.public .link {
+    margin: 0px;
+    color: #bb3;
+}
+.news .link {
+    margin: 0px;
+    color: #b33;
+}
+.warning {
+    color: #c00;
+    font-weight: bold;
+}
+.preview .thread {
+    border-top: 2px groove #bbc2cc;
+}
+.threadwrapper {
+    margin: 4px 10px 8px 2px;
+}
+.thread {
+    min-width: 500px;
+    max-width: 1800px;
+    padding: 0px;
+    width: auto;
+    color: #335;
+    background: #fffaee;
+    border: 0px inset #fffaee;
+}
+.flash tbody:nth-child(even) {
+    background: #fffaee;
+}
+.flash tbody:nth-child(odd) {
+    background: #eee4dd;
+}
+.flash td {
+    padding: 1px 4px;
+}
+.title-bar {
+    margin: 0px;
+    font-weight: bold;
+    background: #dcb;
+}
+.title {
+    font-size: 24px;
+    text-decoration: none;
+}
+.post-frame {
+    border-collapse: collapse;
+}
+blockquote {
+    white-space: pre-wrap /* css-3 */;
+    white-space: -moz-pre-wrap /* Mozilla, since 1999 */;
+    white-space: -pre-wrap /* Opera 4-6 */;
+    white-space: -o-pre-wrap /* Opera 7 */;
+    word-wrap: break-word /* Internet Explorer 5.5+ */;
+    overflow-wrap: break-word;
+    margin-left: 10px;
+}
+.post {
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 3px double #ddd3cc;
+    margin: 1px;
+}
+.postform {
+    background: #eee4dd;
+    border: #dcb;
+}
+.field {
+    color: #005;
+    text-align: right;
+    font-weight: bold;
+    background: #dcb;
+}
+.name {
+    color: #174;
+}
+.capcode {
+    color: #c00;
+}
+.date {
+    color: #447;
+}
+.shade {
+    color: #888;
+    font-size: 11px;
+}
+.warning {
+    color: #c00;
+    fong-weight: bold;
+}
+.aa {
+    font-family: 'MS PGothic', 'MS Pゴシック', 'Konatu', 'Mona', 'Monapo', 'Textar', 'submona-web-font';
+    font-size: 16px;
+}
+.spoiler {
+    color: #335;
+    background: #335;
+}
+.code {
+    font-family: monospace;
+    background: #fffaee;
+    border: 1px solid #ddd3cc;
+}
+.OPimg {
+    margin: 0px 10px 10px 10px;
+    float: left;
+}
+.subthread {
+    background: #fffaee;
+    border: 1px solid #ddd3cc;
+    width: 220px;
+    height: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    resize: both;
+}
+.subpost blockquote, .subpost .name, .subpost .date {
+    color: #888;
+    font-size: 11px;
+}
+.top-nav {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+.header {
+    background: #ccd3dd;
+    margin: 0px;
+    padding: 5px;
+}
+.board-message {
+    border: 1px inset #bbc2cc;
+    background: #bbc2cc;
+    margin-bottom: 5px;
+}
+.catalog {
+    justify-content: center;
+    text-align: center;
+}
+.catalog .threadwrapper {
+    float: left;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+    margin: 2px;
+}
+.catalog .thread {
+    overflow: hidden;
+    min-width: 200px!important;
+    max-width: 200px!important;
+    width: 200px!important;
+    min-height: 250px!important;
+    max-height: 250px!important;
+    height: 250px!important;
+}
+.catalog .thread .OPimg {
+    float: none;
+    max-width: 100px;
+    max-height: 100px;
+}
+.catalog .thread .title {
+    font-size: 14px;
+}
+.stack {
+    max-width: 1000px;
+    padding: 2px 10px 2px 2px;
+    background: #eee4dd;
+    border: 4px solid #ccc2bb;
+}
+.odd {
+    background: #eee4dd;
+}
+.even {
+    background: #fffaee;
+    border: 1px solid #dcb;
+}
+.odd td, .even td {
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: center;
+}
+*:target, .highlight {
+    background: #ccd3dd !important;
+}

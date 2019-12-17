@@ -1,0 +1,1 @@
+<li class=<%= (format #f "\"~a\"" type) %> id=<%= (format #f "\"note~a\"" id) %>><b><a class="link" href=<%= (format #f "\"/~a#note~a\"" links-target id) %> ><%= subject %></a></b> by <b><%= name %></b> [<%= (format #f "~a:~a" type id) %>] <span style="font-size:11px"><%= date %><%= (if admin (format #f " <a href=\"/note-editor/~a\">(edit)</a>" id) "") %></span></li>
