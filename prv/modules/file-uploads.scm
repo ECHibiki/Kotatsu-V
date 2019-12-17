@@ -37,7 +37,8 @@
     (define (-? x) (= 1 (length x)))
     (let lp((n l) (ret '()))
       (cond
-       ((null? n) (reverse! ret))
+       ((null? n) 	
+	(reverse! ret))
        (else
         (let* ((p (car n))
                (z (string-split p #\=))
@@ -46,9 +47,10 @@
                       (map header-trim z))))
           (lp (cdr n) (cons y ret)))))))
   (match (string-split line #\:)
-    ((k v)
+    ((k v)      
      (-> `(,k ,@(string-split v #\;))))
-    (else (throw 'artanis-err 400 ->mfd-header
+    (else
+     (throw 'artanis-err 400 ->mfd-header
                  "->mfd-headers: Invalid MFD header!" line))))
 
 (define (parse-body boundary body)
@@ -72,9 +74,9 @@
       ;    #f))
       (let lp((start (+ from blen 2)) (end (bv-read-line body (+ from blen 2))) (ret '()))
         (cond
-         ((blankline? start) (cons ret (1+ end))) ; end of headers
+         ((blankline? start)(cons ret (1+ end))) ; end of headers
          (else
-          (let ((line (subbv->string body "utf-8" start end))
+          (let ((line (subbv->string body "utf-8" start (- end start)))
                 (llen (- end start -1)))
             (lp (+ start llen) (bv-read-line body (+ start llen))
                 (cons (->mfd-header line) ret)))))))
@@ -104,7 +106,7 @@
              (name (-> dispos "name"))
              (type (-> headers "Content-Type"))
              ;(mfd (make-mfd (car dispos) name filename start end type)))
-             (val (if filename #f (cons (string->symbol name) (subbv->string body "utf-8" start (- end 2))))))
+             (val (if filename #f (cons (string->symbol name) (subbv->string body "utf-8" start (- (- end start) 2))))))
         (lp end (cons val mfds))))
      (else (throw 'artanis-err 422 parse-body
                   "Wrong multipart form body!")))))

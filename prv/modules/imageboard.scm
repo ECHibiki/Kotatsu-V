@@ -413,7 +413,7 @@
     ;(:cookies-set! rc 'cc "style" style)
     ;(:cookies-setattr! rc 'cc #:expires 315360000 #:path "/" #:secure #f #:http-only #f)
     ;(:cookies-update! rc) ;; FIXME: Documentation says this isn't needed, but it seems to be
-    (redirect-to rc (uri-path referer) #:scheme scheme)))
+    (redirect-to rc (uri-path referer))))
 
 (define (mod-login rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
@@ -444,7 +444,9 @@
                      (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer)))
                 ;; -----------------------------------------------
                 ;; -----------------------------------------------
-                (redirect-to rc "/panel" #:scheme scheme)))))))))
+(newline)(display request)(newline)(newline)
+(newline)(display headers)(newline)(newline)
+                (redirect-to rc "/panel")))))))))
 
 (define (mod-logoff rc mtable cookies)
   (let ((key (assoc-ref cookies "mod-key")))
@@ -770,7 +772,7 @@
              cc (>= cc 1)
              (equal? (assoc-ref (car admin) "name")
                      (substring name 0 cc)))
-        (string-append "<span class=capcode>" (assoc-ref (car admin) "name") " ## " (substring name (+ cc 4)) " <img title='Mod' style='vertical-align:bottom' src='/pub/img/capcode.png'></span>")
+        (string-append "<span class=capcode>" (assoc-ref (car admin) "name") " ## " (substring name (+ cc 4)) " <img title=''Mod'' style=''vertical-align:bottom'' src=''/pub/img/capcode.png''></span>")
         name)))
 
 (define (get-threadnum mtable board)
@@ -802,6 +804,7 @@
              (name (escape-str (or-blank (assoc-ref data 'name)
                                          (assq-ref (assoc-ref boards board) 'name)
                                          default-name)))
+
              (options (string-split (or (assoc-ref data 'options) "") #\space))
              (sage (lset-intersection equal? '("sage" "SAGE" "さげ" "下げ") options))
              (noko (or (and noko-enabled (member "noko" options))
@@ -824,7 +827,10 @@
              ;(tname (string->symbol (string-append "thread" (number->string threadnum)))))
 
         ;; FIXME: There's probably a better way to do this
+	(display "dataDISPLAY")
+	(display data)(newline)
         (set-password rc pass)
+
         (let ((file-info (store-uploaded-files rc #:path (string-append (getcwd) "/pub/img/upload")
                                                #:uid #f
                                                #:gid #f
@@ -964,8 +970,8 @@
                    ;; -----------------------------------------------
                    ;; -----------------------------------------------
                      (if (or noko nokosage)
-                       (redirect-to rc (string-append "/thread/" (uri-encode board) "/" (number->string threadnum)) #:scheme scheme)
-                       (redirect-to rc (string-append "/board/" (uri-encode board)) #:scheme scheme))))))))))))))
+                       (redirect-to rc (string-append "/thread/" (uri-encode board) "/" (number->string threadnum)))
+                       (redirect-to rc (string-append "/board/" (uri-encode board))))))))))))))))
 
 (define (post-note rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
@@ -997,7 +1003,7 @@
         (if (equal? id "new")
           (begin
             (database-new-note mtable type name perms-read perms-write subject ctime date body)
-            (redirect-to rc "/panel" #:scheme scheme))
+            (redirect-to rc "/panel"))
 
           (let* ((note (database-get-note mtable id))
                  (creator (assoc-ref (car note) "name"))
@@ -1012,7 +1018,7 @@
                 (if (equal? del "delete")
                   (database-delete-note rc id)
                   (database-update-note mtable type perms-read perms-write subject ctime name date body id))
-                (redirect-to rc "/panel" #:scheme scheme))
+                (redirect-to rc "/panel"))
               (throw 'artanis-err 401 post-note "Unauthorized."))))))))
 
 (define (prune-unlisted rc mtable ctime) ; FIXME: replace rc with mtable once the database calls can use mtable only
