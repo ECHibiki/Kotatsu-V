@@ -11,6 +11,7 @@ However, if more speed and scalability is required then services such as Apache2
 * guile 2.2.3
 * artanis 0.4.0 
 * guile-dbi 2.1.7
+* imagemagick
 * Kernel version 3.9 or higher (allows binding multiple instances to the same port, for lower kernel versions recommend using Apache2 or Nginx)
 
 ## Installation
