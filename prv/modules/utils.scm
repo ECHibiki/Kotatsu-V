@@ -99,6 +99,7 @@
   (let* ((port (open-pipe* OPEN_READ "identify" "-format" "%wx%h" (string-append file "[0]")))
          (dims (read-line port)))
     (close-pipe port)
+(display file)(newline)
     (if (string-prefix? "identify:" dims)
       #f
       dims)))

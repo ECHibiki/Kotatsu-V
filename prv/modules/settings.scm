@@ -8,8 +8,8 @@
 ;;; Edit the settings below ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-public website-title "下葉ちゃんねる")
-(define-public greeting "")
+(define-public website-title "下葉二ちゃんねる")
+(define-public greeting "ShitabaNi Yokouso")
 (define-public default-comment "ｷﾀ━━━(ﾟ∀ﾟ)━━━!!") ; Default comment if left blank by user
 (define-public javascript-enabled #t)
 
@@ -55,7 +55,7 @@
 (define-public default-OP-template 'post-OP) ; Template function for thread OP's
 
 ;(define-public default-post-template post-tpl) ; Template function for normal posts
-(define-public default-name "Nameless")
+(define-public default-name "Anonymous")
 (define-public default-subject "Untitled") ; Default new thread subject if left blank by user
 (define-public default-board-message "<span class=\"shade\">【File uploads are unmodified. Please use caution when downloading.】</span>")
 (define-public default-page-count 10)
@@ -133,7 +133,7 @@
                                   (theme    . "yotsuba")))))
 
 ;;; Define mods:
-(define-public mods `(; NAME      PERMISSIONS  DEFAULT_PASSWORD(this field is only used until the mod changes their password)
+(define-public mods `(; NAME      PERMISSIONS  DEFAULT_PASSWORD(this field is only used until the mod changes their password)))
                       ("Admin"   "*"          "abc123")
                       ("SomeMod" "*"          "abc123")))
 

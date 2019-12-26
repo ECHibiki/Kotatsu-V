@@ -437,16 +437,28 @@
               ;(:cookies-update! rc) ;; FIXME: Documentation says this isn't needed, but it seems to be
               
               ;; -----------------------------------------------
-              ;; FIXME: These aren't needed except to get scheme
+              ;; 
               (let* ((request ((record-accessor (record-type-descriptor rc) 'request) rc))
                      (headers ((record-accessor (record-type-descriptor request) 'headers) request))
+					 
                      (referer (assoc-ref headers 'referer))
-                     (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer)))
+                     (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
+                     (host ((record-accessor (record-type-descriptor referer) 'host) referer))
+					 (direct_uri (build-uri scheme #:host host #:path "/panel")))
                 ;; -----------------------------------------------
                 ;; -----------------------------------------------
 (newline)(display request)(newline)(newline)
 (newline)(display headers)(newline)(newline)
-                (redirect-to rc "/panel")))))))))
+(newline)(display referer)(newline)(newline)
+(newline)(display scheme)(newline)(newline)
+(newline)(display host)(newline)(newline)
+(newline)(display direct_uri)(newline)(newline)
+                (redirect-to rc direct_uri)
+				)
+			))
+		  ))
+		)
+	))
 
 (define (mod-logoff rc mtable cookies)
   (let ((key (assoc-ref cookies "mod-key")))
@@ -963,15 +975,19 @@
 
                    ;; -----------------------------------------------
                    ;; FIXME: These aren't needed except to get the scheme
-                   (let* ((request ((record-accessor (record-type-descriptor rc) 'request) rc))
-                          (headers ((record-accessor (record-type-descriptor request) 'headers) request))
-                          (referer (assoc-ref headers 'referer))
-                          (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer)))
+              (let* ((request ((record-accessor (record-type-descriptor rc) 'request) rc))
+                     (headers ((record-accessor (record-type-descriptor request) 'headers) request))
+					 
+                     (referer (assoc-ref headers 'referer))
+                     (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
+                     (host ((record-accessor (record-type-descriptor referer) 'host) referer))
+					 (direct_uri (build-uri scheme #:host host #:path "/panel")))
+
                    ;; -----------------------------------------------
                    ;; -----------------------------------------------
-                     (if (or noko nokosage)
-                       (redirect-to rc (string-append "/thread/" (uri-encode board) "/" (number->string threadnum)))
-                       (redirect-to rc (string-append "/board/" (uri-encode board))))))))))))))))
+                     (if (or noko nokosage)		
+                       (redirect-to rc (build-uri scheme #:host host #:path (string-append "/thread/" (uri-encode board) "/" (number->string threadnum))))
+                       (redirect-to rc (build-uri scheme #:host host #:path (string-append "/board/" (uri-encode board)))))))))))))))))
 
 (define (post-note rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
@@ -997,13 +1013,14 @@
              (request ((record-accessor (record-type-descriptor rc) 'request) rc))
              (headers ((record-accessor (record-type-descriptor request) 'headers) request))
              (referer (assoc-ref headers 'referer))
-             (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer)))
+             (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
+             (host ((record-accessor (record-type-descriptor referer) 'host) referer)))
              ;; -----------------------------------------------
              ;; -----------------------------------------------
         (if (equal? id "new")
           (begin
             (database-new-note mtable type name perms-read perms-write subject ctime date body)
-            (redirect-to rc "/panel"))
+            (redirect-to rc (build-uri scheme #:host host #:path "/panel")))
 
           (let* ((note (database-get-note mtable id))
                  (creator (assoc-ref (car note) "name"))
@@ -1018,7 +1035,7 @@
                 (if (equal? del "delete")
                   (database-delete-note rc id)
                   (database-update-note mtable type perms-read perms-write subject ctime name date body id))
-                (redirect-to rc "/panel"))
+                (redirect-to rc (build-uri scheme #:host host #:path "/panel")))
               (throw 'artanis-err 401 post-note "Unauthorized."))))))))
 
 (define (prune-unlisted rc mtable ctime) ; FIXME: replace rc with mtable once the database calls can use mtable only
