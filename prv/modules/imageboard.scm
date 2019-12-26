@@ -437,7 +437,6 @@
               ;(:cookies-update! rc) ;; FIXME: Documentation says this isn't needed, but it seems to be
               
               ;; -----------------------------------------------
-              ;; 
               (let* ((request ((record-accessor (record-type-descriptor rc) 'request) rc))
                      (headers ((record-accessor (record-type-descriptor request) 'headers) request))
 					 
@@ -447,12 +446,6 @@
 					 (direct_uri (build-uri scheme #:host host #:path "/panel")))
                 ;; -----------------------------------------------
                 ;; -----------------------------------------------
-(newline)(display request)(newline)(newline)
-(newline)(display headers)(newline)(newline)
-(newline)(display referer)(newline)(newline)
-(newline)(display scheme)(newline)(newline)
-(newline)(display host)(newline)(newline)
-(newline)(display direct_uri)(newline)(newline)
                 (redirect-to rc direct_uri)
 				)
 			))
