@@ -549,7 +549,7 @@
               'pre
               (lambda (m)
                 (let ((parts (string-split (match:substring m) #\/)))
-                  (string-append "<a target='_top' href='"
+                  (string-append "<a target=''_top'' href=''"
                                  ;(string-join
                                  ; (append `(,(car parts))
                                  ;         (map (lambda (x)
@@ -557,14 +557,14 @@
                                  ;              (cdr parts)))
                                  ; "/")
                                  (match:substring m)
-                                 "'>" (match:substring m) "</a>")))
+                                 "''>" (match:substring m) "</a>")))
                 'post)) ; FIXME : add quotes around the href and target once you figure out how to escape chars properly
           (lambda (p) ; Board link 
             (regexp-substitute/global #f "&gt;&gt;&gt;/*[^/]+/([^0-9]|$)" p
               'pre
               (lambda (m)
                 (let* ((brd (substring (match:substring m) 13 (- (string-length (match:substring m)) 1))))
-                  (format #f "<a href='/board/~a'>~a</a>" brd (match:substring m))))
+                  (format #f "<a href=''/board/~a''>~a</a>" brd (match:substring m))))
               'post))
           (lambda (p) ; Cross-page link matching
             ;(regexp-substitute/global #f "&gt;&gt;&gt;[a-zA-Z0-9/,-\\#]*[a-zA-Z0-9]" p
@@ -596,7 +596,7 @@
                            ;                 (string-append "#" psts "p")
                            ;                 (string-append "/" psts))
                            ;               ">" (match:substring m) "</a>")
-                           (format #f "<a href='/~a/~a/~a~a'>~a</a>"
+                           (format #f "<a href=''/~a/~a/~a~a''>~a</a>"
                                    (if (= (length lnks) 1) "thread" "posts")
                                    brd trd
                                    (if (= (length lnks) 1) (string-append "#" psts "p")
@@ -630,7 +630,7 @@
                            ;                 (string-append "#" psts "p")
                            ;                 (string-append "/" psts))
                            ;               ">" (match:substring m) "</a>")
-                           (format #f "<a href='/~a/~a/~a~a'>~a</a>"
+                           (format #f "<a href=''/~a/~a/~a~a''>~a</a>"
                                    (if (= (length lnks) 1) "thread" "posts")
                                    board trd
                                    (if (= (length lnks) 1) (string-append "#" psts "p")
@@ -645,7 +645,7 @@
                          ;                 (string-append "#" psts "p")
                          ;                 (string-append "/" psts))
                          ;               ">" (match:substring m) "</a>")))
-                         (format #f "<a href='/~a/~a/~a~a'>~a</a>"
+                         (format #f "<a href=''/~a/~a/~a~a''>~a</a>"
                                  (if (= (length lnks) 1) "thread" "posts")
                                  board thread
                                  (if (= (length lnks) 1) (string-append "#" psts "p")
@@ -658,13 +658,13 @@
               'pre (lambda (m) (string-append "<i>" (match:substring m) "</i>")) 'post))
           (lambda (p) ; Spoiler matching
             (regexp-substitute/global #f "\\[spoiler\\].*\\[/spoiler\\]" p
-              'pre (lambda (m) (string-append "<span class='spoiler'>" (substring (match:substring m) 9 (- (string-length (match:substring m)) 10)) "</span>")) 'post))
+              'pre (lambda (m) (string-append "<span class=''spoiler''>" (substring (match:substring m) 9 (- (string-length (match:substring m)) 10)) "</span>")) 'post))
           (lambda (p) ; AA matching
             (regexp-substitute/global #f "\\[aa\\].*\\[/aa\\]" p
-              'pre (lambda (m) (string-append "<span class='aa'>" (substring (match:substring m) 4 (- (string-length (match:substring m)) 5)) "</span>")) 'post))
+              'pre (lambda (m) (string-append "<span class=''aa''>" (substring (match:substring m) 4 (- (string-length (match:substring m)) 5)) "</span>")) 'post))
           (lambda (p) ; Code matching
             (regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
-              'pre (lambda (m) (string-append "<div class='code'>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
+              'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
           (lambda (p) ; Convert all newlines to <br>, this is done last because matching \n in regex is easier than matching <br>
             (regexp-substitute/global #f "\n" p
               'pre "<br>" 'post)))))
