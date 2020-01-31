@@ -168,7 +168,7 @@
                   (null? sage)
                   (equal? (car sage) "nokosage"))
             name
-            (format #f "<a class='sage' href='mailto:~a'>~a</a>" (car sage) name))
+            (format #f "<a class=''sage'' href=''mailto:~a''>~a</a>" (car sage) name))
           #:date date #:ctime ctime #:image (car finfo) #:thumb (cadr finfo) #:iname filename #:size (format #f "~a, ~a, ~a" (caddr finfo) fsize (cdddr finfo)) #:comment comment))
 
 (define-public (database-save-subpost mtable board threadnum postnum ip name date ctime comment)

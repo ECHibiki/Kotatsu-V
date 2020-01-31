@@ -9,7 +9,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-public website-title "下葉二ちゃんねる")
-(define-public greeting "ShitabaNi Yokouso")
+(define-public greeting "Shitaba Ni Yokouso<br/>")
 (define-public default-comment "ｷﾀ━━━(ﾟ∀ﾟ)━━━!!") ; Default comment if left blank by user
 (define-public javascript-enabled #t)
 

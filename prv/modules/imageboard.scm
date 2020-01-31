@@ -974,13 +974,13 @@
                      (referer (assoc-ref headers 'referer))
                      (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
                      (host ((record-accessor (record-type-descriptor referer) 'host) referer))
-					 (direct_uri (build-uri scheme #:host host #:path "/panel")))
+					 )
 
                    ;; -----------------------------------------------
                    ;; -----------------------------------------------
                      (if (or noko nokosage)		
-                       (redirect-to rc (build-uri scheme #:host host #:path (string-append "/thread/" (uri-encode board) "/" (number->string threadnum))))
-                       (redirect-to rc (build-uri scheme #:host host #:path (string-append "/board/" (uri-encode board)))))))))))))))))
+                       (redirect-to rc (string-append "/thread/" (uri-encode board) "/" (number->string threadnum)))
+                       (redirect-to rc (string-append "/board/" (uri-encode board))))))))))))))))
 
 (define (post-note rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))

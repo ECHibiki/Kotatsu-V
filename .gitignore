@@ -1,6 +1,7 @@
 *.bak*
 *.sqlt
 *.db
+*.gz
 /tmp/
 /pub/img/*/*
 !/pub/img/upload/.gitkeep

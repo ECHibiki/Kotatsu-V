@@ -108,7 +108,8 @@
   (let* ((port (open-pipe* OPEN_READ "ffprobe" "-v" "error" "-select_streams" "v:0" "-show_entries" "stream=width,height" "-of" "csv=s=x:p=0" video))
          (dims (read-line port)))
     (close-pipe port)
-    (if (string-contains dims "Invalid")
+	(display dims)(newline)
+    (if (or (eof-object? dims) (string-contains dims "Invalid"))
       #f
       dims)))
 
