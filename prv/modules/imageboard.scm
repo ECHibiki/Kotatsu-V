@@ -843,7 +843,7 @@
                                                #:mode #o664
                                                #:path-mode #o775
                                                #:sync #t)))
-          (let* ((filename (if (null? (caddr file-info)) "" (escape-str (caaddr file-info))))
+          (let* ((filename (if (null? (caddr file-info)) "" (caaddr file-info)))
                  (mimetype (get-mimetype (string-append (getcwd) "/pub/img/upload/" filename)))
                  (mimetypes-OP-blacklist (or (assq-ref (assoc-ref boards board) 'mimetypes-OP-blacklist) default-OP-mimetypes-blacklist))
                  (mimetypes-blacklist (or (assq-ref (assoc-ref boards board) 'mimetypes-blacklist) default-mimetypes-blacklist))
@@ -956,7 +956,8 @@
                             (> (string->number (car subpost)) 1))
                      (database-save-subpost mtable board threadnum (string->number (car subpost)) ip (process-name-codes admin name) date ctime comment)
                      (begin
-                       (database-save-post mtable board threadnum postnum ip (or nokosage sage) (process-name-codes admin name) date ctime finfo filename fsize comment)
+			;filename is not safe for html output so save to db in safe format
+                       (database-save-post mtable board threadnum postnum ip (or nokosage sage) (process-name-codes admin name) date ctime finfo (escape-str filename) fsize comment)
                        (if existing-thread
                          (database-update-thread mtable board threadnum postnum (or nokosage sage) ctime btime)
                          (begin
