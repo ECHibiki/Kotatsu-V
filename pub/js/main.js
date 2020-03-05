@@ -77,7 +77,7 @@ function thumbnailClick(e) {
     }
 
     if (['JPEG','PNG','GIF', 'WEBP'].indexOf(mimetype) > -1) {
-        //e.style.opacity = 0.5;
+        e.style.opacity = 0.5;
         e.src = swap;
         e.dataset.swapWith = src;
         if (window.scrollY > offsetTop) {
@@ -87,4 +87,8 @@ function thumbnailClick(e) {
     } else {
         return true;
     }
+}
+
+function swapIsLoaded(e){
+	e.style.opacity = 1;
 }

@@ -281,7 +281,7 @@
       "For feedback, suggestions, bug reports, or help:" (br)
       (table (@ (border "2") (valign "top"))
        (tr (td (@ (class "stack"))
-            "GitLab: " (a (@ (href "https://gitlab.com/ison2/kotatsu")) "https://gitlab.com/ison2/kotatsu")))
+            "GitHub: " (a (@ (href "https://github.com/ECHibiki/kotatsu")) "https://github.com/ECHibiki/kotatsu")))
        (tr (td (@ (class "stack"))
             "Email: " (img (@ (src "/pub/img/email.png")))))))))
 
@@ -416,6 +416,7 @@
     personal-block))
       
 (define (post-tpl mode board-uri threadnum postnum name date image iname thumb size comment subposts replies)
+  (display size)(newline)
   `((table (@ (class "post-frame"))
     (tr
      (td (@ (valign "top") (weight "bold")) "»")
@@ -443,6 +444,7 @@
                        (href ,(format #f "/pub/img/~a/~a/~a" board-uri threadnum image)))
                   (img (@ (src "/pub/img/" ,board-uri "/" ,threadnum "/" ,thumb)
                           (onclick "ret=thumbnailClick(this);return ret;")
+			  (onload "swapIsLoaded(this)")
                           (data-swap-with "/pub/img/" ,board-uri "/" ,threadnum "/" ,image)
                           (data-mimetype ,(car (string-split size #\,)))))))
             '())
