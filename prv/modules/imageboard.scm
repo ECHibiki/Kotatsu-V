@@ -882,11 +882,11 @@
                                 ;(cons newname newthumbname)))))
                                 ;; FIXME: replace this extension case with actual mimetype detection?
                                 (case mimetype
-                                  ((GIF JPEG PNG) ; IMAGES
+                                  ((GIF JPEG PNG WEBP) ; IMAGES
                                    (make-image-thumbnail fullpath max-dimensions (string-append fullthumb "." extension))
                                    (cons* newfile (string-append newthumb "." extension) mimetype
                                           (get-image-dimensions fullpath)))
-                                  ((FLAC M4A MKV MP3 MP4 OCTET OGG WAV WMA) ; Audio/Video/Octet-streams
+                                  ((FLAC M4A MKV MP3 MP4 OCTET OGG WAV WMA WEBM) ; Audio/Video/Octet-streams
                                    (make-video-thumbnail fullpath max-dimensions (string-append fullthumb ".jpg"))
                                    (if (file-exists? (string-append fullthumb ".jpg"))
                                      (cons* newfile (string-append newthumb ".jpg") mimetype
