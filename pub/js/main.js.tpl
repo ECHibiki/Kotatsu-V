@@ -68,7 +68,7 @@ function thumbnailClick(e) {
         p = p.offsetParent;
     }
 
-    if (['JPEG','PNG','GIF'].indexOf(mimetype) > -1) {
+    if (['JPEG','PNG','GIF', 'WEBP'].indexOf(mimetype) > -1) {
         //e.style.opacity = 0.5;
         e.src = swap;
         e.dataset.swapWith = src;
