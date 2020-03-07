@@ -698,10 +698,13 @@
           (lambda (p) ; AA matching
             (regexp-substitute/global #f "\\[aa\\].*\\[/aa\\]" p
               'pre (lambda (m) (string-append "<span class=''aa''>" (substring (match:substring m) 4 (- (string-length (match:substring m)) 5)) "</span>")) 'post))
-          (lambda (p) ; Code matching
-            (regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
-              'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
-          (lambda (p) ; Convert all newlines to <br>, this is done last because matching \n in regex is easier than matching <br>
+         (lambda (p) ; Code matching
+         (newline)(newline)  (display p)(newline)(newline) 
+	 (reluctant-code-tags p)) 
+	  ;(regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
+          ;    'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
+         
+	  (lambda (p) ; Convert all newlines to <br>, this is done last because matching \n in regex is easier than matching <br>
             (regexp-substitute/global #f "\n" p
               'pre "<br>" 'post)))))
           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -877,7 +880,6 @@
                                                #:mode #o664
                                                #:path-mode #o775
                                                #:sync #t)))
-(display file-info)
 	   (let* ((filename (if (null? (caddr file-info)) "" (caaddr file-info)))
                  (mimetype (get-mimetype (string-append (getcwd) "/pub/img/upload/" filename)))
                  (mimetypes-OP-blacklist (or (assq-ref (assoc-ref boards board) 'mimetypes-OP-blacklist) default-OP-mimetypes-blacklist))
