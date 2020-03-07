@@ -92,3 +92,7 @@ function thumbnailClick(e) {
 function swapIsLoaded(e){
 	e.style.opacity = 1;
 }
+
+function postNumClick(e){
+	document.forms[1].elements["comment"].value+=">>"+e.textContent;
+}

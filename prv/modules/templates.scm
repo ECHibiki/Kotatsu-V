@@ -424,7 +424,7 @@
       (div (@ (border "1") (id ,postnum "p") (class "post"))
        (input (@ (type "checkbox") (name "posts") (value ,board-uri "/" ,threadnum "/" ,postnum)))
        (b
-        (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#" ,postnum "p")) ,(number->string postnum)) " "
+        (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#" ,postnum "p") (onclick "postNumClick(this)")) ,(number->string postnum)) " "
         (span (@ (class "name")) ,name) " "
         (span (@ (class "date")) ,date)
         ,(imgops-tpl image board-uri threadnum))
@@ -626,7 +626,7 @@
                `(u (span (@ (class "warning")) " This thread has been marked for deletion"))))
            '()))
        (br)
-       (b (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#1p")) "1") " "
+       (b (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#1p") (onclick "postNumClick(this)")) "1") " "
           (span (@ (id "1p") (class "name")) ,name) " "
           (span (@ (class "date")) ,date) " "
           ,(imgops-tpl image board-uri threadnum))
