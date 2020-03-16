@@ -635,7 +635,7 @@
                `(u (span (@ (class "warning")) " This thread has been marked for deletion"))))
            '())
 	 "&nbsp;"
-         (a (@ (title , "Hide thread") (href "javascript:void(0);") (onclick "hideThread(this)") (thread , threadnum) (board , board)) "[ ╳ ]")
+         (a (@ (title , "Hide thread") (href "javascript:void(0);") (onclick "hideThread(this,'" , board , "tbody" , threadnum "')") (class "close-thread") ) "[ ╳ ]")
        )
        (div (@ (id , board , "tbody" , threadnum))
         (br)
@@ -671,6 +671,7 @@
         ,replies
         (br (@ (style "clear:both")))
         )
+         (script "initThread(\"" , board , "tbody" , (number->string threadnum) "\")")
        )
      )
    )

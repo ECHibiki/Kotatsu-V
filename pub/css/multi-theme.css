@@ -46,6 +46,12 @@ input, textarea {
 input[type='checkbox'] {
     background: #c00;
 }
+.close-thread{
+	float:right;
+	padding-top: 0.32em;
+	padding-right:0.32em;
+}
+
 .site-name {
     color: #ff4646;
     font-size: 32px;

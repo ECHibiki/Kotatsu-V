@@ -21,6 +21,10 @@ function initSidebar() {
     }
 }
 
+function initThread(target_id){
+	document.getElementById(target_id).style.display = localStorage[target_id];
+}
+
 function showSidebar() {
     var bar_width = 110;
     var margin = 4;
@@ -56,11 +60,13 @@ function hideAdminLinks() {
     }
 }
 
-function hideThread(e){
-    var body = document.getElementById(
-	e.getAttribute('board') + "tbody" + e.getAttribute('thread')
-    );
-    body.style.display = body.style.display == "none" ? "initial" : "none";
+function hideThread(e, target_id){
+    var thread_body = document.getElementById(target_id);
+    var display_type = thread_body.style.display == "none" ? "initial" : "none";
+
+    thread_body.style.display = display_type;
+    localStorage[target_id] = display_type;
+
     return false;
 }
 
