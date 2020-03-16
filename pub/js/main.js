@@ -21,6 +21,10 @@ function initSidebar() {
     }
 }
 
+function initThread(){
+
+}
+
 function showSidebar() {
     var bar_width = 110;
     var margin = 4;
@@ -62,6 +66,14 @@ function hideAdminLinks() {
     if (getCookie("mod-key") == "") {
         document.getElementById("sidebar-admin-links").style.display = "none";
     }
+}
+
+function hideThread(e){
+    var body = document.getElementById(
+	e.getAttribute('board') + "tbody" + e.getAttribute('thread')
+    );
+    body.style.display = body.style.display == "none" ? "initial" : "none";
+    return false;
 }
 
 function thumbnailClick(e) {

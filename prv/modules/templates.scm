@@ -619,11 +619,12 @@
        (div (@ (class ,(if (eq? mode 'preview) "title-bar" "")))
         (u ,@(if sticky `(" " (img (@ (src "/pub/img/sticky.png") (title "Sticky")))) '())
            (input (@ (type "checkbox") (name "posts") (value ,board-uri "/" ,threadnum "/" 1)))
+	   ()
            (a (@ (href "/thread/" ,board-uri "/" ,threadnum))
             "【" ,(number->string threadnum) "】"
             (span (@ (class "title"))
              ,subject " "))
-            "[" (a (@ (href "/thread/" ,board-uri "/" ,threadnum "?last=50"))
+            "[" (a  (@ (href "/thread/" ,board-uri "/" ,threadnum "?last=50"))
                  "last50") " "
                 (a (@ (href "/board/" ,board-uri)) "/" ,board-html "/")
             "]")
@@ -632,14 +633,18 @@
              (if (> remaining 0)
                `(u (span (@ (class "warning")) " This thread has been marked old and will be deleted in " ,(human-readable-interval remaining)))
                `(u (span (@ (class "warning")) " This thread has been marked for deletion"))))
-           '()))
-       (br)
-       (b (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#1p") (onclick "postNumClick(this)")) "1") " "
-          (span (@ (id "1p") (class "name")) ,name) " "
-          (span (@ (class "date")) ,date) " "
+           '())
+	 "&nbsp;"
+         (a (@ (title , "Hide thread") (href "javascript:void(0);") (onclick "hideThread(this)") (thread , threadnum) (board , board)) "[ ╳ ]")
+       )
+       (div (@ (id , board , "tbody" , threadnum))
+        (br)
+        (b (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#1p") (onclick "postNumClick(this)")) "1") " "
+           (span (@ (id "1p") (class "name")) ,name) " "
+           (span (@ (class "date")) ,date) " "
           ,(imgops-tpl image board-uri threadnum))
-       (br)
-       ,@(if image
+        (br)
+        ,@(if image
            `("File: " (a (@ (title ,iname)
                             (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,(if (member (string-downcase (cdr name+ext)) '("sfw" "html5"))
                                                                            (if (cdr name+ext) (string-append (car file+ext) "." (cdr name+ext)) "")
@@ -649,7 +654,7 @@
              " (" ,size ")"
              (br))
            '())
-       ,(if image
+        ,(if image
           `(a (@ (target "_top")
                  (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,image))
             (img (@ (class "OPimg")
@@ -659,13 +664,17 @@
 		    (data-swap-with "/pub/img/" ,board-uri "/" ,threadnum "/" ,image)
                     (data-mimetype ,(car (string-split size #\,))))))
           '())
-       (blockquote ,(truncate-comment comment max-comment-preview-lines mode))
-       ,(if (and (eq? mode 'preview) (> postcount (+ post-preview-count 1)))
+        (blockquote ,(truncate-comment comment max-comment-preview-lines mode))
+        ,(if (and (eq? mode 'preview) (> postcount (+ post-preview-count 1)))
           `(span (@ (class "shade")) ,(number->string (- postcount post-preview-count 1)) " posts omitted")
           '())
-
-       ,replies
-       (br (@ (style "clear:both")))))))
+        ,replies
+        (br (@ (style "clear:both")))
+        )
+       )
+     )
+   )
+ )
 
 (define (post-OP-flash-tpl mode board board-html board-uri threadnum postcount subject name date image iname thumb size comment old sticky replies)
   (let ((name+ext (or (and iname (separate-extension iname)) '("" . #f)))

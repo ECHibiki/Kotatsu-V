@@ -56,6 +56,14 @@ function hideAdminLinks() {
     }
 }
 
+function hideThread(e){
+    var body = document.getElementById(
+	e.getAttribute('board') + "tbody" + e.getAttribute('thread')
+    );
+    body.style.display = body.style.display == "none" ? "initial" : "none";
+    return false;
+}
+
 function thumbnailClick(e) {
     var src = e.src;
     var swap = e.dataset.swapWith;
