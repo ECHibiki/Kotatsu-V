@@ -368,7 +368,7 @@
            (br)
            (li (a (@ (href "/note-editor/new")) "New Note")))
        (br)(br)
-       (b "Administration:") "(work in progress)"             
+       (b "Administration:") "(work in progress)"
        (br)(br)
        (ul (li "Report Queue")
            (li "Ban List")
@@ -422,7 +422,7 @@
 (define (notes-view-tpl style style-menu admin personal-block)
   (master-tpl admin (string-append "Notes - " website-title) style style-menu default-style "infopage" "<h2>Personal Notes</h2>"
     personal-block))
-      
+
 (define (post-tpl mode board-uri threadnum postnum name date image iname thumb size comment subposts replies)
   (display size)(newline)
   `((table (@ (class "post-frame"))
@@ -784,7 +784,7 @@ TO VIEW THE ACTUAL FILE DATA VISIT THE src LINK BELOW.
                ": " ,(format #f "~a (w:~a h:~a ~a)" filename width height fsize)))
           (tr (@ (style "width:100%;height:100%"))
            (td (@ (style "text-align:center;width:100%;height:100%"))
-               (iframe (@ (style "margin-left:auto;margin-right:auto;border:none;width:" ,width ";height:" ,height)
+               (embed (@ (style "margin-left:auto;margin-right:auto;border:none;width:100%;height:100%")
                           (src "/pub/img/" ,board-uri "/" ,threadnum "/" ,entrypoint)
                           (sandbox "allow-scripts")
                           (allowfullscreen "allowfullscreen")) #f))))))))
