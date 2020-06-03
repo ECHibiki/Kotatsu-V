@@ -209,6 +209,7 @@ blockquote {
     font-family: monospace;
     background: #e2e2e2;
     border: 1px solid #caa;
+	display:inline
 }
 .OPimg {
     margin: 0px 10px 10px 10px;
