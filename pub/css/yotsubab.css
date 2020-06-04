@@ -202,7 +202,7 @@ blockquote {
     font-family: monospace;
     background: #eef2ff;
     border: 1px solid #b7c5d9;
-	display:inline;
+    display:inline-block;
 }
 .OPimg {
     margin: 0px 10px 10px 10px;
