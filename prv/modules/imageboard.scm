@@ -38,6 +38,8 @@
             serve-posts
             make-thread
             make-post
+	    make-reluctant-processor
+	    reluctant-code-tags
             refilter-comments
             build-javascript
             note-editor
@@ -226,6 +228,40 @@
                      (string->number (caddr path))
                      #f)))
     (save-post rc mtable board #:existing-thread thread)))
+
+; see reluctant-code-tags for usage
+(define (make-reluctant-processor tagspec outputopen outputclose)
+  (let* ((tagnames   (string-split tagspec #\space))
+         (tagor      (string-join tagnames "|"))
+         (regexpopen (make-regexp (string-append "\\[(" tagor ")\\]")))
+         (table      (make-hash-table)))
+    (for-each (lambda (s) (hash-set! table s (make-regexp (string-append "\\[/" s "\\]")))) tagnames)
+    (letrec ((outside (lambda (s outlistrev)
+               (let ((m (regexp-exec regexpopen s)))
+                 (if m
+                     (inside (match:suffix m)
+                             (cons* (match:substring m)
+                                    (match:prefix m)
+                                    outlistrev)
+                             (match:substring m 1))
+                     (string-concatenate-reverse outlistrev s)))))
+             (inside  (lambda (s outlistrev open)
+               (let ((m (regexp-exec (hash-ref table open) s)))
+                 (if m
+                     (outside (match:suffix m)
+                              (cons* outputclose
+                                     (match:prefix m)
+                                     outputopen
+                                     (cdr outlistrev)))
+                     (string-concatenate-reverse outlistrev s))))))
+      (lambda (s) (outside s '())))))
+
+(define reluctant-code-tags
+  (make-reluctant-processor
+    "codeblock code c"
+    "<div class=''code''>"
+    "</div>"))
+
 
 (define (refilter-comments rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
@@ -662,10 +698,13 @@
           (lambda (p) ; AA matching
             (regexp-substitute/global #f "\\[aa\\].*\\[/aa\\]" p
               'pre (lambda (m) (string-append "<span class=''aa''>" (substring (match:substring m) 4 (- (string-length (match:substring m)) 5)) "</span>")) 'post))
-          (lambda (p) ; Code matching
-            (regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
-              'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
-          (lambda (p) ; Convert all newlines to <br>, this is done last because matching \n in regex is easier than matching <br>
+         (lambda (p) ; Code matching
+         (newline)(newline)  (display p)(newline)(newline) 
+	 (reluctant-code-tags p)) 
+	  ;(regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
+          ;    'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
+         
+	  (lambda (p) ; Convert all newlines to <br>, this is done last because matching \n in regex is easier than matching <br>
             (regexp-substitute/global #f "\n" p
               'pre "<br>" 'post)))))
           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -787,9 +826,9 @@
         (+ 1 (assoc-ref (car val) "threadcount")))))
 
 (define* (save-post rc mtable board #:key existing-thread)
-  (let* ((ip (get-ip rc))
-         (cooldown (check-cooldown mtable ip))
-         (bans (check-bans mtable ip)))
+  (let* ((ip (get-ip rc)) 	       
+	 (cooldown (check-cooldown mtable ip))
+         (bans (check-bans mtable ip))) 
     (cond
      (bans (tpl->response (message-tpl bans)))
      ((not (car cooldown)) (tpl->response (message-tpl (cdr cooldown))))
@@ -832,8 +871,6 @@
              ;(tname (string->symbol (string-append "thread" (number->string threadnum)))))
 
         ;; FIXME: There's probably a better way to do this
-	(display "dataDISPLAY")
-	(display data)(newline)
         (set-password rc pass)
 
         (let ((file-info (store-uploaded-files rc #:path (string-append (getcwd) "/pub/img/upload")
@@ -843,7 +880,7 @@
                                                #:mode #o664
                                                #:path-mode #o775
                                                #:sync #t)))
-          (let* ((filename (if (null? (caddr file-info)) "" (caaddr file-info)))
+	   (let* ((filename (if (null? (caddr file-info)) "" (caaddr file-info)))
                  (mimetype (get-mimetype (string-append (getcwd) "/pub/img/upload/" filename)))
                  (mimetypes-OP-blacklist (or (assq-ref (assoc-ref boards board) 'mimetypes-OP-blacklist) default-OP-mimetypes-blacklist))
                  (mimetypes-blacklist (or (assq-ref (assoc-ref boards board) 'mimetypes-blacklist) default-mimetypes-blacklist))
@@ -956,7 +993,7 @@
                             (> (string->number (car subpost)) 1))
                      (database-save-subpost mtable board threadnum (string->number (car subpost)) ip (process-name-codes admin name) date ctime comment)
                      (begin
-			;filename is not safe for html output so save to db in safe format
+		       ;filename is not safe for html output so save to db in safe format
                        (database-save-post mtable board threadnum postnum ip (or nokosage sage) (process-name-codes admin name) date ctime finfo (escape-str filename) fsize comment)
                        (if existing-thread
                          (database-update-thread mtable board threadnum postnum (or nokosage sage) ctime btime)
@@ -1084,8 +1121,8 @@
 
 (define (mod-posts rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
-         (ip (get-ip rc))
-         (data (parse-body (string->utf8 (string-append "--" (content-type-is-mfd? rc))) ; FIXME: pare-body is our own function, there should be a built-in one
+         (ip (get-ip rc)) 
+	 (data (parse-body (string->utf8 (string-append "--" (content-type-is-mfd? rc))) ; FIXME: pare-body is our own function, there should be a built-in one
                            (rc-body rc)))
          (cookies (get-cookie-alist rc))
          (admin (get-admin rc mtable cookies)) ; FIXME: is this needed if there's a built-in function to get cookie alist?
