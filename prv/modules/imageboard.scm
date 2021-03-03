@@ -227,6 +227,41 @@
                      #f)))
     (save-post rc mtable board #:existing-thread thread)))
 
+; see reluctant-code-tags for usage
+(define (make-reluctant-processor tagspec outputopen outputclose)
+  (let* ((tagnames   (string-split tagspec #\space))
+         (tagor      (string-join tagnames "|"))
+         (regexpopen (make-regexp (string-append "\\[(" tagor ")\\]")))
+         (table      (make-hash-table)))
+    (for-each (lambda (s) (hash-set! table s (make-regexp (string-append "\\[/" s "\\]")))) tagnames)
+    (letrec ((outside (lambda (s outlistrev)
+               (let ((m (regexp-exec regexpopen s)))
+                 (if m
+                     (inside (match:suffix m)
+                             (cons* (match:substring m)
+                                    (match:prefix m)
+                                    outlistrev)
+                             (match:substring m 1))
+                     (string-concatenate-reverse outlistrev s)))))
+             (inside  (lambda (s outlistrev open)
+               (let ((m (regexp-exec (hash-ref table open) s)))
+                 (if m
+                     (outside (match:suffix m)
+                              (cons* outputclose
+                                     (match:prefix m)
+                                     outputopen
+                                     (cdr outlistrev)))
+                     (string-concatenate-reverse outlistrev s))))))
+      (lambda (s) (outside s '())))))
+
+(define reluctant-code-tags
+  (make-reluctant-processor
+    "codeblock code c"
+    "<div class=''code''>"
+    "</div>"))
+
+
+
 (define (refilter-comments rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
          (cookies (get-cookie-alist rc))
@@ -325,7 +360,7 @@
                         (remove (lambda (x)
                                   (not (member (assoc-ref (car admin) "name") (string-split (assoc-ref x "read") #\space))))
                                 full)))))))
-    (string-join 
+    (string-join
      (map (lambda (note)
             (let ((id (assoc-ref note "id"))
                   (type (assoc-ref note "type"))
@@ -435,11 +470,11 @@
               ;(:cookies-set! rc 'cc "admin" "1")
               ;(:cookies-setattr! rc 'cc #:expires 315360000 #:path "/" #:secure #f #:http-only #f)
               ;(:cookies-update! rc) ;; FIXME: Documentation says this isn't needed, but it seems to be
-              
+
               ;; -----------------------------------------------
               (let* ((request ((record-accessor (record-type-descriptor rc) 'request) rc))
                      (headers ((record-accessor (record-type-descriptor request) 'headers) request))
-					 
+
                      (referer (assoc-ref headers 'referer))
                      (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
                      (host ((record-accessor (record-type-descriptor referer) 'host) referer))
@@ -559,7 +594,7 @@
                                  (match:substring m)
                                  "''>" (match:substring m) "</a>")))
                 'post)) ; FIXME : add quotes around the href and target once you figure out how to escape chars properly
-          (lambda (p) ; Board link 
+          (lambda (p) ; Board link
             (regexp-substitute/global #f "&gt;&gt;&gt;/*[^/]+/([^0-9]|$)" p
               'pre
               (lambda (m)
@@ -662,9 +697,12 @@
           (lambda (p) ; AA matching
             (regexp-substitute/global #f "\\[aa\\].*\\[/aa\\]" p
               'pre (lambda (m) (string-append "<span class=''aa''>" (substring (match:substring m) 4 (- (string-length (match:substring m)) 5)) "</span>")) 'post))
-          (lambda (p) ; Code matching
-            (regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
-              'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
+			 (lambda (p) ; Code matching
+			 (newline)(newline)  (display p)(newline)(newline)
+		 (reluctant-code-tags p))
+		  ;(regexp-substitute/global #f "\\[code\\].*\\[/code\\]" p
+			  ;    'pre (lambda (m) (string-append "<div class=''code''>" (substring (match:substring m) 6 (- (string-length (match:substring m)) 7)) "</div>")) 'post))
+
           (lambda (p) ; Convert all newlines to <br>, this is done last because matching \n in regex is easier than matching <br>
             (regexp-substitute/global #f "\n" p
               'pre "<br>" 'post)))))
@@ -811,11 +849,14 @@
                                          default-name)))
 
              (options (string-split (or (assoc-ref data 'options) "") #\space))
-             (sage (lset-intersection equal? '("sage" "SAGE" "さげ" "下げ") options))
+             ;(sage (lset-intersection equal? '("sage" "SAGE" "さげ" "下げ") options))
+             (sage '())
              (noko (or (and noko-enabled (member "noko" options))
                        (and (not noko-enabled) (not (member "nonoko" options)))))
-             (nokosage (member "nokosage" options))
-             (subpost (filter string->number options))
+             ;(nokosage (member "nokosage" options))
+             (nokosage '() )
+
+			 (subpost (filter string->number options))
              (pass (or (assoc-ref data 'password) ""))
              ;(date (date->string (current-date) "(~k:~M) ~a ~b ~e, ~Y"))
              (date (get-datestring))
@@ -832,8 +873,7 @@
              ;(tname (string->symbol (string-append "thread" (number->string threadnum)))))
 
         ;; FIXME: There's probably a better way to do this
-	(display "dataDISPLAY")
-	(display data)(newline)
+
         (set-password rc pass)
 
         (let ((file-info (store-uploaded-files rc #:path (string-append (getcwd) "/pub/img/upload")
@@ -881,6 +921,7 @@
                                 (rename-file (string-append (getcwd) "/pub/img/upload/" filename) fullpath)
                                 ;(cons newname newthumbname)))))
                                 ;; FIXME: replace this extension case with actual mimetype detection?
+				(display mimetype)
                                 (case mimetype
                                   ((GIF JPEG PNG WEBP) ; IMAGES
                                    (make-image-thumbnail fullpath max-dimensions (string-append fullthumb "." extension))
@@ -971,7 +1012,7 @@
                    ;; FIXME: These aren't needed except to get the scheme
               (let* ((request ((record-accessor (record-type-descriptor rc) 'request) rc))
                      (headers ((record-accessor (record-type-descriptor request) 'headers) request))
-					 
+
                      (referer (assoc-ref headers 'referer))
                      (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
                      (host ((record-accessor (record-type-descriptor referer) 'host) referer))
@@ -979,7 +1020,7 @@
 
                    ;; -----------------------------------------------
                    ;; -----------------------------------------------
-                     (if (or noko nokosage)		
+                     (if (or noko nokosage)
                        (redirect-to rc (string-append "/thread/" (uri-encode board) "/" (number->string threadnum)))
                        (redirect-to rc (string-append "/board/" (uri-encode board))))))))))))))))
 
@@ -1062,7 +1103,7 @@
               'depth 'mount 'physical))
       (when (null? (scandir boarddir))
         (rmdir boarddir)))))
-            
+
 (define (delete-post rc board threadnum postnum)
   (database-delete-post rc board threadnum postnum))
 
