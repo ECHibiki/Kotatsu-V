@@ -83,9 +83,12 @@
              '())
          "[" (a (@ (href "/index")) "HOME") "] "
          "[" (a (@ (href "/frames") (target "_top")) "Frames") "] "
+         "[" (a (@ (href "https://archive.4taba.net")) "Archive") "] "
          "[" (a (@ (href "/about")) "About") "] "
          "[" (a (@ (href "/rules")) "Rules") "] "
-         "[" (a (@ (href "/news")) "News") "] "))
+         "[" (a (@ (href "/news")) "News") "] "
+		 )
+	 )
        (hr))
       (section
        (div (@ (class ,(format #f "mid ~a" mid-class)))
@@ -208,6 +211,7 @@
            (div (@ (style "padding-bottom:5px")) (a (@ (href "/logoff") (target ,target)) "Log Off")))))
       (h3 "Information")
       (div (@ (style "padding-bottom:5px")) (a (@ (href "/") (target "_top")) "HOME"))
+	  (div (@ (style "padding-bottom:5px")) (a (@ (href "https://archive.4taba.net") (target ,target)) "Archive"))
       (div (@ (style "padding-bottom:5px")) (a (@ (href "/about") (target ,target)) "About"))
       (div (@ (style "padding-bottom:5px")) (a (@ (href "/rules") (target ,target)) "Rules"))
       (div (@ (style "padding-bottom:5px")) (a (@ (href "/news") (target ,target)) "News")))))
@@ -320,6 +324,16 @@
                 "]"))
     '()))
 
+(define (iqdb-tpl thumb board-uri threadnum)
+  (if thumb
+    `(" " (span (@ (class "imgops"))
+                "[" (a (@ (href ,(format #f "https://iqdb.org/?url=https://~a/pub/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum thumb))
+                          (target "_blank"))
+                       "iqdb")
+                "]"))
+    '()))
+
+
 (define (note-tpl id type links-target subject name date admin body edited)
   `(div (@ (id "note" ,id) (class ,type))
     (h3 (b (a (@ (class "link")
@@ -424,7 +438,7 @@
     personal-block))
 
 (define (post-tpl mode board-uri threadnum postnum name date image iname thumb size comment subposts replies)
-  (display size)(newline)
+  ;(display size)(newline)
   `((table (@ (class "post-frame"))
     (tr
      (td (@ (valign "top") (weight "bold")) "»")
@@ -435,7 +449,8 @@
         (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#" ,postnum "p") (onclick "postNumClick(this)")) ,(number->string postnum)) " "
         (span (@ (class "name")) ,name) " "
         (span (@ (class "date")) ,date)
-        ,(imgops-tpl image board-uri threadnum))
+        ,(imgops-tpl image board-uri threadnum)
+        ,(iqdb-tpl thumb board-uri threadnum))
        (br)
        ,@(if image
            `("File: " (a (@ (title ,iname)
@@ -642,7 +657,8 @@
         (b (a (@ (href "/thread/" ,board-uri "/" ,threadnum "#1p") (onclick "postNumClick(this)")) "1") " "
            (span (@ (id "1p") (class "name")) ,name) " "
            (span (@ (class "date")) ,date) " "
-          ,(imgops-tpl image board-uri threadnum))
+          ,(imgops-tpl image board-uri threadnum)
+          ,(iqdb-tpl thumb board-uri threadnum))
         (br)
         ,@(if image
            `("File: " (a (@ (title ,iname)
