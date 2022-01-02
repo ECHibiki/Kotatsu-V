@@ -575,20 +575,21 @@
       (br (@ (style "clear:both"))))))
 
 (define (thread-tpl style style-menu admin board board-html board-uri board-title password posts)
-  (master-tpl admin (format #f "/~a/ - ~a - ~a" board-html board-title website-title)
-               style style-menu (or (assoc-ref (assoc-ref boards board) 'theme) default-style)
-               "threadbg"
-               (format #f "<h2>/~a/ - ~a</h2>" board-html board-title)
-     ;; This form covers all thread and post boxes and is used for submitting actions such as post deletion
-   `((form (@ (enctype "multipart/form-data") (action "/mod-posts") (method "post"))
-      ,@(mod-bar-tpl admin)
-      "[" (a (@ (href "/board/" ,board-uri)) "Return") "]"
-      ,posts
-      "[" (a (@ (href "/board/" ,board-uri)) "Return") "]"
-      (br)
-      (span "Delete Post: " (input (@ (type "submit") (name "delete-button") (value "Delete")))))
-
-     ,(post-form-tpl password))))
+    (let ((nav-links `("[" (a (@ (href "/board/"   ,board-uri)) "Return")  "] ["
+                           (a (@ (href "/catalog/" ,board-uri)) "Catalog") "]")))
+      (master-tpl admin (format #f "/~a/ - ~a - ~a" board-html board-title website-title)
+                  style style-menu (or (assoc-ref (assoc-ref boards board) 'theme) default-style)
+                  "threadbg"
+                  (format #f "<h2>/~a/ - ~a</h2>" board-html board-title)
+        ;; This form covers all thread and post boxes and is used for submitting actions such as post deletion
+        `((form (@ (enctype "multipart/form-data") (action "/mod-posts") (method "post"))
+           ,@(mod-bar-tpl admin)
+           ,@nav-links
+           ,posts
+           ,@nav-links
+           (br)
+           (span "Delete Post: " (input (@ (type "submit") (name "delete-button") (value "Delete")))))
+          ,(post-form-tpl password)))))
 
 (define (catalog-thread-tpl mode board board-html board-uri threadnum postcount subject name date image iname thumb size comment old sticky replies)
   `(div (@ (border 1) (class (string-append (or (assoc-ref (assoc-ref boards board) 'theme) default-style) " threadwrapper")))
