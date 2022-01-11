@@ -20,3 +20,4 @@ However, if more speed and scalability is required then services such as Apache2
 * Edit the Artanis config file to your liking: `conf/artanis.conf`
 * Edit the Kotatsu config file to your liking: `prv/modules/settings.scm`
 * Start the server with `./start-server`
+* Unicode may not be configured properly on some distros(Ubuntu 18.04) due to either guile-db or artanis(I'm not sure which). These steps will resolve the annoying ???? unicode issue https://askubuntu.com/questions/770309/cannot-permanently-change-locale-on-16-04-server
