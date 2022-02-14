@@ -44,13 +44,13 @@
       (meta (@ (charset "utf-8")))
       (meta (@ (name "robots") (content "noarchive")))
       (meta (@ (name "description") (content ,description)))
-      (link (@ (rel "icon") (href "/pub/img/favicon.ico") (type "image/x-icon")))
+      (link (@ (rel "icon") (href "/img/favicon.ico") (type "image/x-icon")))
       (title ,title))
       ,(if style
-         `(link (@ (rel "stylesheet") (href ,(format #f "/pub/css/~a.css" style))))
+         `(link (@ (rel "stylesheet") (href ,(format #f "/css/~a.css" style))))
          '())
       ,(if javascript-enabled
-         '(script (@ (type "text/javascript") (src "/pub/js/main.js")) #f)
+         '(script (@ (type "text/javascript") (src "/js/main.js")) #f)
          '())
      ,body)))
 
@@ -71,7 +71,7 @@
                         (class "name"))
                 "Admin - " ,(assoc-ref (car admin) "name")) (br))
              '())
-         (img (@ (src ,(format #f "/pub/img/~a"
+         (img (@ (src ,(format #f "/img/~a"
                                (list-ref banners
                                          (modulo (round (/ (time-second (current-time time-utc))
                                                            banner-rotation-period))
@@ -103,12 +103,12 @@
     (a (@ (style "float:right") (href "#head")) "▲")
     (a (@ (target "_top") (href "https://www.gnu.org/software/guile/"))
      (img (@ (style "vertical-align:middle")
-             (src "/pub/img/guile.png"))))
+             (src "/img/guile.png"))))
     " "
     (a (@ (target "_top")
           (href "https://www.gnu.org/software/artanis/"))
      (img (@ (style "vertical-align:middle")
-             (src "/pub/img/artanis.png")
+             (src "/img/artanis.png")
              (height "25"))))
     " ♦ "
     (a (@ (href "/contact")) "Contact")
@@ -136,7 +136,7 @@
 (define (index-tpl style style-menu admin news-block)
   (master-tpl admin website-title style style-menu "none" "infopage" greeting
     `((center
-       (img (@ (src "/pub/img/logo.png")))
+       (img (@ (src "/img/logo.png")))
        (table
         (tr
          (td
@@ -177,7 +177,7 @@
 
 (define* (sidebar-data-tpl frame? #:key admin)
   (let ((target (if frame? "main" "")))
-    `((a (@ (href "/index") (target ,target)) (img (@ (src "/pub/img/favicon.ico"))))
+    `((a (@ (href "/index") (target ,target)) (img (@ (src "/img/favicon.ico"))))
       (br)
       "["
       ,(if frame?
@@ -295,7 +295,7 @@
        (tr (td (@ (class "stack"))
             "GitHub: " (a (@ (href "https://github.com/ECHibiki/kotatsu")) "https://github.com/ECHibiki/kotatsu")))
        (tr (td (@ (class "stack"))
-            "Email: " (img (@ (src "/pub/img/email.png")))))))))
+            "Email: " (img (@ (src "/img/email.png")))))))))
 
 (define (login-tpl style style-menu admin)
   (master-tpl admin (string-append "Login - " website-title) style style-menu "none" "infopage" "<h2>Login</h2>"
@@ -318,7 +318,7 @@
 (define (imgops-tpl image board-uri threadnum)
   (if image
     `(" " (span (@ (class "imgops"))
-                "[" (a (@ (href ,(format #f "https://imgops.com/http://~a/pub/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum image))
+                "[" (a (@ (href ,(format #f "https://imgops.com/http://~a/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum image))
                           (target "_blank"))
                        "ImgOps")
                 "]"))
@@ -327,7 +327,7 @@
 (define (iqdb-tpl thumb board-uri threadnum)
   (if thumb
     `(" " (span (@ (class "imgops"))
-                "[" (a (@ (href ,(format #f "https://iqdb.org/?url=https://~a/pub/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum thumb))
+                "[" (a (@ (href ,(format #f "https://iqdb.org/?url=https://~a/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum thumb))
                           (target "_blank"))
                        "iqdb")
                 "]"))
@@ -394,7 +394,7 @@
          (b (span (@ (class "name")) (span (@ (class "capcode"))
                                       ,(assoc-ref (car admin) "name")
                                       " ## SysOP "
-                                      (img (@ (title "Mod") (style "vertical-align:bottom") (src "/pub/img/capcode.png"))))))
+                                      (img (@ (title "Mod") (style "vertical-align:bottom") (src "/img/capcode.png"))))))
          " just make sure you're signed in, then when making a post put in the name field: "
          (b (span (@ (class "name"))
              ,(assoc-ref (car admin) "name")
@@ -454,7 +454,7 @@
        (br)
        ,@(if image
            `("File: " (a (@ (title ,iname)
-                            (href ,(format #f "/pub/img/~a/~a/~a" board-uri threadnum image))
+                            (href ,(format #f "/img/~a/~a/~a" board-uri threadnum image))
                             (download ,iname))
                          ,(shorten iname max-filename-display-length))
              " (" ,size ")"
@@ -464,11 +464,11 @@
         (tr (@ (valign "top"))
          ,(if image
             `(td (a (@ (target "_top")
-                       (href ,(format #f "/pub/img/~a/~a/~a" board-uri threadnum image)))
-                  (img (@ (src "/pub/img/" ,board-uri "/" ,threadnum "/" ,thumb)
+                       (href ,(format #f "/img/~a/~a/~a" board-uri threadnum image)))
+                  (img (@ (src "/img/" ,board-uri "/" ,threadnum "/" ,thumb)
                           (onclick "ret=thumbnailClick(this);return ret;")
 			  (onload "swapIsLoaded(this)")
-                          (data-swap-with "/pub/img/" ,board-uri "/" ,threadnum "/" ,image)
+                          (data-swap-with "/img/" ,board-uri "/" ,threadnum "/" ,image)
                           (data-mimetype ,(car (string-split size #\,)))))))
             '())
          (td
@@ -597,11 +597,11 @@
      ,(if image
         `(a (@ (href "/thread/" ,board-uri "/" ,threadnum))
           (img (@ (class "OPimg")
-                  (src "/pub/img/" ,board-uri "/" ,threadnum "/" ,thumb))))
+                  (src "/img/" ,board-uri "/" ,threadnum "/" ,thumb))))
         '())
      (br)
      ,(if sticky
-        `(img (@ (src "/pub/img/sticky.png") (title "Sticky")))
+        `(img (@ (src "/img/sticky.png") (title "Sticky")))
         '())
      (span (@ (class "shade")) ,(number->string (- postcount 1)) " Replies")
      (br)
@@ -633,7 +633,7 @@
     `(div (@ (class ,(string-append (or (assoc-ref (assoc-ref boards board) 'theme) default-style) " threadwrapper")))
       (div (@ (class "thread"))
        (div (@ (class ,(if (eq? mode 'preview) "title-bar" "")))
-        (u ,@(if sticky `(" " (img (@ (src "/pub/img/sticky.png") (title "Sticky")))) '())
+        (u ,@(if sticky `(" " (img (@ (src "/img/sticky.png") (title "Sticky")))) '())
            (input (@ (type "checkbox") (name "posts") (value ,board-uri "/" ,threadnum "/" 1)))
 	   ()
            (a (@ (href "/thread/" ,board-uri "/" ,threadnum))
@@ -663,7 +663,7 @@
         (br)
         ,@(if image
            `("File: " (a (@ (title ,iname)
-                            (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,(if (member (string-downcase (cdr name+ext)) '("sfw" "html5"))
+                            (href "/img/" ,board-uri "/" ,threadnum "/" ,(if (member (string-downcase (cdr name+ext)) '("sfw" "html5"))
                                                                            (if (cdr name+ext) (string-append (car file+ext) "." (cdr name+ext)) "")
                                                                            image))
                             (download ,iname))
@@ -673,12 +673,12 @@
            '())
         ,(if image
           `(a (@ (target "_top")
-                 (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,image))
+                 (href "/img/" ,board-uri "/" ,threadnum "/" ,image))
             (img (@ (class "OPimg")
-                    (src "/pub/img/" ,board-uri "/" ,threadnum "/" ,thumb)
+                    (src "/img/" ,board-uri "/" ,threadnum "/" ,thumb)
                     (onclick "ret=thumbnailClick(this);return ret;")
                     (onload "swapIsLoaded(this)")
-		    (data-swap-with "/pub/img/" ,board-uri "/" ,threadnum "/" ,image)
+		    (data-swap-with "/img/" ,board-uri "/" ,threadnum "/" ,image)
                     (data-mimetype ,(car (string-split size #\,))))))
           '())
         (blockquote ,(truncate-comment comment max-comment-preview-lines mode))
@@ -701,17 +701,17 @@
                       ,(if (equal? "html5" (string-locale-downcase (or (cdr name+ext) "")))
                          " highlight" "")))
       (tr (td ,@(if sticky
-                  `(" " (img (@ (src "/pub/img/sticky.png") (title "Sticky"))))
+                  `(" " (img (@ (src "/img/sticky.png") (title "Sticky"))))
                   '())
               (input (@ (type "checkbox") (name "posts") (value ,board-uri "/" ,threadnum "/" 1)))
               ,(number->string threadnum))
           (td (b (span (@ (id "1p") (class "name")) ,name)))
           (td (a (@ (href "/board/" ,board-uri)) ,(string-append "/" board-html) "/"))
           (td (@ (style "text-align:center"))
-           "[" (a (@ (title ,iname) (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,image))
+           "[" (a (@ (title ,iname) (href "/img/" ,board-uri "/" ,threadnum "/" ,image))
                 ,(shorten (car name+ext) max-filename-display-length)) "]"
            " [" (a (@ (title ,iname)
-                      (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,(car file+ext) ,(if (cdr name+ext) (string-append "." (cdr name+ext)) ""))
+                      (href "/img/" ,board-uri "/" ,threadnum "/" ,(car file+ext) ,(if (cdr name+ext) (string-append "." (cdr name+ext)) ""))
                       (download ,iname))
                    "F")
            "]")
@@ -797,11 +797,11 @@ TO VIEW THE ACTUAL FILE DATA VISIT THE src LINK BELOW.
        `(body (@ (style "margin:0px;background:#333;width:100%;height:100%"))
          (table (@ (style "border-collapse:collapse;width:100%;height:100%"))
           (tr (@ (style "height:15px;font-size:12px;text-align:center;background:#fed"))
-           (td (a (@ (href "/pub/img/" ,board-uri "/" ,threadnum "/" ,timestamp "." ,extension)) "DOWNLOAD FILE")
+           (td (a (@ (href "/img/" ,board-uri "/" ,threadnum "/" ,timestamp "." ,extension)) "DOWNLOAD FILE")
                ": " ,(format #f "~a (w:~a h:~a ~a)" filename width height fsize)))
           (tr (@ (style "width:100%;height:100%"))
            (td (@ (style "text-align:center;width:100%;height:100%"))
                (embed (@ (style "margin-left:auto;margin-right:auto;border:none;width:100%;height:100%")
-                          (src "/pub/img/" ,board-uri "/" ,threadnum "/" ,entrypoint)
+                          (src "/img/" ,board-uri "/" ,threadnum "/" ,entrypoint)
                           (sandbox "allow-scripts")
                           (allowfullscreen "allowfullscreen")) #f))))))))

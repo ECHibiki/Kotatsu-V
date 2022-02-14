@@ -36,7 +36,7 @@ function showSidebar() {
     document.getElementById("top-nav").style.left = (bar_width + margin).toString() + "px";
 
     e.innerHTML = `
-<a href="/index" target=""><img src="/pub/img/favicon.ico" /></a><br />[<a target="_top" href="javascript:void(0);" onclick="hideSidebar();">Hide Menu ⇤</a>]<br /><br /><div style="padding-bottom:5px"><a href="/board/all" target="">All Threads</a></div>
+<a href="/index" target=""><img src="/img/favicon.ico" /></a><br />[<a target="_top" href="javascript:void(0);" onclick="hideSidebar();">Hide Menu ⇤</a>]<br /><br /><div style="padding-bottom:5px"><a href="/board/all" target="">All Threads</a></div>
 <div style="padding-bottom:5px"><a href="/board/listed" target="">Listed Threads</a></div>
 <div style="padding-bottom:5px"><a href="/board/unlisted" target="">Unlisted Threads</a></div><br><hr><h3>Boards</h3><div style="padding-bottom:5px"><a href="/board/a" target="">Anime & Manga</a></div>
 <div style="padding-bottom:5px"><a href="/board/ni" target="">日本裏</a></div>
@@ -44,7 +44,7 @@ function showSidebar() {
 <div style="padding-bottom:5px"><a href="/board/cc" target="">Computer Club</a></div>
 <div style="padding-bottom:5px"><a href="/board/f" target="">Flash & HTML5</a></div>
 <div style="padding-bottom:5px"><a href="/board/v" target="">Video Games</a></div>
-<div style="padding-bottom:5px"><a href="/board/ho" target="">Other</a></div><br /><hr /><br /><div id="sidebar-admin-links"><h3>Admin Links</h3><div style="padding-bottom:5px"><a href="/panel" target="">Admin Panel</a></div><div style="padding-bottom:5px"><a href="/logoff" target="">Log Off</a></div></div><h3>Information</h3><div style="padding-bottom:5px"><a href="/" target="_top">HOME</a></div><div style="padding-bottom:5px"><a href="/about" target="">About</a></div><div style="padding-bottom:5px"><a href="/rules" target="">Rules</a></div><div style="padding-bottom:5px"><a href="/news" target="">News</a></div>
+<div style="padding-bottom:5px"><a href="/board/ho" target="">Other</a></div><br /><hr /><br /><div id="sidebar-admin-links"><h3>Admin Links</h3><div style="padding-bottom:5px"><a href="/panel" target="">Admin Panel</a></div><div style="padding-bottom:5px"><a href="/logoff" target="">Log Off</a></div></div><h3>Information</h3><div style="padding-bottom:5px"><a href="/" target="_top">HOME</a></div><div style="padding-bottom:5px"><a href="https://archive.4taba.net" target="">Archive</a></div><div style="padding-bottom:5px"><a href="/about" target="">About</a></div><div style="padding-bottom:5px"><a href="/rules" target="">Rules</a></div><div style="padding-bottom:5px"><a href="/news" target="">News</a></div>
 `;
 
     hideAdminLinks();
