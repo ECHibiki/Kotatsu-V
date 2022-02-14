@@ -595,12 +595,11 @@
                                  "''>" (match:substring m) "</a>")))
                 'post)) ; FIXME : add quotes around the href and target once you figure out how to escape chars properly
           (lambda (p) ; Board link
-            (regexp-substitute/global #f "&gt;&gt;&gt;/*[^/]+/([^0-9]|$)" p
+            (regexp-substitute/global #f "(&gt;&gt;&gt;/*([^ \\t\\r\\n/]+)/)([^0-9]|$)" p
               'pre
               (lambda (m)
-                (let* ((brd (substring (match:substring m) 13 (- (string-length (match:substring m)) 1))))
-                  (format #f "<a href=''/board/~a''>~a</a>" brd (match:substring m))))
-              'post))
+              (format #f "<a href=''/board/~a''>~a</a>~a" (match:substring m 2) (match:substring m 1) (match:substring m 3)))
+             'post))
           (lambda (p) ; Cross-page link matching
             ;(regexp-substitute/global #f "&gt;&gt;&gt;[a-zA-Z0-9/,-\\#]*[a-zA-Z0-9]" p
             (regexp-substitute/global #f "&gt;&gt;&gt;/*[^/]+/[0-9/,\\-]*[0-9]" p ; NOTE: Just make this end with a number. If you want to link to pages like >>>about#format then make a new filter
