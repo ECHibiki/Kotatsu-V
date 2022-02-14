@@ -908,7 +908,7 @@
                                          (or (assq-ref (assoc-ref boards board) 'OP-file-required) default-OP-file-required)))
                      (max-dimensions (number->string (if existing-thread max-thumb-size max-thumb-size-OP)))
                      (finfo (if (equal? filename "")
-                              (cons* #f #f #f #f)
+                              (cons* "" "" "" "")
                               (let* ((boarddir (string-append (getcwd) "/pub/img/" board))
                                      (threaddir (string-append boarddir "/" (number->string threadnum)))
                                      (timestring (number->string (get-timestamp13)))
@@ -921,7 +921,6 @@
                                 (rename-file (string-append (getcwd) "/pub/img/upload/" filename) fullpath)
                                 ;(cons newname newthumbname)))))
                                 ;; FIXME: replace this extension case with actual mimetype detection?
-				(display mimetype)
                                 (case mimetype
                                   ((GIF JPEG PNG WEBP) ; IMAGES
                                    (make-image-thumbnail fullpath max-dimensions (string-append fullthumb "." extension))

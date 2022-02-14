@@ -316,13 +316,14 @@
       (h1 "Successfully logged off."))))
 
 (define (imgops-tpl image board-uri threadnum)
-  (if image
+  (if (string-null? image)
+     '()
     `(" " (span (@ (class "imgops"))
                 "[" (a (@ (href ,(format #f "https://imgops.com/http://~a/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum image))
                           (target "_blank"))
                        "ImgOps")
                 "]"))
-    '()))
+    ))
 
 (define (iqdb-tpl thumb board-uri threadnum)
   (if thumb
@@ -452,17 +453,19 @@
         ,(imgops-tpl image board-uri threadnum)
         ,(iqdb-tpl thumb board-uri threadnum))
        (br)
-       ,@(if image
+       ,@(if (string-null? image)
+          '()
            `("File: " (a (@ (title ,iname)
                             (href ,(format #f "/img/~a/~a/~a" board-uri threadnum image))
                             (download ,iname))
                          ,(shorten iname max-filename-display-length))
              " (" ,size ")"
              (br))
-           '())
+           )
        (table
         (tr (@ (valign "top"))
-         ,(if image
+         ,(if (string-null? image)
+            '()
             `(td (a (@ (target "_top")
                        (href ,(format #f "/img/~a/~a/~a" board-uri threadnum image)))
                   (img (@ (src "/img/" ,board-uri "/" ,threadnum "/" ,thumb)
@@ -470,7 +473,7 @@
 			  (onload "swapIsLoaded(this)")
                           (data-swap-with "/img/" ,board-uri "/" ,threadnum "/" ,image)
                           (data-mimetype ,(car (string-split size #\,)))))))
-            '())
+          )
          (td
           (blockquote ,(truncate-comment comment max-comment-preview-lines mode))
           ,(if subposts
@@ -594,11 +597,12 @@
 (define (catalog-thread-tpl mode board board-html board-uri threadnum postcount subject name date image iname thumb size comment old sticky replies)
   `(div (@ (border 1) (class (string-append (or (assoc-ref (assoc-ref boards board) 'theme) default-style) " threadwrapper")))
     (div (@ (class "thread"))
-     ,(if image
+     ,(if (string-null? image)
+        '()
         `(a (@ (href "/thread/" ,board-uri "/" ,threadnum))
           (img (@ (class "OPimg")
                   (src "/img/" ,board-uri "/" ,threadnum "/" ,thumb))))
-        '())
+        )
      (br)
      ,(if sticky
         `(img (@ (src "/img/sticky.png") (title "Sticky")))
@@ -661,7 +665,8 @@
           ,(imgops-tpl image board-uri threadnum)
           ,(iqdb-tpl thumb board-uri threadnum))
         (br)
-        ,@(if image
+        ,@(if (string-null? image)
+           '()
            `("File: " (a (@ (title ,iname)
                             (href "/img/" ,board-uri "/" ,threadnum "/" ,(if (member (string-downcase (cdr name+ext)) '("sfw" "html5"))
                                                                            (if (cdr name+ext) (string-append (car file+ext) "." (cdr name+ext)) "")
@@ -670,8 +675,9 @@
                          ,(shorten iname max-filename-display-length))
              " (" ,size ")"
              (br))
-           '())
-        ,(if image
+           )
+        ,(if (string-null? image)
+           '()
           `(a (@ (target "_top")
                  (href "/img/" ,board-uri "/" ,threadnum "/" ,image))
             (img (@ (class "OPimg")
@@ -680,7 +686,7 @@
                     (onload "swapIsLoaded(this)")
 		    (data-swap-with "/img/" ,board-uri "/" ,threadnum "/" ,image)
                     (data-mimetype ,(car (string-split size #\,))))))
-          '())
+          )
         (blockquote ,(truncate-comment comment max-comment-preview-lines mode))
         ,(if (and (eq? mode 'preview) (> postcount (+ post-preview-count 1)))
           `(span (@ (class "shade")) ,(number->string (- postcount post-preview-count 1)) " posts omitted")

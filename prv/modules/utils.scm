@@ -53,7 +53,7 @@
       (if (null? board)
         #f
         (list->string board)))))
-    
+
 (define* (escape-str str #:key
                      (char-encoding
                       '((#\< . "&lt;")
@@ -99,8 +99,7 @@
   (let* ((port (open-pipe* OPEN_READ "identify" "-format" "%wx%h" (string-append file "[0]")))
          (dims (read-line port)))
     (close-pipe port)
-(display file)(newline)
-    (if (string-prefix? "identify:" dims)
+    (if (or (eof-object? dims) (string-contains dims "Invalid"))
       #f
       dims)))
 
@@ -108,7 +107,6 @@
   (let* ((port (open-pipe* OPEN_READ "ffprobe" "-v" "error" "-select_streams" "v:0" "-show_entries" "stream=width,height" "-of" "csv=s=x:p=0" video))
          (dims (read-line port)))
     (close-pipe port)
-	(display dims)(newline)
     (if (or (eof-object? dims) (string-contains dims "Invalid"))
       #f
       dims)))
