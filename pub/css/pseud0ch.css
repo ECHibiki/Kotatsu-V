@@ -289,3 +289,8 @@ blockquote {
 *:target, .highlight {
     background: #bbb !important;
 }
+.close-thread {
+    float: right;
+    padding-top: 0.32em;
+    padding-right: 0.32em;
+}
