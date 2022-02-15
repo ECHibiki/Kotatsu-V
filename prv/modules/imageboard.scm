@@ -443,12 +443,16 @@
          (request ((record-accessor (record-type-descriptor rc) 'request) rc))
          (headers ((record-accessor (record-type-descriptor request) 'headers) request))
          (referer (assoc-ref headers 'referer))
-         (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer)))
-    (rc-set-cookie! rc `(,(new-cookie #:npv `(("style" . ,style)) #:expires 315360000 #:http-only #f)))
-    ;(:cookies-set! rc 'cc "style" style)
-    ;(:cookies-setattr! rc 'cc #:expires 315360000 #:path "/" #:secure #f #:http-only #f)
-    ;(:cookies-update! rc) ;; FIXME: Documentation says this isn't needed, but it seems to be
-    (redirect-to rc (uri-path referer))))
+         (scheme ((record-accessor (record-type-descriptor referer) 'scheme) referer))
+         (host ((record-accessor (record-type-descriptor referer) 'host) referer))
+         (path ((record-accessor (record-type-descriptor referer) 'path) referer))
+         (direct_uri (build-uri scheme #:host host #:path path))
+        )
+         (rc-set-cookie! rc `(,(new-cookie #:npv `(("style" . ,style)) #:expires 315360000 #:http-only #f)))
+         ;uri-path can't be used because it appends the working port onto the domain
+         (redirect-to rc direct_uri)
+    )
+  )
 
 (define (mod-login rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
@@ -1019,8 +1023,15 @@
                    ;; -----------------------------------------------
                    ;; -----------------------------------------------
                      (if (or noko nokosage)
-                       (redirect-to rc (string-append "/thread/" (uri-encode board) "/" (number->string threadnum)))
-                       (redirect-to rc (string-append "/board/" (uri-encode board))))))))))))))))
+                       (redirect-to rc (
+                        build-uri scheme #:host host
+                        #:path (string-append "/thread/" (uri-encode board) "/" (number->string threadnum))))
+                       (redirect-to rc (
+                        build-uri scheme #:host host
+                        #:path (string-append "/board/" (uri-encode board))))
+                      )
+                    )
+                  )))))))))))
 
 (define (post-note rc)
   (let* ((mtable (map-table-from-DB (:conn rc)))
