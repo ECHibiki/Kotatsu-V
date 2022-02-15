@@ -315,8 +315,12 @@
     `(,logoff-result
       (h1 "Successfully logged off."))))
 
+; compatibility with existing database
+(define (notimage? image)
+  (or (not (string? image) ) (string= "" image) ))
+
 (define (imgops-tpl image board-uri threadnum)
-  (if (or (not (string? image) ) (string= "" image) )
+  (if (notimage? image)
      '()
     `(" " (span (@ (class "imgops"))
                 "[" (a (@ (href ,(format #f "https://imgops.com/http://~a/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum image))
@@ -326,13 +330,14 @@
     ))
 
 (define (iqdb-tpl thumb board-uri threadnum)
-  (if thumb
+  (if (notimage? thumb)
+    '()
     `(" " (span (@ (class "imgops"))
                 "[" (a (@ (href ,(format #f "https://iqdb.org/?url=https://~a/img/~a/~a/~a" (get-conf '(host name)) board-uri threadnum thumb))
                           (target "_blank"))
                        "iqdb")
                 "]"))
-    '()))
+    ))
 
 
 (define (note-tpl id type links-target subject name date admin body edited)
@@ -453,7 +458,7 @@
         ,(imgops-tpl image board-uri threadnum)
         ,(iqdb-tpl thumb board-uri threadnum))
        (br)
-       ,@(if (or (not (string? image) ) (string= "" image) )
+       ,@(if (notimage? image)
           '()
            `("File: " (a (@ (title ,iname)
                             (href ,(format #f "/img/~a/~a/~a" board-uri threadnum image))
@@ -464,7 +469,7 @@
            )
        (table
         (tr (@ (valign "top"))
-         ,(if (or (not (string? image) ) (string= "" image) )
+         ,(if (notimage? image)
             '()
             `(td (a (@ (target "_top")
                        (href ,(format #f "/img/~a/~a/~a" board-uri threadnum image)))
@@ -597,7 +602,7 @@
 (define (catalog-thread-tpl mode board board-html board-uri threadnum postcount subject name date image iname thumb size comment old sticky replies)
   `(div (@ (border 1) (class (string-append (or (assoc-ref (assoc-ref boards board) 'theme) default-style) " threadwrapper")))
     (div (@ (class "thread"))
-     ,(if (or (not (string? image) ) (string= "" image) )
+     ,(if (notimage? image)
         '()
         `(a (@ (href "/thread/" ,board-uri "/" ,threadnum))
           (img (@ (class "OPimg")
@@ -665,7 +670,7 @@
           ,(imgops-tpl image board-uri threadnum)
           ,(iqdb-tpl thumb board-uri threadnum))
         (br)
-        ,@(if (or (not (string? image) ) (string= "" image) )
+        ,@(if (notimage? image)
            '()
            `("File: " (a (@ (title ,iname)
                             (href "/img/" ,board-uri "/" ,threadnum "/" ,(if (member (string-downcase (cdr name+ext)) '("sfw" "html5"))
@@ -676,7 +681,7 @@
              " (" ,size ")"
              (br))
            )
-        ,(if (or (not (string? image) ) (string= "" image) )
+        ,(if (notimage? image)
            '()
           `(a (@ (target "_top")
                  (href "/img/" ,board-uri "/" ,threadnum "/" ,image))
