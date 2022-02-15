@@ -814,7 +814,7 @@
              cc (>= cc 1)
              (equal? (assoc-ref (car admin) "name")
                      (substring name 0 cc)))
-        (string-append "<span class=capcode>" (assoc-ref (car admin) "name") " ## " (substring name (+ cc 4)) " <img title=''Mod'' style=''vertical-align:bottom'' src=''/pub/img/capcode.png''></span>")
+        (string-append "<span class=capcode>" (assoc-ref (car admin) "name") " ## " (substring name (+ cc 4)) " <img title=''Mod'' style=''vertical-align:bottom'' src=''/img/capcode.png''></span>")
         name)))
 
 (define (get-threadnum mtable board)

@@ -134,7 +134,7 @@
 
 ;;; Define mods:
 (define-public mods `(; NAME      PERMISSIONS  DEFAULT_PASSWORD(this field is only used until the mod changes their password)))
-                      ("Admin"   "*"          "abc123")
-                      ("SomeMod" "*"          "abc123")))
+                     ("Admin"   "*"          "abc123")
+                     ("SomeMod" "*"          "abc132")  ))
 
 ;(define-public admin-only-pages '("panel" "note-editor" "notes-view" "logoff")) ; These are pages which should throw and "unauthorized" error if accessed by non-moderators
