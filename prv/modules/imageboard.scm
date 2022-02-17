@@ -933,7 +933,7 @@
                                    (make-video-thumbnail fullpath max-dimensions (string-append fullthumb ".jpg"))
                                    (if (file-exists? (string-append fullthumb ".jpg"))
                                      (cons* newfile (string-append newthumb ".jpg") mimetype
-                                            (get-image-dimensions (string-append fullthumb ".jpg")))
+                                            (get-video-dimensions fullpath))
                                      (begin
                                        (copy-file "pub/img/mimetype-audio.png"
                                                   (string-append fullthumb ".png"))
