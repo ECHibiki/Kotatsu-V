@@ -7,8 +7,8 @@ By default it will use sqlite3 as the database and the built-in Artanis engine f
 However, if more speed and scalability is required then services such as Apache2, Nginx, PostgresQL, and MySQL are also supported and can be enabled in the config files. This may require some code changes to allow storage of capcode posts.
 
 ## Dependencies
-
-* guile 3.0.1
+* Prior deps: libunistring-dev , libffi-dev 
+* guile 3.0.1 ( use ./configure --enable-mini-gmp since we don't need high percision digits)
 * artanis 0.5.1
 * guile-dbi 2.1.8 (2.1.7 seems to no longer work , but then again maybe not?)
 * imagemagick, ffmpeg and webp
